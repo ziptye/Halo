@@ -16,6 +16,22 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
 //    addAndMakeVisible(animatedKnob1);
     createPanelNavArrows();
     addImagesToArray();
+    
+    // Reverb Settings:
+    presentBank1Settings.add("Default");
+    presentBank1Settings.add("Long Hall");
+    presentBank1Settings.add("Short Hall");
+    presentBank1Settings.add("Room 1");
+    presentBank1Settings.add("Room 2");
+    
+    // Delay Settings:
+    presentBank2Settings.add("Default");
+    presentBank2Settings.add("Ping-Pong");
+    presentBank2Settings.add("BPM Sync");
+    presentBank2Settings.add("MS");
+    
+    currentIndexPresetBank1 = 0;
+    currentIndexPresetBank2 = 0;
         
     // BACKGROUND ======================================================
     
@@ -89,6 +105,37 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     // SICKO MODE COORDS. ----
 //    g.setColour(juce::Colours::pink);
 //    g.fillRect(553, 123, 50, 50);
+    
+    // PRESET BANK 1 COORDS. ----
+//        g.setColour(juce::Colours::red);
+//        g.fillRect(125, 294, 85, 35);
+    
+    // PRESET BANK 2 COORDS. ----
+//        g.setColour(juce::Colours::red);
+//        g.fillRect(792, 294, 85, 35);
+    
+    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setColour(juce::Colours::white);
+    g.drawText(presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294, 85, 35, juce::Justification::centred);
+    
+    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setColour(juce::Colours::white);
+    g.drawText(presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294, 85, 35, juce::Justification::centred);
+    
+}
+
+juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int num, int pos){
+
+    if (num == 0){
+        int index = juce::jmin(pos, presentBank1Settings.size() - 1);
+        return presentBank1Settings[index];
+    }
+    else if (num == 1) {
+        int index = juce::jmin(pos, presentBank2Settings.size() - 1);
+        return presentBank2Settings[index];
+    }
+    
+    return "";
     
 }
 
@@ -184,7 +231,13 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESENT BANK 1L";
+                        if (currentIndexPresetBank1 == 0){
+                            currentIndexPresetBank1 = presentBank1Settings.size() - 1;
+                        }
+                        else {
+                            currentIndexPresetBank1--;
+                        }
+                        repaint();
                     }
                     break;
                 case 304:
@@ -194,7 +247,8 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESENT BANK 1R";
+                        currentIndexPresetBank1 = (currentIndexPresetBank1 + 1) % presentBank1Settings.size();
+                        repaint();
                     }
                     break;
                 case 670:
@@ -204,7 +258,13 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESET BANK 2L";
+                        if (currentIndexPresetBank2 == 0){
+                            currentIndexPresetBank2 = presentBank2Settings.size() - 1;
+                        }
+                        else {
+                            currentIndexPresetBank2--;
+                        }
+                        repaint();
                     }
                     break;
                 case 965:
@@ -214,7 +274,8 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESET BANK 2R";
+                        currentIndexPresetBank2 = (currentIndexPresetBank2 + 1) % presentBank2Settings.size();
+                        repaint();
                     }
                     break;
                 case 393:
