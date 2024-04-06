@@ -35,11 +35,66 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     g.drawImageAt(background, 0, 0);
     
+    // LED LIGHT COORDS.
+    
+    // LEFT TOP ----
+    if (!distortionState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(467, 75, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(467, 30, 8, 8, 4.0f);
+    }
+    // RIGHT TOP ----
+    if (!shifterState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(628, 75, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(628, 30, 8, 8, 4.0f);
+    }
+    // LEFT BOT. ----
+    if (!cozyModeState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(467, 170, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(467, 122, 8, 8, 4.0f);
+    }
+    // RIGHT BOT. ----
+    if (!sickoModeState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(628, 170, 8, 8, 4.0f);
+    }
+    else {
+        
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(628, 122, 8, 8, 4.0f);
+    }
+    // DIST COORDS. ----
+//    g.setColour(juce::Colours::pink);
+//    g.fillRect(393, 30, 50, 50);
+    
+    // SHIFTER COORDS. ----
+//    g.setColour(juce::Colours::pink);
+//    g.fillRect(553, 30, 50, 50);
+    
+    // COZY MODE COORDS. ----
+//    g.setColour(juce::Colours::pink);
+//    g.fillRect(393, 123, 50, 50);
+    
+    // SICKO MODE COORDS. ----
+//    g.setColour(juce::Colours::pink);
+//    g.fillRect(553, 123, 50, 50);
+    
 }
 
 void ProjectHaloAudioProcessorEditor::resized()
 {
-    animatedKnob1.setBounds(783, 400, 100, 100);
+//    animatedKnob1.setBounds(783, 400, 100, 100);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -50,8 +105,6 @@ void ProjectHaloAudioProcessorEditor::addImagesToArray()
     auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
     auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
     auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDon_png, BinaryData::PH_RonDon_pngSize);
-    
-    
     
     // Add images to array
     imagesArray.add(initBackground);
@@ -64,15 +117,7 @@ void ProjectHaloAudioProcessorEditor::addImagesToArray()
 juce::Image ProjectHaloAudioProcessorEditor::backgroundGenerator(int pos)
 {
     
-    if (!imagesArray.isEmpty()) {
-        return imagesArray[pos];
-    }
-    else
-    {
-        std::cout << "EMPTY ARRAY";
-        return background;
-    }
-    
+    return imagesArray[pos];
     
 }
 
@@ -91,7 +136,12 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     
     juce::Rectangle<int> powerOn1(110, 103, 116, 120);
     juce::Rectangle<int> powerOn2(776, 103, 116, 120);
-
+    
+    juce::Rectangle<int> distortionFx(393, 30, 50, 50);
+    juce::Rectangle<int> cozyModeFx(393, 123, 50, 50);
+    juce::Rectangle<int> shifterFx(553, 30, 50, 50);
+    juce::Rectangle<int> sickoModeFx(553, 123, 50, 50);
+    
     
     rectangleArr.add(panelLeft1);
     rectangleArr.add(panelRight1);
@@ -105,6 +155,11 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     
     rectangleArr.add(powerOn1);
     rectangleArr.add(powerOn2);
+    
+    rectangleArr.add(distortionFx);
+    rectangleArr.add(shifterFx);
+    rectangleArr.add(cozyModeFx);
+    rectangleArr.add(sickoModeFx);
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -162,6 +217,70 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                         std::cout << "PRESET BANK 2R";
                     }
                     break;
+                case 393:
+                    if (y == 30)
+                    {
+                        int i = 0;
+                        
+                        if (!distortionState && i == 0){
+                            i++;
+                            distortionState = true;
+                            repaint();
+                        }
+                        else{
+                            distortionState = false;
+                            i = 0;
+                            repaint();
+                        }
+                    }
+                    else if (y == 123){
+                        
+                        int i = 0;
+                        
+                        if (!cozyModeState && i == 0){
+                            i++;
+                            cozyModeState = true;
+                            repaint();
+                        }
+                        else {
+                            i = 0;
+                            cozyModeState = false;
+                            repaint();
+                        }
+                    }
+                    break;
+                case 553:
+                    if (y == 30)
+                    {
+                        int i = 0;
+                        
+                        if (!shifterState && i == 0){
+                            i++;
+                            shifterState = true;
+                            repaint();
+                        }
+                        else{
+                            i = 0;
+                            shifterState = false;
+                            repaint();
+                        }
+                    }
+                    else if (y == 123){
+                        
+                        int i = 0;
+                        
+                        if (!sickoModeState && i == 0){
+                            i++;
+                            sickoModeState = true;
+                            repaint();
+                        }
+                        else {
+                            i = 0;
+                            sickoModeState = false;
+                            repaint();
+                        }
+                    }
+                    break;
                 case 110:
                     if (y == 103)
                     {
@@ -187,14 +306,6 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                         }
                     }
                     break;
-                    
-//                case 442:
-//                    if (y == 90){
-//                        std::cout<< "CENTER SECTION" << std::endl;
-//                    }
-//                    
-//                    break;
-                    
                 case 776:
                     if (y == 103)
                     {
@@ -218,7 +329,6 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             repaint();
                             delayState = false;
                         }
-                        
                     }
                     break;
                 
@@ -227,6 +337,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     break;
                 }
             }
+            
             break; // Exit the loop
         }
     }

@@ -45,6 +45,11 @@ private:
     bool reverbState = false;
     bool delayState = false;
     
+    bool distortionState = false;
+    bool shifterState = false;
+    bool cozyModeState = false;
+    bool sickoModeState = false;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
 };
