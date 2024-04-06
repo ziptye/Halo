@@ -13,7 +13,7 @@
 ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    addAndMakeVisible(animatedKnob1);
+//    addAndMakeVisible(animatedKnob1);
     createPanelNavArrows();
     addImagesToArray();
         
@@ -21,7 +21,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     
     background = backgroundGenerator(0);
     
-    setSize(1000, 526);
+    setSize(1000, 525);
 
 }
 
@@ -47,15 +47,10 @@ void ProjectHaloAudioProcessorEditor::addImagesToArray()
     // Define the images:
     auto initBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
     
-    auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2On_P3On_png, BinaryData::PH_P1On_P2On_P3On_pngSize);
+    auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
+    auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
+    auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDon_png, BinaryData::PH_RonDon_pngSize);
     
-    auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_P1Off_P2On_P3On_png, BinaryData::PH_P1Off_P2On_P3On_pngSize);
-    auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2Off_P3On_png, BinaryData::PH_P1On_P2Off_P3On_pngSize);
-    auto bg4 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2On_P3Off_png, BinaryData::PH_P1On_P2On_P3Off_pngSize);
-    
-    auto bg5 = juce::ImageCache::getFromMemory(BinaryData::PH_P1Off_P2Off_P3On_png, BinaryData::PH_P1Off_P2Off_P3On_pngSize);
-    auto bg6 = juce::ImageCache::getFromMemory(BinaryData::PH_P1Off_P2On_P3Off_png, BinaryData::PH_P1Off_P2On_P3Off_pngSize);
-    auto bg7 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2Off_P3Off_png, BinaryData::PH_P1On_P2Off_P3Off_pngSize);
     
     
     // Add images to array
@@ -63,10 +58,6 @@ void ProjectHaloAudioProcessorEditor::addImagesToArray()
     imagesArray.add(bg1);
     imagesArray.add(bg2);
     imagesArray.add(bg3);
-    imagesArray.add(bg4);
-    imagesArray.add(bg5);
-    imagesArray.add(bg6);
-    imagesArray.add(bg7);
     
 }
 
@@ -79,7 +70,7 @@ juce::Image ProjectHaloAudioProcessorEditor::backgroundGenerator(int pos)
     else
     {
         std::cout << "EMPTY ARRAY";
-        return imagesArray[0];
+        return background;
     }
     
     
@@ -99,8 +90,7 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     juce::Rectangle<int> presetBank2R(965, 299, 25, 25);
     
     juce::Rectangle<int> powerOn1(110, 103, 116, 120);
-    juce::Rectangle<int> powerOn2(442, 90, 116, 120);
-    juce::Rectangle<int> powerOn3(776, 103, 116, 120);
+    juce::Rectangle<int> powerOn2(776, 103, 116, 120);
 
     
     rectangleArr.add(panelLeft1);
@@ -115,7 +105,6 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     
     rectangleArr.add(powerOn1);
     rectangleArr.add(powerOn2);
-    rectangleArr.add(powerOn3);
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -176,163 +165,58 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 110:
                     if (y == 103)
                     {
-                        if (!panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(7);
-                            panel1State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && panel3State)
-                        {
+                        if (!reverbState && !delayState){
                             background = backgroundGenerator(1);
-                            panel1State = true;
                             repaint();
+                            reverbState = true;
                         }
-                        else if (!panel1State && !panel2State && panel3State)
-                        {
+                        else if (!reverbState && delayState){
                             background = backgroundGenerator(3);
-                            panel1State = true;
                             repaint();
+                            reverbState = true;
                         }
-                        else if (!panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(4);
-                            panel1State = true;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(2);
-                            panel1State = false;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && !panel3State)
-                        {
+                        else if (reverbState && !delayState){
                             background = backgroundGenerator(0);
-                            panel1State = false;
                             repaint();
+                            reverbState = false;
                         }
-                        else if (panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(5);
-                            panel1State = false;
+                        else if (reverbState && delayState){
+                            background = backgroundGenerator(2);
                             repaint();
+                            reverbState = false;
                         }
-                        else if (panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(6);
-                            panel1State = false;
-                            repaint();
-                        }
-                        
                     }
                     break;
                     
-                case 442:
-                    if (y == 90)
-                    {
-                        if (!panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(6);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(4);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(1);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(2);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(0);
-                            panel2State = false;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(5);
-                            panel2State = false;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(7);
-                            panel2State = false;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(3);
-                            panel2State = false;
-                            repaint();
-                        }
-                        
-                    }
-                    break;
+//                case 442:
+//                    if (y == 90){
+//                        std::cout<< "CENTER SECTION" << std::endl;
+//                    }
+//                    
+//                    break;
                     
                 case 776:
                     if (y == 103)
                     {
-                        if (!panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(5);
-                            panel3State = true;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(3);
-                            panel3State = true;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(1);
-                            panel3State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && !panel3State)
-                        {
+                        if (!delayState && !reverbState){
                             background = backgroundGenerator(2);
-                            panel3State = true;
                             repaint();
+                            delayState = true;
                         }
-                        else if (panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(4);
-                            panel3State = false;
+                        else if (!delayState && reverbState){
+                            background = backgroundGenerator(3);
                             repaint();
+                            delayState = true;
                         }
-                        else if (!panel1State && !panel2State && panel3State)
-                        {
+                        else if (delayState && !reverbState){
                             background = backgroundGenerator(0);
-                            panel3State = false;
                             repaint();
+                            delayState = false;
                         }
-                        else if (panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(7);
-                            panel3State = false;
+                        else if (delayState && reverbState){
+                            background = backgroundGenerator(1);
                             repaint();
-                        }
-                        else if (!panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(6);
-                            panel3State = false;
-                            repaint();
+                            delayState = false;
                         }
                         
                     }

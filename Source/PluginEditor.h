@@ -42,9 +42,8 @@ private:
     
     juce::Array<juce::Image> imagesArray;
     
-    bool panel1State = false;
-    bool panel2State = false;
-    bool panel3State = false;
+    bool reverbState = false;
+    bool delayState = false;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
