@@ -29,6 +29,7 @@ public:
     void createPanelNavArrows();
     void addImagesToArray();
     juce::Image backgroundGenerator(int pos);
+    juce::String presentBankSettingsGenerator(int num, int pos);
 
 private:
     
@@ -42,9 +43,24 @@ private:
     
     juce::Array<juce::Image> imagesArray;
     
-    bool panel1State = false;
-    bool panel2State = false;
-    bool panel3State = false;
+    juce::StringArray presentBank1Settings;
+    juce::StringArray presentBank2Settings;
+    
+    bool reverbState = false;
+    bool delayState = false;
+    
+    bool distortionState = false;
+    bool shifterState = false;
+    bool cozyModeState = false;
+    bool sickoModeState = false;
+    
+    int currentIndexPresetBank1;
+    int currentIndexPresetBank2;
+    
+    int distortionAmt;
+    int shifterAmt;
+    int cozyModeAmt;
+    int sickoModeAmt;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)

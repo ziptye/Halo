@@ -13,15 +13,36 @@
 ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-    addAndMakeVisible(animatedKnob1);
+//    addAndMakeVisible(animatedKnob1);
     createPanelNavArrows();
     addImagesToArray();
+    
+    // Reverb Settings:
+    presentBank1Settings.add("Default");
+    presentBank1Settings.add("Long Hall");
+    presentBank1Settings.add("Short Hall");
+    presentBank1Settings.add("Room 1");
+    presentBank1Settings.add("Room 2");
+    
+    // Delay Settings:
+    presentBank2Settings.add("Default");
+    presentBank2Settings.add("Ping-Pong");
+    presentBank2Settings.add("BPM Sync");
+    presentBank2Settings.add("MS");
+    
+    currentIndexPresetBank1 = 0;
+    currentIndexPresetBank2 = 0;
+    
+    distortionAmt = 0;
+    shifterAmt = 0;
+    cozyModeAmt = 0;
+    sickoModeAmt = 0;
         
     // BACKGROUND ======================================================
     
     background = backgroundGenerator(0);
     
-    setSize(1000, 526);
+    setSize(1000, 525);
 
 }
 
@@ -35,53 +56,122 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     g.drawImageAt(background, 0, 0);
     
+    // LED LIGHT COORDS.
+    
+    // LEFT TOP ----
+    if (!distortionState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(467, 75, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(467, 30, 8, 8, 4.0f);
+    }
+    // RIGHT TOP ----
+    if (!shifterState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(628, 75, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(628, 30, 8, 8, 4.0f);
+    }
+    // LEFT BOT. ----
+    if (!cozyModeState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(467, 170, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(467, 122, 8, 8, 4.0f);
+    }
+    // RIGHT BOT. ----
+    if (!sickoModeState){
+        g.setColour(juce::Colours::red);
+        g.fillRoundedRectangle(628, 170, 8, 8, 4.0f);
+    }
+    else {
+        g.setColour(juce::Colours::lime);
+        g.fillRoundedRectangle(628, 122, 8, 8, 4.0f);
+    }
+    
+    // Preset Bank 1 Label
+    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setColour(juce::Colours::white);
+    g.drawText(presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294, 85, 35, juce::Justification::centred);
+    
+    // Preset Bank 2 Label
+    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setColour(juce::Colours::white);
+    g.drawText(presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294, 85, 35, juce::Justification::centred);
+    
+    // Dist. Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s = std::to_string(distortionAmt);
+    g.drawText(s, 340, 49, 35, 20, juce::Justification::centred);
+    
+    // Cozy Mode Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s2 = std::to_string(cozyModeAmt);
+    g.drawText(s2, 340, 139, 35, 20, juce::Justification::centred);
+    
+    // Shifter Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s3 = std::to_string(shifterAmt);
+    g.drawText(s3, 504, 49, 35, 20, juce::Justification::centred);
+    
+    // Sick-O Mode Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s4 = std::to_string(sickoModeAmt);
+    g.drawText(s4, 504, 139, 35, 20, juce::Justification::centred);
+    
+}
+
+juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int num, int pos){
+
+    if (num == 0){
+        int index = juce::jmin(pos, presentBank1Settings.size() - 1);
+        return presentBank1Settings[index];
+    }
+    else if (num == 1) {
+        int index = juce::jmin(pos, presentBank2Settings.size() - 1);
+        return presentBank2Settings[index];
+    }
+    
+    return "";
+    
 }
 
 void ProjectHaloAudioProcessorEditor::resized()
 {
-    animatedKnob1.setBounds(783, 400, 100, 100);
+//    animatedKnob1.setBounds(783, 400, 100, 100);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
 {
     // Define the images:
     auto initBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
-    
-    auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2On_P3On_png, BinaryData::PH_P1On_P2On_P3On_pngSize);
-    
-    auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_P1Off_P2On_P3On_png, BinaryData::PH_P1Off_P2On_P3On_pngSize);
-    auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2Off_P3On_png, BinaryData::PH_P1On_P2Off_P3On_pngSize);
-    auto bg4 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2On_P3Off_png, BinaryData::PH_P1On_P2On_P3Off_pngSize);
-    
-    auto bg5 = juce::ImageCache::getFromMemory(BinaryData::PH_P1Off_P2Off_P3On_png, BinaryData::PH_P1Off_P2Off_P3On_pngSize);
-    auto bg6 = juce::ImageCache::getFromMemory(BinaryData::PH_P1Off_P2On_P3Off_png, BinaryData::PH_P1Off_P2On_P3Off_pngSize);
-    auto bg7 = juce::ImageCache::getFromMemory(BinaryData::PH_P1On_P2Off_P3Off_png, BinaryData::PH_P1On_P2Off_P3Off_pngSize);
-    
+    auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
+    auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
+    auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDon_png, BinaryData::PH_RonDon_pngSize);
     
     // Add images to array
     imagesArray.add(initBackground);
     imagesArray.add(bg1);
     imagesArray.add(bg2);
     imagesArray.add(bg3);
-    imagesArray.add(bg4);
-    imagesArray.add(bg5);
-    imagesArray.add(bg6);
-    imagesArray.add(bg7);
     
 }
 
 juce::Image ProjectHaloAudioProcessorEditor::backgroundGenerator(int pos)
 {
     
-    if (!imagesArray.isEmpty()) {
-        return imagesArray[pos];
-    }
-    else
-    {
-        std::cout << "EMPTY ARRAY";
-        return imagesArray[0];
-    }
-    
+    int index = juce::jmin(pos, imagesArray.size() - 1);
+    return imagesArray[index];
     
 }
 
@@ -99,9 +189,22 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     juce::Rectangle<int> presetBank2R(965, 299, 25, 25);
     
     juce::Rectangle<int> powerOn1(110, 103, 116, 120);
-    juce::Rectangle<int> powerOn2(442, 90, 116, 120);
-    juce::Rectangle<int> powerOn3(776, 103, 116, 120);
-
+    juce::Rectangle<int> powerOn2(776, 103, 116, 120);
+    
+    juce::Rectangle<int> distortionFx(393, 30, 50, 50);
+    juce::Rectangle<int> cozyModeFx(393, 123, 50, 50);
+    juce::Rectangle<int> shifterFx(553, 30, 50, 50);
+    juce::Rectangle<int> sickoModeFx(553, 123, 50, 50);
+    
+    juce::Rectangle<int> distortionAmtUp(347, 25, 20, 20);
+    juce::Rectangle<int> distortionAmtDown(347, 75, 20, 20);
+    juce::Rectangle<int> cozyModeAmtUp(347, 115, 20, 20);
+    juce::Rectangle<int> cozyModeAmtDown(347, 165, 20, 20);
+    juce::Rectangle<int> shifterAmtUp(512, 25, 20, 20);
+    juce::Rectangle<int> shifterAmtDown(512, 75, 20, 20);
+    juce::Rectangle<int> sickoModeAmtUp(512, 115, 20, 20);
+    juce::Rectangle<int> sickoModeAmtDown(512, 165, 20, 20);
+    
     
     rectangleArr.add(panelLeft1);
     rectangleArr.add(panelRight1);
@@ -115,7 +218,20 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     
     rectangleArr.add(powerOn1);
     rectangleArr.add(powerOn2);
-    rectangleArr.add(powerOn3);
+    
+    rectangleArr.add(distortionFx);
+    rectangleArr.add(shifterFx);
+    rectangleArr.add(cozyModeFx);
+    rectangleArr.add(sickoModeFx);
+    
+    rectangleArr.add(distortionAmtUp);
+    rectangleArr.add(distortionAmtDown);
+    rectangleArr.add(cozyModeAmtUp);
+    rectangleArr.add(cozyModeAmtDown);
+    rectangleArr.add(shifterAmtUp);
+    rectangleArr.add(shifterAmtDown);
+    rectangleArr.add(sickoModeAmtUp);
+    rectangleArr.add(sickoModeAmtDown);
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -140,7 +256,13 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESENT BANK 1L";
+                        if (currentIndexPresetBank1 == 0){
+                            currentIndexPresetBank1 = presentBank1Settings.size() - 1;
+                        }
+                        else {
+                            currentIndexPresetBank1--;
+                        }
+                        repaint();
                     }
                     break;
                 case 304:
@@ -150,7 +272,88 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESENT BANK 1R";
+                        currentIndexPresetBank1 = (currentIndexPresetBank1 + 1) % presentBank1Settings.size();
+                        repaint();
+                    }
+                    break;
+                case 347:
+                    if (y == 25)
+                    {
+                        if (distortionAmt < 100 && distortionState) // && distortionState ?????
+                        {
+                            distortionAmt += 2;
+                            repaint();
+                        }
+                        distortionAmt += 0;
+                    }
+                    else if (y == 75)
+                    {
+                        // Checks that distortionAmt is non-negative
+                        if (distortionAmt > 0 && distortionState)
+                        {
+                            distortionAmt -= 2;
+                            repaint();
+                        }
+                        distortionAmt -= 0;
+                    }
+                    else if (y == 115 && cozyModeState)
+                    {
+                        if (cozyModeAmt < 100)
+                        {
+                            cozyModeAmt += 2;
+                            repaint();
+                        }
+                        cozyModeAmt += 0;
+                    }
+                    else if (y == 165 && cozyModeState)
+                    {
+                        // Checks that cozyModeAmt is non-negative
+                        if (cozyModeAmt > 0)
+                        {
+                            cozyModeAmt -= 2;
+                            repaint();
+                        }
+                        cozyModeAmt -= 0;
+                    }
+                    break;
+                case 512:
+                    if (y == 25 && shifterState)
+                    {
+                        if (shifterAmt < 100)
+                        {
+                            shifterAmt += 2;
+                            repaint();
+                        }
+                        shifterAmt += 0;
+                    }
+                    else if (y == 75 && shifterState)
+                    {
+                        // Checks that shifterAmt is non-negative
+                        if (shifterAmt > 0)
+                        {
+                            shifterAmt -= 2;
+                            repaint();
+                        }
+                        shifterAmt -= 0;
+                    }
+                    else if (y == 115 && sickoModeState)
+                    {
+                        if (sickoModeAmt < 100)
+                        {
+                            sickoModeAmt += 2;
+                            repaint();
+                        }
+                        sickoModeAmt += 0;
+                    }
+                    else if (y == 165 && sickoModeState)
+                    {
+                        // Checks that sickoModeAmt is non-negative
+                        if (sickoModeAmt > 0)
+                        {
+                            sickoModeAmt -= 2;
+                            repaint();
+                        }
+                        sickoModeAmt -= 0;
                     }
                     break;
                 case 670:
@@ -160,7 +363,14 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESET BANK 2L";
+                        if (currentIndexPresetBank2 == 0)
+                        {
+                            currentIndexPresetBank2 = presentBank2Settings.size() - 1;
+                        }
+                        else {
+                            currentIndexPresetBank2--;
+                        }
+                        repaint();
                     }
                     break;
                 case 965:
@@ -170,171 +380,130 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        std::cout << "PRESET BANK 2R";
+                        currentIndexPresetBank2 = (currentIndexPresetBank2 + 1) % presentBank2Settings.size();
+                        repaint();
+                    }
+                    break;
+                case 393:
+                    if (y == 30)
+                    {
+                        int i = 0;
+                        
+                        if (!distortionState && i == 0)
+                        {
+                            i++;
+                            distortionState = true;
+                            repaint();
+                        }
+                        else
+                        {
+                            distortionState = false;
+                            i = 0;
+                            repaint();
+                        }
+                    }
+                    else if (y == 123){
+                        
+                        int i = 0;
+                        
+                        if (!cozyModeState && i == 0)
+                        {
+                            i++;
+                            cozyModeState = true;
+                            repaint();
+                        }
+                        else 
+                        {
+                            i = 0;
+                            cozyModeState = false;
+                            repaint();
+                        }
+                    }
+                    break;
+                case 553:
+                    if (y == 30)
+                    {
+                        int i = 0;
+                        
+                        if (!shifterState && i == 0)
+                        {
+                            i++;
+                            shifterState = true;
+                            repaint();
+                        }
+                        else
+                        {
+                            i = 0;
+                            shifterState = false;
+                            repaint();
+                        }
+                    }
+                    else if (y == 123){
+                        
+                        int i = 0;
+                        
+                        if (!sickoModeState && i == 0)
+                        {
+                            i++;
+                            sickoModeState = true;
+                            repaint();
+                        }
+                        else 
+                        {
+                            i = 0;
+                            sickoModeState = false;
+                            repaint();
+                        }
                     }
                     break;
                 case 110:
                     if (y == 103)
                     {
-                        if (!panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(7);
-                            panel1State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && panel3State)
-                        {
+                        if (!reverbState && !delayState){
                             background = backgroundGenerator(1);
-                            panel1State = true;
                             repaint();
+                            reverbState = true;
                         }
-                        else if (!panel1State && !panel2State && panel3State)
-                        {
+                        else if (!reverbState && delayState){
                             background = backgroundGenerator(3);
-                            panel1State = true;
                             repaint();
+                            reverbState = true;
                         }
-                        else if (!panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(4);
-                            panel1State = true;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(2);
-                            panel1State = false;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && !panel3State)
-                        {
+                        else if (reverbState && !delayState){
                             background = backgroundGenerator(0);
-                            panel1State = false;
                             repaint();
+                            reverbState = false;
                         }
-                        else if (panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(5);
-                            panel1State = false;
+                        else if (reverbState && delayState){
+                            background = backgroundGenerator(2);
                             repaint();
+                            reverbState = false;
                         }
-                        else if (panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(6);
-                            panel1State = false;
-                            repaint();
-                        }
-                        
                     }
                     break;
-                    
-                case 442:
-                    if (y == 90)
-                    {
-                        if (!panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(6);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(4);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(1);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(2);
-                            panel2State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(0);
-                            panel2State = false;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(5);
-                            panel2State = false;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(7);
-                            panel2State = false;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(3);
-                            panel2State = false;
-                            repaint();
-                        }
-                        
-                    }
-                    break;
-                    
                 case 776:
                     if (y == 103)
                     {
-                        if (!panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(5);
-                            panel3State = true;
-                            repaint();
-                        }
-                        else if (panel1State && !panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(3);
-                            panel3State = true;
-                            repaint();
-                        }
-                        else if (panel1State && panel2State && !panel3State)
-                        {
-                            background = backgroundGenerator(1);
-                            panel3State = true;
-                            repaint();
-                        }
-                        else if (!panel1State && panel2State && !panel3State)
-                        {
+                        if (!delayState && !reverbState){
                             background = backgroundGenerator(2);
-                            panel3State = true;
                             repaint();
+                            delayState = true;
                         }
-                        else if (panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(4);
-                            panel3State = false;
+                        else if (!delayState && reverbState){
+                            background = backgroundGenerator(3);
                             repaint();
+                            delayState = true;
                         }
-                        else if (!panel1State && !panel2State && panel3State)
-                        {
+                        else if (delayState && !reverbState){
                             background = backgroundGenerator(0);
-                            panel3State = false;
                             repaint();
+                            delayState = false;
                         }
-                        else if (panel1State && !panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(7);
-                            panel3State = false;
+                        else if (delayState && reverbState){
+                            background = backgroundGenerator(1);
                             repaint();
+                            delayState = false;
                         }
-                        else if (!panel1State && panel2State && panel3State)
-                        {
-                            background = backgroundGenerator(6);
-                            panel3State = false;
-                            repaint();
-                        }
-                        
                     }
                     break;
                 
@@ -343,6 +512,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     break;
                 }
             }
+            
             break; // Exit the loop
         }
     }

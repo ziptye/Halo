@@ -5,20 +5,9 @@
   <MAINGROUP id="cRJusX" name="Project Halo">
     <GROUP id="{B4E655E9-2A52-2561-4CBE-BB02E5787628}" name="Assets">
       <FILE id="U6PlGL" name="PH_InitBG.png" compile="0" resource="1" file="../../HALO ASSETS/PH_InitBG.png"/>
-      <FILE id="PGXJoV" name="PH_P1Off_P2Off_P3On.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1Off_P2Off_P3On.png"/>
-      <FILE id="HrwOsk" name="PH_P1Off_P2On_P3Off.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1Off_P2On_P3Off.png"/>
-      <FILE id="uhLEKl" name="PH_P1Off_P2On_P3On.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1Off_P2On_P3On.png"/>
-      <FILE id="Pv86Oz" name="PH_P1On_P2Off_P3Off.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1On_P2Off_P3Off.png"/>
-      <FILE id="tYhND7" name="PH_P1On_P2Off_P3On.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1On_P2Off_P3On.png"/>
-      <FILE id="suDJDr" name="PH_P1On_P2On_P3Off.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1On_P2On_P3Off.png"/>
-      <FILE id="cdSZlT" name="PH_P1On_P2On_P3On.png" compile="0" resource="1"
-            file="../../HALO ASSETS/PH_P1On_P2On_P3On.png"/>
+      <FILE id="tEwQGu" name="PH_RoffDon.png" compile="0" resource="1" file="../../HALO ASSETS/PH_RoffDon.png"/>
+      <FILE id="cYXqmf" name="PH_RonDoff.png" compile="0" resource="1" file="../../HALO ASSETS/PH_RonDoff.png"/>
+      <FILE id="nCoHgP" name="PH_RonDon.png" compile="0" resource="1" file="../../HALO ASSETS/PH_RonDon.png"/>
     </GROUP>
     <GROUP id="{630D8907-384A-25B9-EF17-7DE55815EE79}" name="Source">
       <FILE id="hu21Dw" name="AnimatedKnob.h" compile="0" resource="0" file="Source/AnimatedKnob.h"/>
