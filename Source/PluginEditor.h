@@ -57,6 +57,11 @@ private:
     int currentIndexPresetBank1;
     int currentIndexPresetBank2;
     
+    int distortionAmt;
+    int shifterAmt;
+    int cozyModeAmt;
+    int sickoModeAmt;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
 };

@@ -32,6 +32,11 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     
     currentIndexPresetBank1 = 0;
     currentIndexPresetBank2 = 0;
+    
+    distortionAmt = 0;
+    shifterAmt = 0;
+    cozyModeAmt = 0;
+    sickoModeAmt = 0;
         
     // BACKGROUND ======================================================
     
@@ -90,13 +95,39 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         g.fillRoundedRectangle(628, 122, 8, 8, 4.0f);
     }
     
+    // Preset Bank 1 Label
     g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
     g.setColour(juce::Colours::white);
     g.drawText(presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294, 85, 35, juce::Justification::centred);
     
+    // Preset Bank 2 Label
     g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
     g.setColour(juce::Colours::white);
     g.drawText(presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294, 85, 35, juce::Justification::centred);
+    
+    // Dist. Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s = std::to_string(distortionAmt);
+    g.drawText(s, 340, 49, 35, 20, juce::Justification::centred);
+    
+    // Cozy Mode Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s2 = std::to_string(cozyModeAmt);
+    g.drawText(s2, 340, 139, 35, 20, juce::Justification::centred);
+    
+    // Shifter Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s3 = std::to_string(shifterAmt);
+    g.drawText(s3, 505, 49, 35, 20, juce::Justification::centred);
+    
+    // Sick-O Mode Amount
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    auto s4 = std::to_string(sickoModeAmt);
+    g.drawText(s4, 505, 139, 35, 20, juce::Justification::centred);
     
 }
 
@@ -165,6 +196,15 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     juce::Rectangle<int> shifterFx(553, 30, 50, 50);
     juce::Rectangle<int> sickoModeFx(553, 123, 50, 50);
     
+    juce::Rectangle<int> distortionAmtUp(347, 25, 20, 20);
+    juce::Rectangle<int> distortionAmtDown(347, 75, 20, 20);
+    juce::Rectangle<int> cozyModeAmtUp(347, 115, 20, 20);
+    juce::Rectangle<int> cozyModeAmtDown(347, 165, 20, 20);
+    juce::Rectangle<int> shifterAmtUp(512, 25, 20, 20);
+    juce::Rectangle<int> shifterAmtDown(512, 75, 20, 20);
+    juce::Rectangle<int> sickoModeAmtUp(512, 115, 20, 20);
+    juce::Rectangle<int> sickoModeAmtDown(512, 165, 20, 20);
+    
     
     rectangleArr.add(panelLeft1);
     rectangleArr.add(panelRight1);
@@ -183,6 +223,15 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     rectangleArr.add(shifterFx);
     rectangleArr.add(cozyModeFx);
     rectangleArr.add(sickoModeFx);
+    
+    rectangleArr.add(distortionAmtUp);
+    rectangleArr.add(distortionAmtDown);
+    rectangleArr.add(cozyModeAmtUp);
+    rectangleArr.add(cozyModeAmtDown);
+    rectangleArr.add(shifterAmtUp);
+    rectangleArr.add(shifterAmtDown);
+    rectangleArr.add(sickoModeAmtUp);
+    rectangleArr.add(sickoModeAmtDown);
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -224,6 +273,54 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     else if (y == 299)
                     {
                         currentIndexPresetBank1 = (currentIndexPresetBank1 + 1) % presentBank1Settings.size();
+                        repaint();
+                    }
+                    break;
+                case 347:
+                    if (y == 25)
+                    {
+                        distortionAmt += 2;
+                        repaint();
+                    }
+                    else if (y == 75)
+                    {
+                        // Need to check first to make sure the distortionAmt is not a negative number
+                        distortionAmt -= 2;
+                        repaint();
+                    }
+                    else if (y == 115)
+                    {
+                        cozyModeAmt += 2;
+                        repaint();
+                    }
+                    else if (y == 165)
+                    {
+                        // Need to check first to make sure the cozyModeAmt is not a negative number
+                        cozyModeAmt -= 2;
+                        repaint();
+                    }
+                    break;
+                case 512:
+                    if (y == 25)
+                    {
+                        shifterAmt += 2;
+                        repaint();
+                    }
+                    else if (y == 75)
+                    {
+                        // Need to check first to make sure the shifterAmt is not a negative number
+                        shifterAmt -= 2;
+                        repaint();
+                    }
+                    else if (y == 115)
+                    {
+                        sickoModeAmt += 2;
+                        repaint();
+                    }
+                    else if (y == 165)
+                    {
+                        // Need to check first to make sure the sickoModeAmt is not a negative number
+                        sickoModeAmt -= 2;
                         repaint();
                     }
                     break;
