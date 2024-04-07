@@ -121,13 +121,13 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     g.setFont(juce::Font("Copperplate", 14.0f, 0));
     g.setColour(juce::Colours::white);
     auto s3 = std::to_string(shifterAmt);
-    g.drawText(s3, 505, 49, 35, 20, juce::Justification::centred);
+    g.drawText(s3, 504, 49, 35, 20, juce::Justification::centred);
     
     // Sick-O Mode Amount
     g.setFont(juce::Font("Copperplate", 14.0f, 0));
     g.setColour(juce::Colours::white);
     auto s4 = std::to_string(sickoModeAmt);
-    g.drawText(s4, 505, 139, 35, 20, juce::Justification::centred);
+    g.drawText(s4, 504, 139, 35, 20, juce::Justification::centred);
     
 }
 
@@ -279,49 +279,81 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 347:
                     if (y == 25)
                     {
-                        distortionAmt += 2;
-                        repaint();
+                        if (distortionAmt < 100 && distortionState) // && distortionState ?????
+                        {
+                            distortionAmt += 2;
+                            repaint();
+                        }
+                        distortionAmt += 0;
                     }
                     else if (y == 75)
                     {
-                        // Need to check first to make sure the distortionAmt is not a negative number
-                        distortionAmt -= 2;
-                        repaint();
+                        // Checks that distortionAmt is non-negative
+                        if (distortionAmt > 0 && distortionState)
+                        {
+                            distortionAmt -= 2;
+                            repaint();
+                        }
+                        distortionAmt -= 0;
                     }
-                    else if (y == 115)
+                    else if (y == 115 && cozyModeState)
                     {
-                        cozyModeAmt += 2;
-                        repaint();
+                        if (cozyModeAmt < 100)
+                        {
+                            cozyModeAmt += 2;
+                            repaint();
+                        }
+                        cozyModeAmt += 0;
                     }
-                    else if (y == 165)
+                    else if (y == 165 && cozyModeState)
                     {
-                        // Need to check first to make sure the cozyModeAmt is not a negative number
-                        cozyModeAmt -= 2;
-                        repaint();
+                        // Checks that cozyModeAmt is non-negative
+                        if (cozyModeAmt > 0)
+                        {
+                            cozyModeAmt -= 2;
+                            repaint();
+                        }
+                        cozyModeAmt -= 0;
                     }
                     break;
                 case 512:
-                    if (y == 25)
+                    if (y == 25 && shifterState)
                     {
-                        shifterAmt += 2;
-                        repaint();
+                        if (shifterAmt < 100)
+                        {
+                            shifterAmt += 2;
+                            repaint();
+                        }
+                        shifterAmt += 0;
                     }
-                    else if (y == 75)
+                    else if (y == 75 && shifterState)
                     {
-                        // Need to check first to make sure the shifterAmt is not a negative number
-                        shifterAmt -= 2;
-                        repaint();
+                        // Checks that shifterAmt is non-negative
+                        if (shifterAmt > 0)
+                        {
+                            shifterAmt -= 2;
+                            repaint();
+                        }
+                        shifterAmt -= 0;
                     }
-                    else if (y == 115)
+                    else if (y == 115 && sickoModeState)
                     {
-                        sickoModeAmt += 2;
-                        repaint();
+                        if (sickoModeAmt < 100)
+                        {
+                            sickoModeAmt += 2;
+                            repaint();
+                        }
+                        sickoModeAmt += 0;
                     }
-                    else if (y == 165)
+                    else if (y == 165 && sickoModeState)
                     {
-                        // Need to check first to make sure the sickoModeAmt is not a negative number
-                        sickoModeAmt -= 2;
-                        repaint();
+                        // Checks that sickoModeAmt is non-negative
+                        if (sickoModeAmt > 0)
+                        {
+                            sickoModeAmt -= 2;
+                            repaint();
+                        }
+                        sickoModeAmt -= 0;
                     }
                     break;
                 case 670:
@@ -357,12 +389,14 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     {
                         int i = 0;
                         
-                        if (!distortionState && i == 0){
+                        if (!distortionState && i == 0)
+                        {
                             i++;
                             distortionState = true;
                             repaint();
                         }
-                        else{
+                        else
+                        {
                             distortionState = false;
                             i = 0;
                             repaint();
@@ -372,12 +406,14 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                         
                         int i = 0;
                         
-                        if (!cozyModeState && i == 0){
+                        if (!cozyModeState && i == 0)
+                        {
                             i++;
                             cozyModeState = true;
                             repaint();
                         }
-                        else {
+                        else 
+                        {
                             i = 0;
                             cozyModeState = false;
                             repaint();
@@ -389,12 +425,14 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     {
                         int i = 0;
                         
-                        if (!shifterState && i == 0){
+                        if (!shifterState && i == 0)
+                        {
                             i++;
                             shifterState = true;
                             repaint();
                         }
-                        else{
+                        else
+                        {
                             i = 0;
                             shifterState = false;
                             repaint();
@@ -404,12 +442,14 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                         
                         int i = 0;
                         
-                        if (!sickoModeState && i == 0){
+                        if (!sickoModeState && i == 0)
+                        {
                             i++;
                             sickoModeState = true;
                             repaint();
                         }
-                        else {
+                        else 
+                        {
                             i = 0;
                             sickoModeState = false;
                             repaint();
