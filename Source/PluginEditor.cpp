@@ -86,33 +86,9 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         g.fillRoundedRectangle(628, 170, 8, 8, 4.0f);
     }
     else {
-        
         g.setColour(juce::Colours::lime);
         g.fillRoundedRectangle(628, 122, 8, 8, 4.0f);
     }
-    // DIST COORDS. ----
-//    g.setColour(juce::Colours::pink);
-//    g.fillRect(393, 30, 50, 50);
-    
-    // SHIFTER COORDS. ----
-//    g.setColour(juce::Colours::pink);
-//    g.fillRect(553, 30, 50, 50);
-    
-    // COZY MODE COORDS. ----
-//    g.setColour(juce::Colours::pink);
-//    g.fillRect(393, 123, 50, 50);
-    
-    // SICKO MODE COORDS. ----
-//    g.setColour(juce::Colours::pink);
-//    g.fillRect(553, 123, 50, 50);
-    
-    // PRESET BANK 1 COORDS. ----
-//        g.setColour(juce::Colours::red);
-//        g.fillRect(125, 294, 85, 35);
-    
-    // PRESET BANK 2 COORDS. ----
-//        g.setColour(juce::Colours::red);
-//        g.fillRect(792, 294, 85, 35);
     
     g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
     g.setColour(juce::Colours::white);
@@ -148,7 +124,6 @@ void ProjectHaloAudioProcessorEditor::addImagesToArray()
 {
     // Define the images:
     auto initBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
-    
     auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
     auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
     auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDon_png, BinaryData::PH_RonDon_pngSize);
@@ -164,7 +139,8 @@ void ProjectHaloAudioProcessorEditor::addImagesToArray()
 juce::Image ProjectHaloAudioProcessorEditor::backgroundGenerator(int pos)
 {
     
-    return imagesArray[pos];
+    int index = juce::jmin(pos, imagesArray.size() - 1);
+    return imagesArray[index];
     
 }
 
@@ -258,7 +234,8 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     else if (y == 299)
                     {
-                        if (currentIndexPresetBank2 == 0){
+                        if (currentIndexPresetBank2 == 0)
+                        {
                             currentIndexPresetBank2 = presentBank2Settings.size() - 1;
                         }
                         else {
