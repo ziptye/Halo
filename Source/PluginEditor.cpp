@@ -22,7 +22,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     mainDryWetSlider.setColour(juce::Slider::thumbColourId, juce::Colours::white);
     mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
     
-    addAndMakeVisible(sixtyFourthNote);
     sixtyFourthNote.setButtonText("1/64");
     sixtyFourthNote.setClickingTogglesState(true);
     sixtyFourthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -30,7 +29,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     sixtyFourthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     sixtyFourthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    addAndMakeVisible(thirtySecondNote);
     thirtySecondNote.setButtonText("1/32");
     thirtySecondNote.setClickingTogglesState(true);
     thirtySecondNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -38,7 +36,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     thirtySecondNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     thirtySecondNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    addAndMakeVisible(sixteenthNote);
     sixteenthNote.setButtonText("1/16");
     sixteenthNote.setClickingTogglesState(true);
     sixteenthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -46,7 +43,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     sixteenthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     sixteenthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    addAndMakeVisible(eighthNote);
     eighthNote.setButtonText("1/8");
     eighthNote.setClickingTogglesState(true);
     eighthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -54,7 +50,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     eighthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     eighthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    addAndMakeVisible(quarterNote);
     quarterNote.setButtonText("1/4");
     quarterNote.setClickingTogglesState(true);
     quarterNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -62,7 +57,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     quarterNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     quarterNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    addAndMakeVisible(halfNote);
     halfNote.setButtonText("1/2");
     halfNote.setClickingTogglesState(true);
     halfNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -70,7 +64,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     halfNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     halfNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    addAndMakeVisible(wholeNote);
     wholeNote.setButtonText("1/1");
     wholeNote.setClickingTogglesState(true);
     wholeNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
@@ -206,13 +199,13 @@ void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
     mainDryWetSlider.setBounds(393, 300, 213, 222);
-    sixtyFourthNote.setBounds(670, 200, 60, 30);
-    thirtySecondNote.setBounds(740, 200, 60, 30);
-    sixteenthNote.setBounds(810, 200, 60, 30);
-    eighthNote.setBounds(880, 200, 60, 30);
-    quarterNote.setBounds(670, 240, 60, 30);
-    halfNote.setBounds(740, 240, 60, 30);
-    wholeNote.setBounds(810, 240, 60, 30);
+    sixtyFourthNote.setBounds(720, 200, 50, 30);
+    thirtySecondNote.setBounds(780, 200, 50, 30);
+    sixteenthNote.setBounds(840, 200, 50, 30);
+    eighthNote.setBounds(900, 200, 50, 30);
+    quarterNote.setBounds(750, 240, 50, 30);
+    halfNote.setBounds(810, 240, 50, 30);
+    wholeNote.setBounds(870, 240, 50, 30);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -296,6 +289,19 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     rectangleArr.add(shifterAmtDown);
     rectangleArr.add(sickoModeAmtUp);
     rectangleArr.add(sickoModeAmtDown);
+}
+
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getComps()
+{
+    return {
+        &sixtyFourthNote,
+        &thirtySecondNote,
+        &sixteenthNote,
+        &eighthNote,
+        &quarterNote,
+        &halfNote,
+        &wholeNote,
+    };
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -552,21 +558,41 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(2);
                             repaint();
                             delayState = true;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                    addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                            }
                         }
                         else if (!delayState && reverbState){
                             background = backgroundGenerator(3);
                             repaint();
                             delayState = true;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                    addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                            }
                         }
                         else if (delayState && !reverbState){
                             background = backgroundGenerator(0);
                             repaint();
                             delayState = false;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                    removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                            }
                         }
                         else if (delayState && reverbState){
                             background = backgroundGenerator(1);
                             repaint();
                             delayState = false;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                    removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                            }
                         }
                     }
                     break;

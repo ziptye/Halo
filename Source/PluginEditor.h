@@ -30,6 +30,8 @@ public:
     void addImagesToArray();
     juce::Image backgroundGenerator(int pos);
     juce::String presentBankSettingsGenerator(int num, int pos);
+    
+    std::vector<Component*>getComps();
 
 private:
     
