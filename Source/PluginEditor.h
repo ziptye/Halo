@@ -39,12 +39,22 @@ private:
     
     AnimatedKnob animatedKnob1;
     
+    juce::Slider mainDryWetSlider;
+    
     juce::Array<juce::Rectangle<int>> rectangleArr;
     
     juce::Array<juce::Image> imagesArray;
     
     juce::StringArray presentBank1Settings;
     juce::StringArray presentBank2Settings;
+    
+    juce::TextButton sixtyFourthNote;
+    juce::TextButton thirtySecondNote;
+    juce::TextButton sixteenthNote;
+    juce::TextButton eighthNote;
+    juce::TextButton quarterNote;
+    juce::TextButton halfNote;
+    juce::TextButton wholeNote;
     
     bool reverbState = false;
     bool delayState = false;
@@ -54,13 +64,13 @@ private:
     bool cozyModeState = false;
     bool sickoModeState = false;
     
-    int currentIndexPresetBank1;
-    int currentIndexPresetBank2;
+    int currentIndexPresetBank1 = 0;
+    int currentIndexPresetBank2 = 0;
     
-    int distortionAmt;
-    int shifterAmt;
-    int cozyModeAmt;
-    int sickoModeAmt;
+    int distortionAmt = 0;
+    int shifterAmt = 0;
+    int cozyModeAmt = 0;
+    int sickoModeAmt = 0;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
