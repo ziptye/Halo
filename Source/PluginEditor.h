@@ -1,8 +1,9 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
-
+ PluginEditor.h
+ Author:  Zachary Pennington
+ Project: Halo
   ==============================================================================
 */
 

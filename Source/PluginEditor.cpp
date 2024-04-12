@@ -1,7 +1,9 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
+ PluginEditor.cpp
+ Author:  Zachary Pennington
+ Project: Halo
 
   ==============================================================================
 */
@@ -20,6 +22,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     mainDryWetSlider.setRange(0.0, 100.0);
     mainDryWetSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     mainDryWetSlider.setColour(juce::Slider::thumbColourId, juce::Colours::white);
+    mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
     mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
     
     sixtyFourthNote.setButtonText("1/64");
@@ -198,14 +201,14 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
-    mainDryWetSlider.setBounds(393, 300, 213, 222);
-    sixtyFourthNote.setBounds(720, 200, 50, 30);
-    thirtySecondNote.setBounds(780, 200, 50, 30);
-    sixteenthNote.setBounds(840, 200, 50, 30);
-    eighthNote.setBounds(900, 200, 50, 30);
-    quarterNote.setBounds(750, 240, 50, 30);
-    halfNote.setBounds(810, 240, 50, 30);
-    wholeNote.setBounds(870, 240, 50, 30);
+    mainDryWetSlider.setBounds(393, 299, 213, 227);
+    sixtyFourthNote.setBounds(672, 205, 75, 30);
+    thirtySecondNote.setBounds(752, 205, 75, 30);
+    sixteenthNote.setBounds(832, 205, 75, 30);
+    eighthNote.setBounds(912, 205, 75, 30);
+    quarterNote.setBounds(712, 245, 75, 30);
+    halfNote.setBounds(793, 245, 75, 30);
+    wholeNote.setBounds(873, 245, 75, 30);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -561,7 +564,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             
                             for(auto* comp : getComps())
                             {
-                                    addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
                         }
                         else if (!delayState && reverbState){
@@ -571,7 +574,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             
                             for(auto* comp : getComps())
                             {
-                                    addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
                         }
                         else if (delayState && !reverbState){
@@ -581,7 +584,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             
                             for(auto* comp : getComps())
                             {
-                                    removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
                         }
                         else if (delayState && reverbState){
@@ -591,7 +594,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             
                             for(auto* comp : getComps())
                             {
-                                    removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
                         }
                     }
