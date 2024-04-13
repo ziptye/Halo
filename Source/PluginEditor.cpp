@@ -1,7 +1,9 @@
 /*
   ==============================================================================
 
-    This file contains the basic framework code for a JUCE plugin editor.
+ PluginEditor.cpp
+ Author:  Zachary Pennington
+ Project: Halo
 
   ==============================================================================
 */
@@ -14,6 +16,82 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
 //    addAndMakeVisible(animatedKnob1);
+    
+    addAndMakeVisible(mainDryWetSlider);
+    mainDryWetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    mainDryWetSlider.setRange(0.0, 100.0);
+    mainDryWetSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    mainDryWetSlider.setColour(juce::Slider::thumbColourId, juce::Colours::white);
+    mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
+    mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
+    
+    delayFeedback.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    delayFeedback.setRange(0.0, 100.0);
+    delayFeedback.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    delayFeedback.setColour(juce::Slider::thumbColourId, juce::Colours::white);
+    delayFeedback.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::royalblue);
+    
+    delayHPF.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    delayHPF.setRange(0.0, 100.0);
+    delayHPF.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    delayHPF.setColour(juce::Slider::thumbColourId, juce::Colours::white);
+    delayHPF.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::goldenrod);
+    
+    delayLPF.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    delayLPF.setRange(0.0, 100.0);
+    delayLPF.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    delayLPF.setColour(juce::Slider::thumbColourId, juce::Colours::white);
+    delayLPF.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::limegreen);
+    
+    sixtyFourthNote.setButtonText("1/64");
+    sixtyFourthNote.setClickingTogglesState(true);
+    sixtyFourthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    sixtyFourthNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    sixtyFourthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    sixtyFourthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
+    thirtySecondNote.setButtonText("1/32");
+    thirtySecondNote.setClickingTogglesState(true);
+    thirtySecondNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    thirtySecondNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    thirtySecondNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    thirtySecondNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
+    sixteenthNote.setButtonText("1/16");
+    sixteenthNote.setClickingTogglesState(true);
+    sixteenthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    sixteenthNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    sixteenthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    sixteenthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
+    eighthNote.setButtonText("1/8");
+    eighthNote.setClickingTogglesState(true);
+    eighthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    eighthNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    eighthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    eighthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
+    quarterNote.setButtonText("1/4");
+    quarterNote.setClickingTogglesState(true);
+    quarterNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    quarterNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    quarterNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    quarterNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
+    halfNote.setButtonText("1/2");
+    halfNote.setClickingTogglesState(true);
+    halfNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    halfNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    halfNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    halfNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
+    wholeNote.setButtonText("1/1");
+    wholeNote.setClickingTogglesState(true);
+    wholeNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    wholeNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    wholeNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    wholeNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    
     createPanelNavArrows();
     addImagesToArray();
     
@@ -29,14 +107,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     presentBank2Settings.add("Ping-Pong");
     presentBank2Settings.add("BPM Sync");
     presentBank2Settings.add("MS");
-    
-    currentIndexPresetBank1 = 0;
-    currentIndexPresetBank2 = 0;
-    
-    distortionAmt = 0;
-    shifterAmt = 0;
-    cozyModeAmt = 0;
-    sickoModeAmt = 0;
         
     // BACKGROUND ======================================================
     
@@ -149,6 +219,18 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
+    mainDryWetSlider.setBounds(393, 299, 213, 227);
+    sixtyFourthNote.setBounds(672, 205, 75, 30);
+    thirtySecondNote.setBounds(752, 205, 75, 30);
+    sixteenthNote.setBounds(832, 205, 75, 30);
+    eighthNote.setBounds(912, 205, 75, 30);
+    quarterNote.setBounds(712, 245, 75, 30);
+    halfNote.setBounds(793, 245, 75, 30);
+    wholeNote.setBounds(873, 245, 75, 30);
+    
+    delayFeedback.setBounds(670, 200, 80, 80);
+    delayHPF.setBounds(792, 200, 80, 80);
+    delayLPF.setBounds(910, 200, 80, 80);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -234,6 +316,19 @@ void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
     rectangleArr.add(sickoModeAmtDown);
 }
 
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getComps()
+{
+    return {
+        &sixtyFourthNote,
+        &thirtySecondNote,
+        &sixteenthNote,
+        &eighthNote,
+        &quarterNote,
+        &halfNote,
+        &wholeNote,
+    };
+}
+
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 {
     juce::Point<int> clickPosition = event.getPosition();
@@ -250,9 +345,9 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
             switch (x)
             {
                 case 10:
-                    if (y == 150)
+                    if (y == 150) // LP1
                     {
-                        std::cout << "LEFT PANEL 1";
+//                        std::cout << "LEFT PANEL 1";
                     }
                     else if (y == 299)
                     {
@@ -266,9 +361,9 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     break;
                 case 304:
-                    if (y == 150)
+                    if (y == 150) // RP1
                     {
-                        std::cout << "RIGHT PANEL 1";
+//                        std::cout << "RIGHT PANEL 1";
                     }
                     else if (y == 299)
                     {
@@ -279,7 +374,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 347:
                     if (y == 25)
                     {
-                        if (distortionAmt < 100 && distortionState) // && distortionState ?????
+                        if (distortionAmt < 100 && distortionState)
                         {
                             distortionAmt += 2;
                             repaint();
@@ -357,9 +452,19 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     break;
                 case 670:
-                    if (y == 150)
+                    if (y == 150) // LP3
                     {
-                        std::cout << "LEFT PANEL 3";
+                        if (delayState)
+                        {
+                            for(auto* comp : getComps())
+                            {
+                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                            }
+                            // TODO --> Update the getComps() func to include this code
+                            removeChildComponent(&delayFeedback);
+                            removeChildComponent(&delayHPF);
+                            removeChildComponent(&delayLPF);
+                        }
                     }
                     else if (y == 299)
                     {
@@ -374,9 +479,20 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     }
                     break;
                 case 965:
-                    if (y == 150)
+                    if (y == 150) // RP3
                     {
-                        std::cout << "RIGHT PANEL 3";
+                        if (delayState)
+                        {
+                            for(auto* comp : getComps())
+                            {
+                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                            }
+                            // TODO --> Update the getComps() func to include this code
+                            addAndMakeVisible(delayFeedback);
+                            addAndMakeVisible(delayHPF);
+                            addAndMakeVisible(delayLPF);
+                        }
+                    
                     }
                     else if (y == 299)
                     {
@@ -488,21 +604,49 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(2);
                             repaint();
                             delayState = true;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                            }
                         }
                         else if (!delayState && reverbState){
                             background = backgroundGenerator(3);
                             repaint();
                             delayState = true;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                            }
                         }
                         else if (delayState && !reverbState){
                             background = backgroundGenerator(0);
                             repaint();
                             delayState = false;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                            }
+                            // TODO --> Update the getComps() func to include this code
+                            removeChildComponent(&delayFeedback);
+                            removeChildComponent(&delayHPF);
+                            removeChildComponent(&delayLPF);
                         }
                         else if (delayState && reverbState){
                             background = backgroundGenerator(1);
                             repaint();
                             delayState = false;
+                            
+                            for(auto* comp : getComps())
+                            {
+                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                            }
+                            // TODO --> Update the getComps() func to include this code
+                            removeChildComponent(&delayFeedback);
+                            removeChildComponent(&delayHPF);
+                            removeChildComponent(&delayLPF);
                         }
                     }
                     break;
