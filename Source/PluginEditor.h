@@ -43,6 +43,9 @@ private:
     AnimatedKnob animatedKnob1;
     
     juce::Slider mainDryWetSlider;
+    juce::Slider delayFeedback;
+    juce::Slider delayLPF;
+    juce::Slider delayHPF;
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     
