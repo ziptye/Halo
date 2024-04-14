@@ -85,6 +85,17 @@ void ProjectHaloAudioProcessorEditor::configTextButtons(juce::TextButton &button
     button.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
 }
 
+void ProjectHaloAudioProcessorEditor::configPresetBanks(juce::StringArray &strArray, const juce::String &text)
+{
+    configTextButtons(sixtyFourthNote, "1/64");
+    configTextButtons(thirtySecondNote, "1/32");
+    configTextButtons(sixteenthNote, "1/16");
+    configTextButtons(eighthNote, "1/8");
+    configTextButtons(quarterNote, "1/4");
+    configTextButtons(halfNote, "1/2");
+    configTextButtons(wholeNote, "1/1");
+}
+
 void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
 {
     
