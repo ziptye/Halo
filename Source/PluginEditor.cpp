@@ -25,72 +25,17 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
     mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
     
-    delayFeedback.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    delayFeedback.setRange(0.0, 100.0);
-    delayFeedback.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    delayFeedback.setColour(juce::Slider::thumbColourId, juce::Colours::white);
-    delayFeedback.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::royalblue);
+    configSlider(delayFeedback, 0.0, 100.0, juce::Colours::white, juce::Colours::royalblue);
+    configSlider(delayHPF, 0.0, 100.0, juce::Colours::white, juce::Colours::goldenrod);
+    configSlider(delayLPF, 0.0, 100.0, juce::Colours::white, juce::Colours::limegreen);
     
-    delayHPF.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    delayHPF.setRange(0.0, 100.0);
-    delayHPF.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    delayHPF.setColour(juce::Slider::thumbColourId, juce::Colours::white);
-    delayHPF.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::goldenrod);
-    
-    delayLPF.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    delayLPF.setRange(0.0, 100.0);
-    delayLPF.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    delayLPF.setColour(juce::Slider::thumbColourId, juce::Colours::white);
-    delayLPF.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::limegreen);
-    
-    sixtyFourthNote.setButtonText("1/64");
-    sixtyFourthNote.setClickingTogglesState(true);
-    sixtyFourthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    sixtyFourthNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    sixtyFourthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    sixtyFourthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-    
-    thirtySecondNote.setButtonText("1/32");
-    thirtySecondNote.setClickingTogglesState(true);
-    thirtySecondNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    thirtySecondNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    thirtySecondNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    thirtySecondNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-    
-    sixteenthNote.setButtonText("1/16");
-    sixteenthNote.setClickingTogglesState(true);
-    sixteenthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    sixteenthNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    sixteenthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    sixteenthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-    
-    eighthNote.setButtonText("1/8");
-    eighthNote.setClickingTogglesState(true);
-    eighthNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    eighthNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    eighthNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    eighthNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-    
-    quarterNote.setButtonText("1/4");
-    quarterNote.setClickingTogglesState(true);
-    quarterNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    quarterNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    quarterNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    quarterNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-    
-    halfNote.setButtonText("1/2");
-    halfNote.setClickingTogglesState(true);
-    halfNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    halfNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    halfNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    halfNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-    
-    wholeNote.setButtonText("1/1");
-    wholeNote.setClickingTogglesState(true);
-    wholeNote.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    wholeNote.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    wholeNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    wholeNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+    configTextButtons(sixtyFourthNote, "1/64");
+    configTextButtons(thirtySecondNote, "1/32");
+    configTextButtons(sixteenthNote, "1/16");
+    configTextButtons(eighthNote, "1/8");
+    configTextButtons(quarterNote, "1/4");
+    configTextButtons(halfNote, "1/2");
+    configTextButtons(wholeNote, "1/1");
     
     createClickableAreas();
     addImagesToArray();
@@ -121,6 +66,25 @@ ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 }
 
 //==============================================================================
+void ProjectHaloAudioProcessorEditor::configSlider(juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
+{
+    slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    slider.setRange(minVal, maxVal);
+    slider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
+    slider.setColour(juce::Slider::thumbColourId, thumbColour);
+    slider.setColour(juce::Slider::rotarySliderFillColourId, fillColour);
+}
+
+void ProjectHaloAudioProcessorEditor::configTextButtons(juce::TextButton &button, const juce::String &text)
+{
+    button.setButtonText(text);
+    button.setClickingTogglesState(true);
+    button.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
+    button.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
+    button.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
+    button.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
+}
+
 void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
 {
     
@@ -259,7 +223,7 @@ juce::Image ProjectHaloAudioProcessorEditor::backgroundGenerator(int pos)
 
 void ProjectHaloAudioProcessorEditor::createClickableAreas()
 {
-    
+    // Adds coords. of clickable bounds to the rectangles vector.
     std::vector<juce::Rectangle<int>> rectangles =
     {
         {10, 150, 25, 25}, // P1L
