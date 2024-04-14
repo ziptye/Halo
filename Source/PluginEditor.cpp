@@ -92,7 +92,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     wholeNote.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
     wholeNote.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
     
-    createPanelNavArrows();
+    createClickableAreas();
     addImagesToArray();
     
     // Reverb Settings:
@@ -257,63 +257,39 @@ juce::Image ProjectHaloAudioProcessorEditor::backgroundGenerator(int pos)
     
 }
 
-void ProjectHaloAudioProcessorEditor::createPanelNavArrows()
+void ProjectHaloAudioProcessorEditor::createClickableAreas()
 {
-    juce::Rectangle<int> panelLeft1(10, 150, 25, 25); // x, y, width, height
-    juce::Rectangle<int> panelRight1(304, 150, 25, 25);
     
-    juce::Rectangle<int> panelLeft3(670, 150, 25, 25);
-    juce::Rectangle<int> panelRight3(965, 150, 25, 25);
+    std::vector<juce::Rectangle<int>> rectangles =
+    {
+        {10, 150, 25, 25}, // P1L
+        {304, 150, 25, 25}, // P1R
+        {670, 150, 25, 25}, // P3L
+        {965, 150, 25, 25}, // P3R
+        {10, 299, 25, 25}, // presetBank1L
+        {304, 299, 25, 25}, // presetBank1R
+        {670, 299, 25, 25}, // presetBank2L
+        {965, 299, 25, 25}, // presetBank2R
+        {110, 103, 116, 120}, // Reverb on/off
+        {776, 103, 116, 120}, // Delay on/off
+        {393, 30, 50, 50}, // Distortion FX
+        {393, 123, 50, 50}, // Cozy Mode FX
+        {553, 30, 50, 50}, // Shifter FX
+        {553, 123, 50, 50}, // Sick-o-Mode FX
+        {347, 25, 20, 20}, // Distortion Amt Up
+        {347, 75, 20, 20}, // Distortion Amt Down
+        {347, 115, 20, 20}, // Cozy Mode Amt Up
+        {347, 165, 20, 20}, // Cozy Mode Amt Down
+        {512, 25, 20, 20}, // Shifter Amt Up
+        {512, 75, 20, 20}, // Shifter Amt Down
+        {512, 115, 20, 20}, // Sick-o-Mode Amt Up
+        {512, 165, 20, 20}, // Sick-o-Mode Amt Down
+    };
     
-    juce::Rectangle<int> presetBank1L(10, 299, 25, 25);
-    juce::Rectangle<int> presetBank1R(304, 299, 25, 25);
-    juce::Rectangle<int> presetBank2L(670, 299, 25, 25);
-    juce::Rectangle<int> presetBank2R(965, 299, 25, 25);
-    
-    juce::Rectangle<int> powerOn1(110, 103, 116, 120);
-    juce::Rectangle<int> powerOn2(776, 103, 116, 120);
-    
-    juce::Rectangle<int> distortionFx(393, 30, 50, 50);
-    juce::Rectangle<int> cozyModeFx(393, 123, 50, 50);
-    juce::Rectangle<int> shifterFx(553, 30, 50, 50);
-    juce::Rectangle<int> sickoModeFx(553, 123, 50, 50);
-    
-    juce::Rectangle<int> distortionAmtUp(347, 25, 20, 20);
-    juce::Rectangle<int> distortionAmtDown(347, 75, 20, 20);
-    juce::Rectangle<int> cozyModeAmtUp(347, 115, 20, 20);
-    juce::Rectangle<int> cozyModeAmtDown(347, 165, 20, 20);
-    juce::Rectangle<int> shifterAmtUp(512, 25, 20, 20);
-    juce::Rectangle<int> shifterAmtDown(512, 75, 20, 20);
-    juce::Rectangle<int> sickoModeAmtUp(512, 115, 20, 20);
-    juce::Rectangle<int> sickoModeAmtDown(512, 165, 20, 20);
-    
-    
-    rectangleArr.add(panelLeft1);
-    rectangleArr.add(panelRight1);
-    rectangleArr.add(panelLeft3);
-    rectangleArr.add(panelRight3);
-    
-    rectangleArr.add(presetBank1L);
-    rectangleArr.add(presetBank1R);
-    rectangleArr.add(presetBank2L);
-    rectangleArr.add(presetBank2R);
-    
-    rectangleArr.add(powerOn1);
-    rectangleArr.add(powerOn2);
-    
-    rectangleArr.add(distortionFx);
-    rectangleArr.add(shifterFx);
-    rectangleArr.add(cozyModeFx);
-    rectangleArr.add(sickoModeFx);
-    
-    rectangleArr.add(distortionAmtUp);
-    rectangleArr.add(distortionAmtDown);
-    rectangleArr.add(cozyModeAmtUp);
-    rectangleArr.add(cozyModeAmtDown);
-    rectangleArr.add(shifterAmtUp);
-    rectangleArr.add(shifterAmtDown);
-    rectangleArr.add(sickoModeAmtUp);
-    rectangleArr.add(sickoModeAmtDown);
+    for (const auto& rect : rectangles)
+    {
+        rectangleArr.add(rect);
+    }
 }
 
 std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getComps()

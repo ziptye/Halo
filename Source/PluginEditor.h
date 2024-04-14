@@ -27,7 +27,7 @@ public:
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
     
-    void createPanelNavArrows();
+    void createClickableAreas();
     void addImagesToArray();
     juce::Image backgroundGenerator(int pos);
     juce::String presentBankSettingsGenerator(int num, int pos);
