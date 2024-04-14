@@ -26,6 +26,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
+    void configSlider(juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
+    void configTextButtons(juce::TextButton& button, const juce::String& text);
     
     void createClickableAreas();
     void addImagesToArray();
