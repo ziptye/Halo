@@ -25,9 +25,9 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
     mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
     
-    configSlider(delayFeedback, 0.0, 100.0, juce::Colours::white, juce::Colours::royalblue);
-    configSlider(delayHPF, 0.0, 100.0, juce::Colours::white, juce::Colours::goldenrod);
-    configSlider(delayLPF, 0.0, 100.0, juce::Colours::white, juce::Colours::limegreen);
+    configDelaySliders(delayFeedback, 0.0, 100.0, juce::Colours::white, juce::Colours::royalblue);
+    configDelaySliders(delayHPF, 0.0, 100.0, juce::Colours::white, juce::Colours::goldenrod);
+    configDelaySliders(delayLPF, 0.0, 100.0, juce::Colours::white, juce::Colours::limegreen);
     
     configTextButtons(sixtyFourthNote, "1/64");
     configTextButtons(thirtySecondNote, "1/32");
@@ -66,7 +66,23 @@ ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 }
 
 //==============================================================================
-void ProjectHaloAudioProcessorEditor::configSlider(juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
+void ProjectHaloAudioProcessorEditor::configReverbSliders(int pageNum, juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
+{
+    if (pageNum == 0)
+    {
+        addAndMakeVisible(reverbRoomSize);
+        addAndMakeVisible(reverbPreDelay);
+        addAndMakeVisible(reverbDamping);
+    }
+    else if (pageNum == 1)
+    {
+        addAndMakeVisible(reverbWidth);
+        addAndMakeVisible(reverbHPF);
+        addAndMakeVisible(reverbLPF);
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::configDelaySliders(juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
 {
     slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     slider.setRange(minVal, maxVal);
@@ -267,7 +283,7 @@ void ProjectHaloAudioProcessorEditor::createClickableAreas()
     }
 }
 
-std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getComps()
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getDelayComps()
 {
     return {
         &sixtyFourthNote,
@@ -407,7 +423,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     {
                         if (delayState)
                         {
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps())
                             {
                                 addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
@@ -434,7 +450,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     {
                         if (delayState)
                         {
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps())
                             {
                                 removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
@@ -556,7 +572,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             repaint();
                             delayState = true;
                             
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps())
                             {
                                 addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
@@ -566,7 +582,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             repaint();
                             delayState = true;
                             
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps())
                             {
                                 addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
@@ -576,7 +592,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             repaint();
                             delayState = false;
                             
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps())
                             {
                                 removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
@@ -590,7 +606,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             repaint();
                             delayState = false;
                             
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps())
                             {
                                 removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }

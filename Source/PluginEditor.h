@@ -26,7 +26,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
-    void configSlider(juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
+    void configDelaySliders(juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
+    void configReverbSliders(int pageNum, juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
     void configTextButtons(juce::TextButton& button, const juce::String& text);
     void configPresetBanks(juce::StringArray &strArray, const juce::String &text);
     void createClickableAreas();
@@ -34,7 +35,7 @@ public:
     juce::Image backgroundGenerator(int pos);
     juce::String presentBankSettingsGenerator(int num, int pos);
     
-    std::vector<Component*>getComps();
+    std::vector<Component*>getDelayComps();
 
 private:
     
@@ -45,9 +46,17 @@ private:
     AnimatedKnob animatedKnob1;
     
     juce::Slider mainDryWetSlider;
+    
     juce::Slider delayFeedback;
     juce::Slider delayLPF;
     juce::Slider delayHPF;
+    
+    juce::Slider reverbRoomSize;
+    juce::Slider reverbPreDelay;
+    juce::Slider reverbDamping;
+    juce::Slider reverbWidth;
+    juce::Slider reverbHPF;
+    juce::Slider reverbLPF;
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     
