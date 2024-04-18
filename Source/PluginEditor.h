@@ -12,6 +12,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "AnimatedKnob.h"
+#include "VerbSlider.h"
 
 //==============================================================================
 /**
@@ -27,7 +28,6 @@ public:
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
     void configDelaySliders(juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
-    void configReverbSliders(int pageNum, juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
     void configTextButtons(juce::TextButton& button, const juce::String& text);
     void configPresetBanks(juce::StringArray &strArray, const juce::String &text);
     void createClickableAreas();
@@ -36,6 +36,7 @@ public:
     juce::String presentBankSettingsGenerator(int num, int pos);
     
     std::vector<Component*>getDelayComps();
+    std::vector<Component*>getReverbComps();
 
 private:
     
@@ -51,12 +52,12 @@ private:
     juce::Slider delayLPF;
     juce::Slider delayHPF;
     
-    juce::Slider reverbRoomSize;
-    juce::Slider reverbPreDelay;
-    juce::Slider reverbDamping;
-    juce::Slider reverbWidth;
-    juce::Slider reverbHPF;
-    juce::Slider reverbLPF;
+    VerbSlider reverbRoomSize {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P1
+    VerbSlider reverbPreDelay {juce::Colours::white, juce::Colours::skyblue, 127, 200, 80, 80}; // P1
+    VerbSlider reverbDamping {juce::Colours::white, juce::Colours::yellow, 248, 200, 80, 80}; // P1
+//    VerbSlider reverbWidth {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
+//    VerbSlider reverbHPF {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
+//    VerbSlider reverbLPF {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     

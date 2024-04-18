@@ -66,21 +66,6 @@ ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 }
 
 //==============================================================================
-void ProjectHaloAudioProcessorEditor::configReverbSliders(int pageNum, juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
-{
-    if (pageNum == 0)
-    {
-        addAndMakeVisible(reverbRoomSize);
-        addAndMakeVisible(reverbPreDelay);
-        addAndMakeVisible(reverbDamping);
-    }
-    else if (pageNum == 1)
-    {
-        addAndMakeVisible(reverbWidth);
-        addAndMakeVisible(reverbHPF);
-        addAndMakeVisible(reverbLPF);
-    }
-}
 
 void ProjectHaloAudioProcessorEditor::configDelaySliders(juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
 {
@@ -296,6 +281,16 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getDelayComps()
     };
 }
 
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps()
+{
+    // If page num == 0
+    return {
+        &reverbRoomSize,
+        &reverbPreDelay,
+        &reverbDamping
+    };
+}
+
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 {
     juce::Point<int> clickPosition = event.getPosition();
@@ -427,7 +422,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             {
                                 addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
-                            // TODO --> Update the getComps() func to include this code
+                            // TODO: Update the getComps() func to include this code. See Linear.
                             removeChildComponent(&delayFeedback);
                             removeChildComponent(&delayHPF);
                             removeChildComponent(&delayLPF);
@@ -454,7 +449,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             {
                                 removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
-                            // TODO --> Update the getComps() func to include this code
+                            // TODO: Update the getComps() func to include this code. See Linear.
                             addAndMakeVisible(delayFeedback);
                             addAndMakeVisible(delayHPF);
                             addAndMakeVisible(delayLPF);
@@ -546,21 +541,37 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(1);
                             repaint();
                             reverbState = true;
+                            for (auto* comp : getReverbComps())
+                            {
+                                addAndMakeVisible(comp);
+                            }
                         }
                         else if (!reverbState && delayState){
                             background = backgroundGenerator(3);
                             repaint();
                             reverbState = true;
+                            for (auto* comp : getReverbComps())
+                            {
+                                addAndMakeVisible(comp);
+                            }
                         }
                         else if (reverbState && !delayState){
                             background = backgroundGenerator(0);
                             repaint();
                             reverbState = false;
+                            for (auto* comp : getReverbComps())
+                            {
+                                removeChildComponent(comp);
+                            }
                         }
                         else if (reverbState && delayState){
                             background = backgroundGenerator(2);
                             repaint();
                             reverbState = false;
+                            for (auto* comp : getReverbComps())
+                            {
+                                removeChildComponent(comp);
+                            }
                         }
                     }
                     break;
@@ -610,7 +621,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             {
                                 removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
-                            // TODO --> Update the getComps() func to include this code
+                            // TODO: Update the getComps() func to include this code. See Linear.
                             removeChildComponent(&delayFeedback);
                             removeChildComponent(&delayHPF);
                             removeChildComponent(&delayLPF);
