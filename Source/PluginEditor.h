@@ -36,7 +36,7 @@ public:
     juce::String presentBankSettingsGenerator(int num, int pos);
     
     std::vector<Component*>getDelayComps();
-    std::vector<Component*>getReverbComps();
+    std::vector<Component*>getReverbComps(int pageNum);
 
 private:
     
@@ -55,9 +55,9 @@ private:
     VerbSlider reverbRoomSize {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P1
     VerbSlider reverbPreDelay {juce::Colours::white, juce::Colours::skyblue, 127, 200, 80, 80}; // P1
     VerbSlider reverbDamping {juce::Colours::white, juce::Colours::yellow, 248, 200, 80, 80}; // P1
-//    VerbSlider reverbWidth {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
-//    VerbSlider reverbHPF {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
-//    VerbSlider reverbLPF {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
+    VerbSlider reverbWidth {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
+    VerbSlider reverbHPF {juce::Colours::white, juce::Colours::limegreen, 127, 200, 80, 80}; // P2
+    VerbSlider reverbLPF {juce::Colours::white, juce::Colours::limegreen, 248, 200, 80, 80}; // P2
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     
@@ -84,6 +84,8 @@ private:
     
     int currentIndexPresetBank1 = 0;
     int currentIndexPresetBank2 = 0;
+    
+    unsigned short currentVerbIndex = 0;
     
     int distortionAmt = 0;
     int shifterAmt = 0;

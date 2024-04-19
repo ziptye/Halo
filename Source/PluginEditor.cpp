@@ -211,7 +211,7 @@ void ProjectHaloAudioProcessorEditor::resized()
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
 {
-    // Define the images:
+    // Defines the images:
     auto initBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
     auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
     auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
@@ -281,14 +281,24 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getDelayComps()
     };
 }
 
-std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps()
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps(int pageNum)
 {
-    // If page num == 0
-    return {
-        &reverbRoomSize,
-        &reverbPreDelay,
-        &reverbDamping
-    };
+    if (pageNum == 0)
+    {
+        return {
+            &reverbRoomSize,
+            &reverbPreDelay,
+            &reverbDamping
+        };
+    }
+    else
+    {
+        return {
+            &reverbWidth,
+            &reverbHPF,
+            &reverbLPF
+        };
+    }
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -309,14 +319,26 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 10:
                     if (y == 150) // LP1
                     {
-//                        std::cout << "LEFT PANEL 1";
+                        if (currentVerbIndex == 1)
+                        {
+                            for (auto* comp : getReverbComps(0))
+                            {
+                                addAndMakeVisible(comp);
+                            }
+                            removeChildComponent(&reverbWidth);
+                            removeChildComponent(&reverbHPF);
+                            removeChildComponent(&reverbLPF);
+                            currentVerbIndex--;
+                        }
                     }
                     else if (y == 299)
                     {
-                        if (currentIndexPresetBank1 == 0){
+                        if (currentIndexPresetBank1 == 0)
+                        {
                             currentIndexPresetBank1 = presentBank1Settings.size() - 1;
                         }
-                        else {
+                        else 
+                        {
                             currentIndexPresetBank1--;
                         }
                         repaint();
@@ -326,6 +348,18 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     if (y == 150) // RP1
                     {
 //                        std::cout << "RIGHT PANEL 1";
+                        if (currentVerbIndex == 0)
+                        {
+                            for (auto* comp : getReverbComps(1))
+                            {
+                                addAndMakeVisible(comp);
+                            }
+                            removeChildComponent(&reverbRoomSize);
+                            removeChildComponent(&reverbPreDelay);
+                            removeChildComponent(&reverbDamping);
+                            currentVerbIndex++;
+                        }
+                        
                     }
                     else if (y == 299)
                     {
@@ -541,7 +575,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(1);
                             repaint();
                             reverbState = true;
-                            for (auto* comp : getReverbComps())
+                            for (auto* comp : getReverbComps(0))
                             {
                                 addAndMakeVisible(comp);
                             }
@@ -550,7 +584,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(3);
                             repaint();
                             reverbState = true;
-                            for (auto* comp : getReverbComps())
+                            for (auto* comp : getReverbComps(0))
                             {
                                 addAndMakeVisible(comp);
                             }
@@ -559,7 +593,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(0);
                             repaint();
                             reverbState = false;
-                            for (auto* comp : getReverbComps())
+                            for (auto* comp : getReverbComps(0))
                             {
                                 removeChildComponent(comp);
                             }
@@ -568,7 +602,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             background = backgroundGenerator(2);
                             repaint();
                             reverbState = false;
-                            for (auto* comp : getReverbComps())
+                            for (auto* comp : getReverbComps(0))
                             {
                                 removeChildComponent(comp);
                             }
