@@ -28,8 +28,6 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
-    void configTextButtons(juce::TextButton& button, const juce::String& text);
-    void configPresetBanks(juce::StringArray &strArray, const juce::String &text);
     void createClickableAreas();
     void addImagesToArray();
     juce::Image backgroundGenerator(int pos);
