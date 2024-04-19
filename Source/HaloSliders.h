@@ -13,9 +13,9 @@
 class HaloSliders : public juce::Slider
 {
 public:
-    HaloSliders(juce::Colour thumbColor, juce::Colour fillColor, int x, int y, int w, int h, double minVal, double maxVal)
+    HaloSliders(juce::Colour fillColor, int x, int y, int w, int h, double minVal, double maxVal)
     {
-        setColour(juce::Slider::ColourIds::thumbColourId, thumbColor);
+        setColour(juce::Slider::ColourIds::thumbColourId, juce::Colours::white);
         setColour(juce::Slider::ColourIds::rotarySliderFillColourId, fillColor);
         setTextBoxStyle(NoTextBox, true, 0, 0);
         setBounds(x, y, w, h);
