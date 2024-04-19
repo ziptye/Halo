@@ -25,14 +25,6 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
     mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
     
-    configTextButtons(sixtyFourthNote, "1/64");
-    configTextButtons(thirtySecondNote, "1/32");
-    configTextButtons(sixteenthNote, "1/16");
-    configTextButtons(eighthNote, "1/8");
-    configTextButtons(quarterNote, "1/4");
-    configTextButtons(halfNote, "1/2");
-    configTextButtons(wholeNote, "1/1");
-    
     createClickableAreas();
     addImagesToArray();
     
@@ -62,27 +54,6 @@ ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 }
 
 //==============================================================================
-
-void ProjectHaloAudioProcessorEditor::configTextButtons(juce::TextButton &button, const juce::String &text)
-{
-    button.setButtonText(text);
-    button.setClickingTogglesState(true);
-    button.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    button.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    button.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    button.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-}
-
-void ProjectHaloAudioProcessorEditor::configPresetBanks(juce::StringArray &strArray, const juce::String &text)
-{
-    configTextButtons(sixtyFourthNote, "1/64");
-    configTextButtons(thirtySecondNote, "1/32");
-    configTextButtons(sixteenthNote, "1/16");
-    configTextButtons(eighthNote, "1/8");
-    configTextButtons(quarterNote, "1/4");
-    configTextButtons(halfNote, "1/2");
-    configTextButtons(wholeNote, "1/1");
-}
 
 void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
 {
@@ -183,13 +154,6 @@ void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
     mainDryWetSlider.setBounds(393, 299, 213, 227);
-    sixtyFourthNote.setBounds(672, 205, 75, 30);
-    thirtySecondNote.setBounds(752, 205, 75, 30);
-    sixteenthNote.setBounds(832, 205, 75, 30);
-    eighthNote.setBounds(912, 205, 75, 30);
-    quarterNote.setBounds(712, 245, 75, 30);
-    halfNote.setBounds(793, 245, 75, 30);
-    wholeNote.setBounds(873, 245, 75, 30);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()

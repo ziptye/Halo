@@ -13,6 +13,7 @@
 #include "PluginProcessor.h"
 #include "AnimatedKnob.h"
 #include "HaloSliders.h"
+#include "HaloDelayButtons.h"
 
 //==============================================================================
 /**
@@ -65,13 +66,13 @@ private:
     juce::StringArray presentBank1Settings;
     juce::StringArray presentBank2Settings;
     
-    juce::TextButton sixtyFourthNote;
-    juce::TextButton thirtySecondNote;
-    juce::TextButton sixteenthNote;
-    juce::TextButton eighthNote;
-    juce::TextButton quarterNote;
-    juce::TextButton halfNote;
-    juce::TextButton wholeNote;
+    HaloDelayButtons sixtyFourthNote {"1/64", 672, 205, 75, 30};
+    HaloDelayButtons thirtySecondNote {"1/32", 752, 205, 75, 30};
+    HaloDelayButtons sixteenthNote {"1/16", 832, 205, 75, 30};
+    HaloDelayButtons eighthNote {"1/8", 912, 205, 75, 30};
+    HaloDelayButtons quarterNote {"1/4", 712, 245, 75, 30};
+    HaloDelayButtons halfNote {"1/2", 793, 245, 75, 30};
+    HaloDelayButtons wholeNote {"1/1", 873, 245, 75, 30};
     
     bool reverbState = false;
     bool delayState = false;
