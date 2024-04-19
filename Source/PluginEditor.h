@@ -12,7 +12,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "AnimatedKnob.h"
-#include "VerbSlider.h"
+#include "HaloSliders.h"
 
 //==============================================================================
 /**
@@ -27,7 +27,6 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
-    void configDelaySliders(juce::Slider& slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour);
     void configTextButtons(juce::TextButton& button, const juce::String& text);
     void configPresetBanks(juce::StringArray &strArray, const juce::String &text);
     void createClickableAreas();
@@ -35,7 +34,7 @@ public:
     juce::Image backgroundGenerator(int pos);
     juce::String presentBankSettingsGenerator(int num, int pos);
     
-    std::vector<Component*>getDelayComps();
+    std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
 
 private:
@@ -48,16 +47,16 @@ private:
     
     juce::Slider mainDryWetSlider;
     
-    juce::Slider delayFeedback;
-    juce::Slider delayLPF;
-    juce::Slider delayHPF;
+    HaloSliders delayFeedback {juce::Colours::white, juce::Colours::royalblue, 670, 200, 80, 80, 0.0, 100.0};
+    HaloSliders delayLPF {juce::Colours::white, juce::Colours::goldenrod, 792, 200, 80, 80, 0.0, 100.0};
+    HaloSliders delayHPF {juce::Colours::white, juce::Colours::limegreen, 910, 200, 80, 80, 0.0, 100.0};
     
-    VerbSlider reverbRoomSize {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P1
-    VerbSlider reverbPreDelay {juce::Colours::white, juce::Colours::skyblue, 127, 200, 80, 80}; // P1
-    VerbSlider reverbDamping {juce::Colours::white, juce::Colours::yellow, 248, 200, 80, 80}; // P1
-    VerbSlider reverbWidth {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80}; // P2
-    VerbSlider reverbHPF {juce::Colours::white, juce::Colours::limegreen, 127, 200, 80, 80}; // P2
-    VerbSlider reverbLPF {juce::Colours::white, juce::Colours::limegreen, 248, 200, 80, 80}; // P2
+    HaloSliders reverbRoomSize {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbPreDelay {juce::Colours::white, juce::Colours::skyblue, 127, 200, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbDamping {juce::Colours::white, juce::Colours::yellow, 248, 200, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbWidth {juce::Colours::white, juce::Colours::limegreen, 10, 200, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbHPF {juce::Colours::white, juce::Colours::limegreen, 127, 200, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbLPF {juce::Colours::white, juce::Colours::limegreen, 248, 200, 80, 80, 0.0, 100.0}; // P2
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     
@@ -86,6 +85,7 @@ private:
     int currentIndexPresetBank2 = 0;
     
     unsigned short currentVerbIndex = 0;
+    unsigned short currentDelayIndex = 0;
     
     int distortionAmt = 0;
     int shifterAmt = 0;
