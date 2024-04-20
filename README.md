@@ -1,2 +1,2 @@
 # Halo
-![PH_BGV0 1 1](https://github.com/ziptye/Halo/assets/105367626/72c08ae5-58af-4727-959e-49b7aaf797b9)
+![PH_BGV0 1 1_2](https://github.com/ziptye/Halo/assets/105367626/3d995ce0-654a-4019-a1f1-3d347c39ccf5)
