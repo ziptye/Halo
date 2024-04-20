@@ -16,26 +16,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
 //    addAndMakeVisible(animatedKnob1);
-    
     addAndMakeVisible(mainDryWetSlider);
-    mainDryWetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    mainDryWetSlider.setRange(0.0, 100.0);
-    mainDryWetSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    mainDryWetSlider.setColour(juce::Slider::thumbColourId, juce::Colours::white);
-    mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
-    mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
-    
-    configSlider(delayFeedback, 0.0, 100.0, juce::Colours::white, juce::Colours::royalblue);
-    configSlider(delayHPF, 0.0, 100.0, juce::Colours::white, juce::Colours::goldenrod);
-    configSlider(delayLPF, 0.0, 100.0, juce::Colours::white, juce::Colours::limegreen);
-    
-    configTextButtons(sixtyFourthNote, "1/64");
-    configTextButtons(thirtySecondNote, "1/32");
-    configTextButtons(sixteenthNote, "1/16");
-    configTextButtons(eighthNote, "1/8");
-    configTextButtons(quarterNote, "1/4");
-    configTextButtons(halfNote, "1/2");
-    configTextButtons(wholeNote, "1/1");
     
     createClickableAreas();
     addImagesToArray();
@@ -66,24 +47,6 @@ ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 }
 
 //==============================================================================
-void ProjectHaloAudioProcessorEditor::configSlider(juce::Slider &slider, double minVal, double maxVal, juce::Colour thumbColour, juce::Colour fillColour)
-{
-    slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    slider.setRange(minVal, maxVal);
-    slider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    slider.setColour(juce::Slider::thumbColourId, thumbColour);
-    slider.setColour(juce::Slider::rotarySliderFillColourId, fillColour);
-}
-
-void ProjectHaloAudioProcessorEditor::configTextButtons(juce::TextButton &button, const juce::String &text)
-{
-    button.setButtonText(text);
-    button.setClickingTogglesState(true);
-    button.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::lightgoldenrodyellow);
-    button.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::black);
-    button.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colours::black);
-    button.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::white);
-}
 
 void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
 {
@@ -183,23 +146,11 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
-    mainDryWetSlider.setBounds(393, 299, 213, 227);
-    sixtyFourthNote.setBounds(672, 205, 75, 30);
-    thirtySecondNote.setBounds(752, 205, 75, 30);
-    sixteenthNote.setBounds(832, 205, 75, 30);
-    eighthNote.setBounds(912, 205, 75, 30);
-    quarterNote.setBounds(712, 245, 75, 30);
-    halfNote.setBounds(793, 245, 75, 30);
-    wholeNote.setBounds(873, 245, 75, 30);
-    
-    delayFeedback.setBounds(670, 200, 80, 80);
-    delayHPF.setBounds(792, 200, 80, 80);
-    delayLPF.setBounds(910, 200, 80, 80);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
 {
-    // Define the images:
+    // Defines the images:
     auto initBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
     auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
     auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
@@ -256,17 +207,49 @@ void ProjectHaloAudioProcessorEditor::createClickableAreas()
     }
 }
 
-std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getComps()
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getDelayComps(int curPage)
 {
-    return {
-        &sixtyFourthNote,
-        &thirtySecondNote,
-        &sixteenthNote,
-        &eighthNote,
-        &quarterNote,
-        &halfNote,
-        &wholeNote,
-    };
+    if (curPage == 0)
+    {
+        return {
+            &sixtyFourthNote,
+            &thirtySecondNote,
+            &sixteenthNote,
+            &eighthNote,
+            &quarterNote,
+            &halfNote,
+            &wholeNote,
+        };
+    }
+    else 
+    {
+        return {
+            &delayFeedback,
+            &delayHPF,
+            &delayLPF
+        };
+    }
+    
+}
+
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps(int pageNum)
+{
+    if (pageNum == 0)
+    {
+        return {
+            &reverbRoomSize,
+            &reverbPreDelay,
+            &reverbDamping
+        };
+    }
+    else
+    {
+        return {
+            &reverbWidth,
+            &reverbHPF,
+            &reverbLPF
+        };
+    }
 }
 
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
@@ -287,14 +270,33 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 10:
                     if (y == 150) // LP1
                     {
-//                        std::cout << "LEFT PANEL 1";
+                        if (reverbState)
+                        {
+                            for (auto* comp : getReverbComps(0))
+                            {
+                                addAndMakeVisible(comp);
+                            }
+                            for (auto* comp : getReverbComps(1))
+                            {
+                                removeChildComponent(comp);
+                            }
+                            if (currentVerbIndex > 0)
+                            {
+                                currentVerbIndex--;
+//                                std::cout << currentVerbIndex << std::endl;
+                            }
+                            
+                        }
+                        
                     }
                     else if (y == 299)
                     {
-                        if (currentIndexPresetBank1 == 0){
+                        if (currentIndexPresetBank1 == 0)
+                        {
                             currentIndexPresetBank1 = presentBank1Settings.size() - 1;
                         }
-                        else {
+                        else
+                        {
                             currentIndexPresetBank1--;
                         }
                         repaint();
@@ -303,7 +305,26 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 304:
                     if (y == 150) // RP1
                     {
-//                        std::cout << "RIGHT PANEL 1";
+                        if (reverbState)
+                        {
+                            int numPages = 1;
+                            
+                            for (auto* comp : getReverbComps(1))
+                            {
+                                addAndMakeVisible(comp);
+                            }
+                            for (auto* comp : getReverbComps(0))
+                            {
+                                removeChildComponent(comp);
+                            }
+                            if (currentVerbIndex < numPages)
+                            {
+                                currentVerbIndex++;
+//                                std::cout << currentVerbIndex << std::endl;
+                            }
+                            
+                        }
+                        
                     }
                     else if (y == 299)
                     {
@@ -396,15 +417,23 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                     {
                         if (delayState)
                         {
-                            for(auto* comp : getComps())
+                            for (auto* comp : getDelayComps(0))
                             {
-                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
+                                addAndMakeVisible(comp);
                             }
-                            // TODO --> Update the getComps() func to include this code
-                            removeChildComponent(&delayFeedback);
-                            removeChildComponent(&delayHPF);
-                            removeChildComponent(&delayLPF);
+
+                            for (auto* comp : getDelayComps(1))
+                            {
+                                removeChildComponent(comp);
+                            }
+                            if (currentDelayIndex > 0)
+                            {
+                                currentDelayIndex--;
+//                                std::cout << currentDelayIndex << std::endl;
+                            }
+                            
                         }
+                        
                     }
                     else if (y == 299)
                     {
@@ -421,16 +450,25 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                 case 965:
                     if (y == 150) // RP3
                     {
+                        int numPages = 1;
+                        
                         if (delayState)
                         {
-                            for(auto* comp : getComps())
+                            for (auto* comp : getDelayComps(1))
                             {
-                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                                addAndMakeVisible(comp);
                             }
-                            // TODO --> Update the getComps() func to include this code
-                            addAndMakeVisible(delayFeedback);
-                            addAndMakeVisible(delayHPF);
-                            addAndMakeVisible(delayLPF);
+
+                            for (auto* comp : getDelayComps(0))
+                            {
+                                removeChildComponent(comp);
+                            }
+                            if (currentDelayIndex < numPages)
+                            {
+                                currentDelayIndex++;
+//                                std::cout << currentDelayIndex << std::endl;
+                            }
+            
                         }
                     
                     }
@@ -468,7 +506,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             cozyModeState = true;
                             repaint();
                         }
-                        else 
+                        else
                         {
                             i = 0;
                             cozyModeState = false;
@@ -493,6 +531,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             shifterState = false;
                             repaint();
                         }
+                        
                     }
                     else if (y == 123){
                         
@@ -504,89 +543,110 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             sickoModeState = true;
                             repaint();
                         }
-                        else 
+                        else
                         {
                             i = 0;
                             sickoModeState = false;
                             repaint();
                         }
+                        
                     }
                     break;
-                case 110:
+                case 110: // Reverb Pow
                     if (y == 103)
                     {
-                        if (!reverbState && !delayState){
+                        if (!reverbState && !delayState)
+                        {
                             background = backgroundGenerator(1);
                             repaint();
                             reverbState = true;
+                            for (auto* comp : getReverbComps(currentVerbIndex))
+                            {
+                                addAndMakeVisible(comp); // RENDERS ALL REVERB COMPONENTS
+                            }
                         }
-                        else if (!reverbState && delayState){
+                        else if (!reverbState && delayState)
+                        {
                             background = backgroundGenerator(3);
                             repaint();
                             reverbState = true;
+                            for (auto* comp : getReverbComps(currentVerbIndex))
+                            {
+                                addAndMakeVisible(comp); // RENDERS ALL REVERB COMPONENTS
+                            }
                         }
-                        else if (reverbState && !delayState){
+                        else if (reverbState && !delayState)
+                        {
                             background = backgroundGenerator(0);
                             repaint();
                             reverbState = false;
+                            for (auto* comp : getReverbComps(currentVerbIndex))
+                            {
+                                removeChildComponent(comp); // DELETES ALL REVERB COMPONENTS
+                            }
                         }
-                        else if (reverbState && delayState){
+                        else if (reverbState && delayState)
+                        {
                             background = backgroundGenerator(2);
                             repaint();
                             reverbState = false;
+                            for (auto* comp : getReverbComps(currentVerbIndex))
+                            {
+                                removeChildComponent(comp); // DELETES ALL REVERB COMPONENTS
+                            }
                         }
                     }
                     break;
-                case 776:
+                case 776: // Delay Pow
                     if (y == 103)
                     {
-                        if (!delayState && !reverbState){
+                        if (!delayState && !reverbState)
+                        {
                             background = backgroundGenerator(2);
                             repaint();
                             delayState = true;
                             
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps(currentDelayIndex))
                             {
                                 addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
+                            
                         }
-                        else if (!delayState && reverbState){
+                        else if (!delayState && reverbState)
+                        {
                             background = backgroundGenerator(3);
                             repaint();
                             delayState = true;
-                            
-                            for(auto* comp : getComps())
+        
+                            for(auto* comp : getDelayComps(currentDelayIndex))
                             {
                                 addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
                             }
+                            
                         }
-                        else if (delayState && !reverbState){
+                        else if (delayState && !reverbState)
+                        {
                             background = backgroundGenerator(0);
                             repaint();
                             delayState = false;
-                            
-                            for(auto* comp : getComps())
+    
+                            for(auto* comp : getDelayComps(currentDelayIndex))
                             {
-                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
+                                    removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
-                            // TODO --> Update the getComps() func to include this code
-                            removeChildComponent(&delayFeedback);
-                            removeChildComponent(&delayHPF);
-                            removeChildComponent(&delayLPF);
+                            
                         }
-                        else if (delayState && reverbState){
+                        else if (delayState && reverbState)
+                        {
                             background = backgroundGenerator(1);
                             repaint();
                             delayState = false;
                             
-                            for(auto* comp : getComps())
+                            for(auto* comp : getDelayComps(currentDelayIndex))
                             {
                                 removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
                             }
-                            // TODO --> Update the getComps() func to include this code
-                            removeChildComponent(&delayFeedback);
-                            removeChildComponent(&delayHPF);
-                            removeChildComponent(&delayLPF);
+                                
                         }
                     }
                     break;
