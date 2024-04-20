@@ -19,8 +19,17 @@ public:
         setColour(juce::Slider::ColourIds::rotarySliderFillColourId, fillColor);
         setTextBoxStyle(NoTextBox, true, 0, 0);
         setBounds(x, y, w, h);
-        setRange(minVal, maxVal); // TODO: need to also capture this in the arguments to this constructor. See linear.
-        
+        setRange(minVal, maxVal);
+        setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    }
+    HaloSliders(juce::Colour fillColor,juce::Colour outlineColor, int x, int y, int w, int h, double minVal, double maxVal)
+    {
+        setColour(juce::Slider::ColourIds::thumbColourId, juce::Colours::white);
+        setColour(juce::Slider::ColourIds::rotarySliderFillColourId, fillColor);
+        setColour(juce::Slider::rotarySliderOutlineColourId, outlineColor);
+        setTextBoxStyle(NoTextBox, true, 0, 0);
+        setBounds(x, y, w, h);
+        setRange(minVal, maxVal);
         setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     }
     ~HaloSliders() override {}

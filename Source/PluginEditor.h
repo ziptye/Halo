@@ -44,7 +44,7 @@ private:
     
     AnimatedKnob animatedKnob1;
     
-    juce::Slider mainDryWetSlider;
+    HaloSliders mainDryWetSlider {juce::Colours::white, juce::Colours::transparentWhite, 393, 299, 213, 227, 0.0, 100.0};
     
     HaloSliders delayFeedback {juce::Colours::royalblue, 670, 200, 80, 80, 0.0, 100.0};
     HaloSliders delayLPF {juce::Colours::goldenrod, 792, 200, 80, 80, 0.0, 100.0};

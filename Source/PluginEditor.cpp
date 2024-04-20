@@ -16,14 +16,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
 //    addAndMakeVisible(animatedKnob1);
-    
     addAndMakeVisible(mainDryWetSlider);
-    mainDryWetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    mainDryWetSlider.setRange(0.0, 100.0);
-    mainDryWetSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
-    mainDryWetSlider.setColour(juce::Slider::thumbColourId, juce::Colours::white);
-    mainDryWetSlider.setColour(juce::Slider::trackColourId, juce::Colours::transparentWhite);
-    mainDryWetSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
     
     createClickableAreas();
     addImagesToArray();
@@ -153,7 +146,6 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
-    mainDryWetSlider.setBounds(393, 299, 213, 227);
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -229,7 +221,8 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getDelayComps(int 
             &wholeNote,
         };
     }
-    else {
+    else 
+    {
         return {
             &delayFeedback,
             &delayHPF,
@@ -569,7 +562,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             reverbState = true;
                             for (auto* comp : getReverbComps(currentVerbIndex))
                             {
-                                addAndMakeVisible(comp);
+                                addAndMakeVisible(comp); // RENDERS ALL REVERB COMPONENTS
                             }
                         }
                         else if (!reverbState && delayState)
@@ -579,7 +572,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             reverbState = true;
                             for (auto* comp : getReverbComps(currentVerbIndex))
                             {
-                                addAndMakeVisible(comp);
+                                addAndMakeVisible(comp); // RENDERS ALL REVERB COMPONENTS
                             }
                         }
                         else if (reverbState && !delayState)
@@ -589,7 +582,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             reverbState = false;
                             for (auto* comp : getReverbComps(currentVerbIndex))
                             {
-                                removeChildComponent(comp);
+                                removeChildComponent(comp); // DELETES ALL REVERB COMPONENTS
                             }
                         }
                         else if (reverbState && delayState)
@@ -599,7 +592,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
                             reverbState = false;
                             for (auto* comp : getReverbComps(currentVerbIndex))
                             {
-                                removeChildComponent(comp);
+                                removeChildComponent(comp); // DELETES ALL REVERB COMPONENTS
                             }
                         }
                     }
