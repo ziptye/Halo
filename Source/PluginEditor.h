@@ -33,6 +33,20 @@ public:
     juce::Image backgroundGenerator(int pos);
     juce::String presentBankSettingsGenerator(int num, int pos);
     
+    void handleCompClick(const juce::Rectangle<int>& rect);
+    void handlePanelLeft(int y);
+    void handlePanelRight(int y);
+    void renderReverbComps(int page, int direction);
+    void renderDelayComps(int page, int direction);
+    void hideReverbComps(int page);
+    void hideDelayComps(int page);
+    void handleReverbPowerToggle(int y);
+    void handleDelayToggle(int y);
+    void handleFXPowerToggles1(int y);
+    void handleFXPowerToggles2(int y);
+    void handleFXAmounts1(int y);
+    void handleFXAmounts2(int y);
+    
     std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
 
