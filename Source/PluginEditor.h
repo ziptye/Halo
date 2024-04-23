@@ -34,8 +34,8 @@ public:
     juce::String presentBankSettingsGenerator(int num, int pos);
     
     void handleCompClick(const juce::Rectangle<int>& rect);
-    void handlePanelLeft(int y);
-    void handlePanelRight(int y);
+    void handlePanelLeft(int x, int y);
+    void handlePanelRight(int x, int y);
     void renderReverbComps(int page, int direction);
     void renderDelayComps(int page, int direction);
     void hideReverbComps(int page);
