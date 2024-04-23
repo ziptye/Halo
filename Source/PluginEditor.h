@@ -47,6 +47,9 @@ public:
     void handleFXAmounts1(int y);
     void handleFXAmounts2(int y);
     
+    void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
+    void drawText(juce::Graphics& g, const juce::String& text, int x, int y);
+    
     std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
 

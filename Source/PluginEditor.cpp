@@ -93,39 +93,22 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     }
     
     // Preset Bank 1 Label
-    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
-    g.setColour(juce::Colours::white);
-    g.drawText(presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294, 85, 35, juce::Justification::centred);
+    drawLabel(g, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
     
     // Preset Bank 2 Label
-    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
-    g.setColour(juce::Colours::white);
-    g.drawText(presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294, 85, 35, juce::Justification::centred);
+    drawLabel(g, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s = std::to_string(distortionAmt);
-    g.drawText(s, 340, 49, 35, 20, juce::Justification::centred);
+    drawText(g, std::to_string(distortionAmt), 340, 49);
     
     // Cozy Mode Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s2 = std::to_string(cozyModeAmt);
-    g.drawText(s2, 340, 139, 35, 20, juce::Justification::centred);
+    drawText(g, std::to_string(cozyModeAmt), 340, 139);
     
     // Shifter Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s3 = std::to_string(shifterAmt);
-    g.drawText(s3, 504, 49, 35, 20, juce::Justification::centred);
+    drawText(g, std::to_string(shifterAmt), 504, 49);
     
     // Sick-O Mode Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s4 = std::to_string(sickoModeAmt);
-    g.drawText(s4, 504, 139, 35, 20, juce::Justification::centred);
-    
+    drawText(g, std::to_string(sickoModeAmt), 504, 139);
 }
 
 juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int num, int pos){
@@ -141,6 +124,20 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
     
     return "";
     
+}
+
+void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, const juce::String &text, int x, int y)
+{
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    g.drawText(text, x, y, 35, 20, juce::Justification::centred);
+}
+
+void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, const juce::String &text, int x, int y)
+{
+    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setColour(juce::Colours::white);
+    g.drawText(text, x, y, 85, 35, juce::Justification::centred);
 }
 
 void ProjectHaloAudioProcessorEditor::resized()
@@ -252,9 +249,6 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps(int
     }
 }
 
-// ====================================================================================================================
-// ====================================================================================================================
-// ====================================================================================================================
 // ====================================================================================================================
 void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int> &rect)
 {
