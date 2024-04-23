@@ -50,6 +50,8 @@ public:
     void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
     void drawText(juce::Graphics& g, const juce::String& text, int x, int y);
     
+    void drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize);
+    
     std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
 

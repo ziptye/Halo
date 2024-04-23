@@ -55,41 +55,41 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     // LED LIGHT COORDS.
     
-    // LEFT TOP ----
-    if (!distortionState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(467, 75, 8, 8, 4.0f);
+    // DIST. STATUS ----
+    if (!distortionState)
+    {
+        drawLEDLights(g, juce::Colours::red, 467, 75, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(467, 30, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 467, 30, 8, 8, 4.0f);
     }
-    // RIGHT TOP ----
-    if (!shifterState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(628, 75, 8, 8, 4.0f);
+    // SHIFTER STATUS ----
+    if (!shifterState)
+    {
+        drawLEDLights(g, juce::Colours::red, 628, 75, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(628, 30, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 628, 30, 8, 8, 4.0f);
     }
-    // LEFT BOT. ----
-    if (!cozyModeState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(467, 170, 8, 8, 4.0f);
+    // COZY MODE STATUS  ----
+    if (!cozyModeState)
+    {
+        drawLEDLights(g, juce::Colours::red, 467, 170, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(467, 122, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 467, 122, 8, 8, 4.0f);
     }
-    // RIGHT BOT. ----
-    if (!sickoModeState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(628, 170, 8, 8, 4.0f);
+    // SICKOMODE STATUS ----
+    if (!sickoModeState)
+    {
+        drawLEDLights(g, juce::Colours::red, 628, 170, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(628, 122, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 628, 122, 8, 8, 4.0f);
     }
     
     // Preset Bank 1 Label
@@ -138,6 +138,12 @@ void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, const juce::S
     g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
     g.setColour(juce::Colours::white);
     g.drawText(text, x, y, 85, 35, juce::Justification::centred);
+}
+
+void ProjectHaloAudioProcessorEditor::drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize)
+{
+    g.setColour(color);
+    g.fillRoundedRectangle(x, y, w, h, cornerSize);
 }
 
 void ProjectHaloAudioProcessorEditor::resized()
@@ -256,40 +262,40 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
     int y = rect.getY();
     
     switch (x)
-        {
-            case 10:
-                handlePanelLeft(x, y);
-                break;
-            case 304:
-                handlePanelRight(x, y);
-                break;
-            case 670:
-                handlePanelLeft(x, y);
-                break;
-            case 965:
-                handlePanelRight(x, y);
-                break;
-            case 110:
-                handleReverbPowerToggle(y);
-                break;
-            case 776:
-                handleDelayToggle(y);
-                break;
-            case 347:
-                handleFXAmounts1(y);
-                break;
-            case 512:
-                handleFXAmounts2(y);
-                break;
-            case 393:
-                handleFXPowerToggles1(y);
-                break;
-            case 553:
-                handleFXPowerToggles2(y);
-                break;
-            default:
-                break;
-        }
+    {
+        case 10:
+            handlePanelLeft(x, y);
+            break;
+        case 304:
+            handlePanelRight(x, y);
+            break;
+        case 670:
+            handlePanelLeft(x, y);
+            break;
+        case 965:
+            handlePanelRight(x, y);
+            break;
+        case 110:
+            handleReverbPowerToggle(y);
+            break;
+        case 776:
+            handleDelayToggle(y);
+            break;
+        case 347:
+            handleFXAmounts1(y);
+            break;
+        case 512:
+            handleFXAmounts2(y);
+            break;
+        case 393:
+            handleFXPowerToggles1(y);
+            break;
+        case 553:
+            handleFXPowerToggles2(y);
+            break;
+        default:
+            break;
+    }
 }
 
 void ProjectHaloAudioProcessorEditor::handlePanelLeft(int x, int y)
