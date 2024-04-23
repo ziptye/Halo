@@ -55,77 +55,60 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     // LED LIGHT COORDS.
     
-    // LEFT TOP ----
-    if (!distortionState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(467, 75, 8, 8, 4.0f);
+    // DIST. STATUS ----
+    if (!distortionState)
+    {
+        drawLEDLights(g, juce::Colours::red, 467, 75, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(467, 30, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 467, 30, 8, 8, 4.0f);
     }
-    // RIGHT TOP ----
-    if (!shifterState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(628, 75, 8, 8, 4.0f);
+    // SHIFTER STATUS ----
+    if (!shifterState)
+    {
+        drawLEDLights(g, juce::Colours::red, 628, 75, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(628, 30, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 628, 30, 8, 8, 4.0f);
     }
-    // LEFT BOT. ----
-    if (!cozyModeState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(467, 170, 8, 8, 4.0f);
+    // COZY MODE STATUS  ----
+    if (!cozyModeState)
+    {
+        drawLEDLights(g, juce::Colours::red, 467, 170, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(467, 122, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 467, 122, 8, 8, 4.0f);
     }
-    // RIGHT BOT. ----
-    if (!sickoModeState){
-        g.setColour(juce::Colours::red);
-        g.fillRoundedRectangle(628, 170, 8, 8, 4.0f);
+    // SICKOMODE STATUS ----
+    if (!sickoModeState)
+    {
+        drawLEDLights(g, juce::Colours::red, 628, 170, 8, 8, 4.0f);
     }
-    else {
-        g.setColour(juce::Colours::lime);
-        g.fillRoundedRectangle(628, 122, 8, 8, 4.0f);
+    else 
+    {
+        drawLEDLights(g, juce::Colours::lime, 628, 122, 8, 8, 4.0f);
     }
     
     // Preset Bank 1 Label
-    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
-    g.setColour(juce::Colours::white);
-    g.drawText(presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294, 85, 35, juce::Justification::centred);
+    drawLabel(g, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
     
     // Preset Bank 2 Label
-    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
-    g.setColour(juce::Colours::white);
-    g.drawText(presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294, 85, 35, juce::Justification::centred);
+    drawLabel(g, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s = std::to_string(distortionAmt);
-    g.drawText(s, 340, 49, 35, 20, juce::Justification::centred);
+    drawText(g, std::to_string(distortionAmt), 340, 49);
     
     // Cozy Mode Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s2 = std::to_string(cozyModeAmt);
-    g.drawText(s2, 340, 139, 35, 20, juce::Justification::centred);
+    drawText(g, std::to_string(cozyModeAmt), 340, 139);
     
     // Shifter Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s3 = std::to_string(shifterAmt);
-    g.drawText(s3, 504, 49, 35, 20, juce::Justification::centred);
+    drawText(g, std::to_string(shifterAmt), 504, 49);
     
     // Sick-O Mode Amount
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
-    auto s4 = std::to_string(sickoModeAmt);
-    g.drawText(s4, 504, 139, 35, 20, juce::Justification::centred);
-    
+    drawText(g, std::to_string(sickoModeAmt), 504, 139);
 }
 
 juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int num, int pos){
@@ -141,6 +124,26 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
     
     return "";
     
+}
+
+void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, const juce::String &text, int x, int y)
+{
+    g.setFont(juce::Font("Copperplate", 14.0f, 0));
+    g.setColour(juce::Colours::white);
+    g.drawText(text, x, y, 35, 20, juce::Justification::centred);
+}
+
+void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, const juce::String &text, int x, int y)
+{
+    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setColour(juce::Colours::white);
+    g.drawText(text, x, y, 85, 35, juce::Justification::centred);
+}
+
+void ProjectHaloAudioProcessorEditor::drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize)
+{
+    g.setColour(color);
+    g.fillRoundedRectangle(x, y, w, h, cornerSize);
 }
 
 void ProjectHaloAudioProcessorEditor::resized()
@@ -187,10 +190,10 @@ void ProjectHaloAudioProcessorEditor::createClickableAreas()
         {965, 299, 25, 25}, // presetBank2R
         {110, 103, 116, 120}, // Reverb on/off
         {776, 103, 116, 120}, // Delay on/off
-        {393, 30, 50, 50}, // Distortion FX
-        {393, 123, 50, 50}, // Cozy Mode FX
-        {553, 30, 50, 50}, // Shifter FX
-        {553, 123, 50, 50}, // Sick-o-Mode FX
+        {393, 30, 50, 50}, // Distortion FX on/off
+        {393, 123, 50, 50}, // Cozy Mode FX on/off
+        {553, 30, 50, 50}, // Shifter FX on/off
+        {553, 123, 50, 50}, // Sick-o-Mode FX on/off
         {347, 25, 20, 20}, // Distortion Amt Up
         {347, 75, 20, 20}, // Distortion Amt Down
         {347, 115, 20, 20}, // Cozy Mode Amt Up
@@ -252,412 +255,428 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps(int
     }
 }
 
+// ====================================================================================================================
+void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int> &rect)
+{
+    int x = rect.getX();
+    int y = rect.getY();
+    
+    switch (x)
+    {
+        case 10:
+            handlePanelLeft(x, y);
+            break;
+        case 304:
+            handlePanelRight(x, y);
+            break;
+        case 670:
+            handlePanelLeft(x, y);
+            break;
+        case 965:
+            handlePanelRight(x, y);
+            break;
+        case 110:
+            handleReverbPowerToggle(y);
+            break;
+        case 776:
+            handleDelayToggle(y);
+            break;
+        case 347:
+            handleFXAmounts1(y);
+            break;
+        case 512:
+            handleFXAmounts2(y);
+            break;
+        case 393:
+            handleFXPowerToggles1(y);
+            break;
+        case 553:
+            handleFXPowerToggles2(y);
+            break;
+        default:
+            break;
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handlePanelLeft(int x, int y)
+{
+    if (x == 10 && y == 150) // LP1
+    {
+        if (reverbState)
+        {
+            renderReverbComps(0, -1);
+            if (currentVerbIndex > 0)
+                currentVerbIndex--;
+        }
+    }
+    else if (x == 670 && y == 150) // LP3
+    {
+        if (delayState)
+        {
+            renderDelayComps(0, -1);
+            if (currentDelayIndex > 0)
+                currentDelayIndex--;
+        }
+    }
+    else if (x == 10 && y == 299) // presetBank1L
+    {
+        currentIndexPresetBank1 = (currentIndexPresetBank1 == 0) ? presentBank1Settings.size() - 1 : currentIndexPresetBank1 - 1;
+        repaint();
+    }
+    else if (x == 670 && y == 299) // presetBank2L
+    {
+        currentIndexPresetBank2 = (currentIndexPresetBank2 == 0) ? presentBank2Settings.size() - 1 : currentIndexPresetBank2 - 1;
+        repaint();
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
+{
+    if (x == 304 && y == 150) // RP1
+    {
+        if (reverbState)
+        {
+            int numPages = 1;
+            renderReverbComps(1, 1);
+            if (currentVerbIndex < numPages)
+                currentVerbIndex++;
+        }
+    }
+    else if (x == 965 && y == 150) // RP3
+    {
+        if (delayState)
+        {
+            int numPages = 1;
+            renderDelayComps(1, 1);
+            if (currentDelayIndex < numPages)
+                currentDelayIndex++;
+        }
+    }
+    else if (x == 304 && y == 299) // presetBank1R
+    {
+        currentIndexPresetBank1 = (currentIndexPresetBank1 + 1) % presentBank1Settings.size();
+        repaint();
+    }
+    else if (x == 965 && y == 299) // presetBank1R
+    {
+        currentIndexPresetBank2 = (currentIndexPresetBank2 + 1) % presentBank2Settings.size();
+        repaint();
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle(int y)
+{
+    if (y == 103)
+    {
+        if (!reverbState && !delayState)
+        {
+            background = backgroundGenerator(1);
+            repaint();
+            reverbState = true;
+            renderReverbComps(currentVerbIndex, 0);
+        }
+        else if (!reverbState && delayState)
+        {
+            background = backgroundGenerator(3);
+            repaint();
+            reverbState = true;
+            renderReverbComps(currentVerbIndex, 0);
+        }
+        else if (reverbState && !delayState)
+        {
+            background = backgroundGenerator(0);
+            repaint();
+            reverbState = false;
+            hideReverbComps(currentVerbIndex);
+        }
+        else if (reverbState && delayState)
+        {
+            background = backgroundGenerator(2);
+            repaint();
+            reverbState = false;
+            hideReverbComps(currentVerbIndex);
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleDelayToggle(int y)
+{
+    if (y == 103)
+    {
+        if (!delayState && !reverbState)
+        {
+            background = backgroundGenerator(2);
+            repaint();
+            delayState = true;
+            renderDelayComps(currentDelayIndex, 0);
+        }
+        else if (!delayState && reverbState)
+        {
+            background = backgroundGenerator(3);
+            repaint();
+            delayState = true;
+            renderDelayComps(currentDelayIndex, 0);
+        }
+        else if (delayState && !reverbState)
+        {
+            background = backgroundGenerator(0);
+            repaint();
+            delayState = false;
+            hideDelayComps(currentDelayIndex);
+
+        }
+        else if (delayState && reverbState)
+        {
+            background = backgroundGenerator(1);
+            repaint();
+            delayState = false;
+            hideDelayComps(currentDelayIndex);
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::renderReverbComps(int page, int direction)
+{
+    if (direction == 0) // Default, used for power only
+    {
+        for (auto* comp : getReverbComps(page))
+        {
+            addAndMakeVisible(comp);
+        }
+    }
+    else if (direction == -1) // Left arrow
+    {
+        for (auto* comp: getReverbComps(page))
+        {
+            addAndMakeVisible(comp);
+            hideReverbComps(page + 1);
+        }
+    }
+    else if (direction == 1) // Right arrow
+    {
+        for (auto* comp: getReverbComps(page))
+        {
+            addAndMakeVisible(comp);
+            hideReverbComps(page - 1);
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::renderDelayComps(int page, int direction)
+{
+    if (direction == 0) // Default, used for power only
+    {
+        for (auto* comp: getDelayComps(page))
+        {
+            addAndMakeVisible(comp);
+        }
+    }
+    else if (direction == -1) // Left arrow
+    {
+        for (auto* comp: getDelayComps(page))
+        {
+            addAndMakeVisible(comp);
+            hideDelayComps(page + 1);
+        }
+    }
+    else if (direction == 1) // Right arrow
+    {
+        for (auto* comp: getDelayComps(page))
+        {
+            addAndMakeVisible(comp);
+            hideDelayComps(page - 1);
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::hideReverbComps(int page)
+{
+    for (auto* comp: getReverbComps(page))
+    {
+        removeChildComponent(comp);
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::hideDelayComps(int page)
+{
+    for (auto* comp: getDelayComps(page))
+    {
+        removeChildComponent(comp);
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleFXPowerToggles1(int y) // DIST. && COZY MODES
+{
+    if (y == 30)
+    {
+        int i = 0;
+
+        if (!distortionState && i == 0)
+        {
+            i++;
+            distortionState = true;
+            repaint();
+        }
+        else
+        {
+            distortionState = false;
+            i = 0;
+            repaint();
+        }
+    }
+    else if (y == 123)
+    {
+        int i = 0;
+
+        if (!cozyModeState && i == 0)
+        {
+            i++;
+            cozyModeState = true;
+            repaint();
+        }
+        else
+        {
+            i = 0;
+            cozyModeState = false;
+            repaint();
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER && SICK-O-MODES
+{
+    if (y == 30)
+    {
+        int i = 0;
+
+        if (!shifterState && i == 0)
+        {
+            i++;
+            shifterState = true;
+            repaint();
+        }
+        else
+        {
+            i = 0;
+            shifterState = false;
+            repaint();
+        }
+    }
+    else if (y == 123)
+    {
+
+        int i = 0;
+
+        if (!sickoModeState && i == 0)
+        {
+            i++;
+            sickoModeState = true;
+            repaint();
+        }
+        else
+        {
+            i = 0;
+            sickoModeState = false;
+            repaint();
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY MODES AMT.
+{
+    if (y == 25)
+    {
+        if (distortionAmt < 100 && distortionState)
+        {
+            distortionAmt += 2;
+            repaint();
+        }
+        distortionAmt += 0;
+    }
+    else if (y == 75)
+    {
+        // Checks that distortionAmt is non-negative
+        if (distortionAmt > 0 && distortionState)
+        {
+            distortionAmt -= 2;
+            repaint();
+        }
+        distortionAmt -= 0;
+    }
+    else if (y == 115 && cozyModeState)
+    {
+        if (cozyModeAmt < 100)
+        {
+            cozyModeAmt += 2;
+            repaint();
+        }
+        cozyModeAmt += 0;
+    }
+    else if (y == 165 && cozyModeState)
+    {
+        // Checks that cozyModeAmt is non-negative
+        if (cozyModeAmt > 0)
+        {
+            cozyModeAmt -= 2;
+            repaint();
+        }
+        cozyModeAmt -= 0;
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK-O-MODES AMT.
+{
+    if (y == 25 && shifterState)
+    {
+        if (shifterAmt < 100)
+        {
+            shifterAmt += 2;
+            repaint();
+        }
+        shifterAmt += 0;
+    }
+    else if (y == 75 && shifterState)
+    {
+        // Checks that shifterAmt is non-negative
+        if (shifterAmt > 0)
+        {
+            shifterAmt -= 2;
+            repaint();
+        }
+        shifterAmt -= 0;
+    }
+    else if (y == 115 && sickoModeState)
+    {
+        if (sickoModeAmt < 100)
+        {
+            sickoModeAmt += 2;
+            repaint();
+        }
+        sickoModeAmt += 0;
+    }
+    else if (y == 165 && sickoModeState)
+    {
+        // Checks that sickoModeAmt is non-negative
+        if (sickoModeAmt > 0)
+        {
+            sickoModeAmt -= 2;
+            repaint();
+        }
+        sickoModeAmt -= 0;
+    }
+}
+
 void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 {
     juce::Point<int> clickPosition = event.getPosition();
     
     for (const auto& rect : rectangleArr)
     {
-        // Checks if the current mouse click position matches any (x,y) coordinates in rectangleArr
         if (rect.contains(clickPosition))
         {
-            // Extract x, y of the rectangle
-            int x = rect.getX();
-            int y = rect.getY();
-            
-            switch (x)
-            {
-                case 10:
-                    if (y == 150) // LP1
-                    {
-                        if (reverbState)
-                        {
-                            for (auto* comp : getReverbComps(0))
-                            {
-                                addAndMakeVisible(comp);
-                            }
-                            for (auto* comp : getReverbComps(1))
-                            {
-                                removeChildComponent(comp);
-                            }
-                            if (currentVerbIndex > 0)
-                            {
-                                currentVerbIndex--;
-//                                std::cout << currentVerbIndex << std::endl;
-                            }
-                            
-                        }
-                        
-                    }
-                    else if (y == 299)
-                    {
-                        if (currentIndexPresetBank1 == 0)
-                        {
-                            currentIndexPresetBank1 = presentBank1Settings.size() - 1;
-                        }
-                        else
-                        {
-                            currentIndexPresetBank1--;
-                        }
-                        repaint();
-                    }
-                    break;
-                case 304:
-                    if (y == 150) // RP1
-                    {
-                        if (reverbState)
-                        {
-                            int numPages = 1;
-                            
-                            for (auto* comp : getReverbComps(1))
-                            {
-                                addAndMakeVisible(comp);
-                            }
-                            for (auto* comp : getReverbComps(0))
-                            {
-                                removeChildComponent(comp);
-                            }
-                            if (currentVerbIndex < numPages)
-                            {
-                                currentVerbIndex++;
-//                                std::cout << currentVerbIndex << std::endl;
-                            }
-                            
-                        }
-                        
-                    }
-                    else if (y == 299)
-                    {
-                        currentIndexPresetBank1 = (currentIndexPresetBank1 + 1) % presentBank1Settings.size();
-                        repaint();
-                    }
-                    break;
-                case 347:
-                    if (y == 25)
-                    {
-                        if (distortionAmt < 100 && distortionState)
-                        {
-                            distortionAmt += 2;
-                            repaint();
-                        }
-                        distortionAmt += 0;
-                    }
-                    else if (y == 75)
-                    {
-                        // Checks that distortionAmt is non-negative
-                        if (distortionAmt > 0 && distortionState)
-                        {
-                            distortionAmt -= 2;
-                            repaint();
-                        }
-                        distortionAmt -= 0;
-                    }
-                    else if (y == 115 && cozyModeState)
-                    {
-                        if (cozyModeAmt < 100)
-                        {
-                            cozyModeAmt += 2;
-                            repaint();
-                        }
-                        cozyModeAmt += 0;
-                    }
-                    else if (y == 165 && cozyModeState)
-                    {
-                        // Checks that cozyModeAmt is non-negative
-                        if (cozyModeAmt > 0)
-                        {
-                            cozyModeAmt -= 2;
-                            repaint();
-                        }
-                        cozyModeAmt -= 0;
-                    }
-                    break;
-                case 512:
-                    if (y == 25 && shifterState)
-                    {
-                        if (shifterAmt < 100)
-                        {
-                            shifterAmt += 2;
-                            repaint();
-                        }
-                        shifterAmt += 0;
-                    }
-                    else if (y == 75 && shifterState)
-                    {
-                        // Checks that shifterAmt is non-negative
-                        if (shifterAmt > 0)
-                        {
-                            shifterAmt -= 2;
-                            repaint();
-                        }
-                        shifterAmt -= 0;
-                    }
-                    else if (y == 115 && sickoModeState)
-                    {
-                        if (sickoModeAmt < 100)
-                        {
-                            sickoModeAmt += 2;
-                            repaint();
-                        }
-                        sickoModeAmt += 0;
-                    }
-                    else if (y == 165 && sickoModeState)
-                    {
-                        // Checks that sickoModeAmt is non-negative
-                        if (sickoModeAmt > 0)
-                        {
-                            sickoModeAmt -= 2;
-                            repaint();
-                        }
-                        sickoModeAmt -= 0;
-                    }
-                    break;
-                case 670:
-                    if (y == 150) // LP3
-                    {
-                        if (delayState)
-                        {
-                            for (auto* comp : getDelayComps(0))
-                            {
-                                addAndMakeVisible(comp);
-                            }
-
-                            for (auto* comp : getDelayComps(1))
-                            {
-                                removeChildComponent(comp);
-                            }
-                            if (currentDelayIndex > 0)
-                            {
-                                currentDelayIndex--;
-//                                std::cout << currentDelayIndex << std::endl;
-                            }
-                            
-                        }
-                        
-                    }
-                    else if (y == 299)
-                    {
-                        if (currentIndexPresetBank2 == 0)
-                        {
-                            currentIndexPresetBank2 = presentBank2Settings.size() - 1;
-                        }
-                        else {
-                            currentIndexPresetBank2--;
-                        }
-                        repaint();
-                    }
-                    break;
-                case 965:
-                    if (y == 150) // RP3
-                    {
-                        int numPages = 1;
-                        
-                        if (delayState)
-                        {
-                            for (auto* comp : getDelayComps(1))
-                            {
-                                addAndMakeVisible(comp);
-                            }
-
-                            for (auto* comp : getDelayComps(0))
-                            {
-                                removeChildComponent(comp);
-                            }
-                            if (currentDelayIndex < numPages)
-                            {
-                                currentDelayIndex++;
-//                                std::cout << currentDelayIndex << std::endl;
-                            }
-            
-                        }
-                    
-                    }
-                    else if (y == 299)
-                    {
-                        currentIndexPresetBank2 = (currentIndexPresetBank2 + 1) % presentBank2Settings.size();
-                        repaint();
-                    }
-                    break;
-                case 393:
-                    if (y == 30)
-                    {
-                        int i = 0;
-                        
-                        if (!distortionState && i == 0)
-                        {
-                            i++;
-                            distortionState = true;
-                            repaint();
-                        }
-                        else
-                        {
-                            distortionState = false;
-                            i = 0;
-                            repaint();
-                        }
-                    }
-                    else if (y == 123){
-                        
-                        int i = 0;
-                        
-                        if (!cozyModeState && i == 0)
-                        {
-                            i++;
-                            cozyModeState = true;
-                            repaint();
-                        }
-                        else
-                        {
-                            i = 0;
-                            cozyModeState = false;
-                            repaint();
-                        }
-                    }
-                    break;
-                case 553:
-                    if (y == 30)
-                    {
-                        int i = 0;
-                        
-                        if (!shifterState && i == 0)
-                        {
-                            i++;
-                            shifterState = true;
-                            repaint();
-                        }
-                        else
-                        {
-                            i = 0;
-                            shifterState = false;
-                            repaint();
-                        }
-                        
-                    }
-                    else if (y == 123){
-                        
-                        int i = 0;
-                        
-                        if (!sickoModeState && i == 0)
-                        {
-                            i++;
-                            sickoModeState = true;
-                            repaint();
-                        }
-                        else
-                        {
-                            i = 0;
-                            sickoModeState = false;
-                            repaint();
-                        }
-                        
-                    }
-                    break;
-                case 110: // Reverb Pow
-                    if (y == 103)
-                    {
-                        if (!reverbState && !delayState)
-                        {
-                            background = backgroundGenerator(1);
-                            repaint();
-                            reverbState = true;
-                            for (auto* comp : getReverbComps(currentVerbIndex))
-                            {
-                                addAndMakeVisible(comp); // RENDERS ALL REVERB COMPONENTS
-                            }
-                        }
-                        else if (!reverbState && delayState)
-                        {
-                            background = backgroundGenerator(3);
-                            repaint();
-                            reverbState = true;
-                            for (auto* comp : getReverbComps(currentVerbIndex))
-                            {
-                                addAndMakeVisible(comp); // RENDERS ALL REVERB COMPONENTS
-                            }
-                        }
-                        else if (reverbState && !delayState)
-                        {
-                            background = backgroundGenerator(0);
-                            repaint();
-                            reverbState = false;
-                            for (auto* comp : getReverbComps(currentVerbIndex))
-                            {
-                                removeChildComponent(comp); // DELETES ALL REVERB COMPONENTS
-                            }
-                        }
-                        else if (reverbState && delayState)
-                        {
-                            background = backgroundGenerator(2);
-                            repaint();
-                            reverbState = false;
-                            for (auto* comp : getReverbComps(currentVerbIndex))
-                            {
-                                removeChildComponent(comp); // DELETES ALL REVERB COMPONENTS
-                            }
-                        }
-                    }
-                    break;
-                case 776: // Delay Pow
-                    if (y == 103)
-                    {
-                        if (!delayState && !reverbState)
-                        {
-                            background = backgroundGenerator(2);
-                            repaint();
-                            delayState = true;
-                            
-                            for(auto* comp : getDelayComps(currentDelayIndex))
-                            {
-                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
-                            }
-                            
-                        }
-                        else if (!delayState && reverbState)
-                        {
-                            background = backgroundGenerator(3);
-                            repaint();
-                            delayState = true;
-        
-                            for(auto* comp : getDelayComps(currentDelayIndex))
-                            {
-                                addAndMakeVisible(comp); // RENDERS ALL DELAY COMPONENTS
-                            }
-                            
-                        }
-                        else if (delayState && !reverbState)
-                        {
-                            background = backgroundGenerator(0);
-                            repaint();
-                            delayState = false;
-    
-                            for(auto* comp : getDelayComps(currentDelayIndex))
-                            {
-                                    removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
-                            }
-                            
-                        }
-                        else if (delayState && reverbState)
-                        {
-                            background = backgroundGenerator(1);
-                            repaint();
-                            delayState = false;
-                            
-                            for(auto* comp : getDelayComps(currentDelayIndex))
-                            {
-                                removeChildComponent(comp); // DELETES ALL DELAY COMPONENTS
-                            }
-                                
-                        }
-                    }
-                    break;
-                
-                default:
-                {
-                    break;
-                }
-            }
-            
-            break; // Exit the loop
+            handleCompClick(rect);
+            break;
         }
     }
 }
+// ====================================================================================================================
