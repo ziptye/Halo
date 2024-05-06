@@ -53,44 +53,29 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     g.drawImageAt(background, 0, 0);
     
-    // LED LIGHT COORDS.
-    
     // DIST. STATUS ----
     if (!distortionState)
-    {
         drawLEDLights(g, juce::Colours::red, 467, 75, 8, 8, 4.0f);
-    }
-    else 
-    {
+    else
         drawLEDLights(g, juce::Colours::lime, 467, 30, 8, 8, 4.0f);
-    }
+    
     // SHIFTER STATUS ----
     if (!shifterState)
-    {
         drawLEDLights(g, juce::Colours::red, 628, 75, 8, 8, 4.0f);
-    }
-    else 
-    {
+    else
         drawLEDLights(g, juce::Colours::lime, 628, 30, 8, 8, 4.0f);
-    }
+    
     // COZY MODE STATUS  ----
     if (!cozyModeState)
-    {
         drawLEDLights(g, juce::Colours::red, 467, 170, 8, 8, 4.0f);
-    }
-    else 
-    {
+    else
         drawLEDLights(g, juce::Colours::lime, 467, 122, 8, 8, 4.0f);
-    }
+    
     // SICKOMODE STATUS ----
     if (!sickoModeState)
-    {
         drawLEDLights(g, juce::Colours::red, 628, 170, 8, 8, 4.0f);
-    }
     else 
-    {
         drawLEDLights(g, juce::Colours::lime, 628, 122, 8, 8, 4.0f);
-    }
     
     // Preset Bank 1 Label
     drawLabel(g, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
