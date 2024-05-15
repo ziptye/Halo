@@ -14,11 +14,12 @@
 #include "AnimatedKnob.h"
 #include "HaloSliders.h"
 #include "HaloDelayButtons.h"
+#include "AnimatedParticles.h"
 
 //==============================================================================
 /**
 */
-class ProjectHaloAudioProcessorEditor  : public juce::AudioProcessorEditor
+class ProjectHaloAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor&);
@@ -28,6 +29,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
+    void mouseUp(const juce::MouseEvent& event) override;
     void createClickableAreas();
     void addImagesToArray();
     juce::Image backgroundGenerator(int pos);
@@ -109,6 +111,10 @@ private:
     int shifterAmt = 0;
     int cozyModeAmt = 0;
     int sickoModeAmt = 0;
+    
+    void timerCallback() override;
+    std::vector<std::unique_ptr<AnimatedParticles>> particles;
+    juce::Rectangle<float>particleBounds;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
