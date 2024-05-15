@@ -20,6 +20,8 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     
     createClickableAreas();
     addImagesToArray();
+    generateReverbParticles();
+    generateDelayParticles();
     
     // Reverb Settings:
     presentBank1Settings.add("Default");
@@ -39,25 +41,11 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     background = backgroundGenerator(0);
     
     setSize(1000, 525);
-    
-    // Create Particles:
-    particleBounds = juce::Rectangle<float>(5, 45, 325, 230); // X, Y, W, H
-
-    // Create particles within the defined bounds
-    for (int i = 0; i < 50; ++i)
-        particles.push_back(std::make_unique<AnimatedParticles>(
-            juce::Random::getSystemRandom().nextFloat() * particleBounds.getWidth() + particleBounds.getX(),
-            juce::Random::getSystemRandom().nextFloat() * particleBounds.getHeight() + particleBounds.getY(),
-            particleBounds));
-
-    // Start timer for animation:
-    startTimerHz(60);
-
-
 }
 
 ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 {
+    stopTimer();
 }
 
 //==============================================================================
@@ -109,11 +97,55 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     // Sick-O Mode Amount
     drawText(g, std::to_string(sickoModeAmt), 504, 139);
     
-    // Draw particles
-    for (auto& particle : particles)
+    if(!reverbState)
     {
-        particle->draw(g);
+        // Draw particles
+        for (auto& particle : particles)
+        {
+            particle->draw(g);
+        }
     }
+    
+    if(!delayState)
+    {
+        // Draw particles
+        for (auto& particle : particlesDelay)
+        {
+            particle->draw(g);
+        }
+    }
+    
+}
+
+void ProjectHaloAudioProcessorEditor::generateReverbParticles()
+{
+    // Create Particles:
+    particleBounds = juce::Rectangle<float>(5, 45, 320, 230); // X, Y, W, H
+
+    // Create particles within the defined bounds
+    for (int i = 0; i < 50; ++i)
+        particles.push_back(std::make_unique<AnimatedParticles>(
+            juce::Random::getSystemRandom().nextFloat() * particleBounds.getWidth() + particleBounds.getX(),
+            juce::Random::getSystemRandom().nextFloat() * particleBounds.getHeight() + particleBounds.getY(),
+            particleBounds));
+
+    // Start timer for animation:
+    startTimerHz(60);
+}
+
+void ProjectHaloAudioProcessorEditor::generateDelayParticles()
+{
+    // Create Particles:
+    particleBoundsDelay = juce::Rectangle<float>(667, 45, 320, 230); // X, Y, W, H
+
+    // Create particles within the defined bounds
+    for (int i = 0; i < 50; ++i)
+        particlesDelay.push_back(std::make_unique<AnimatedParticles>(
+            juce::Random::getSystemRandom().nextFloat() * particleBoundsDelay.getWidth() + particleBoundsDelay.getX(),
+            juce::Random::getSystemRandom().nextFloat() * particleBoundsDelay.getHeight() + particleBoundsDelay.getY(), particleBoundsDelay));
+
+    // Start timer for animation:
+    startTimerHz(60);
 }
 
 juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int num, int pos){
@@ -678,6 +710,12 @@ void ProjectHaloAudioProcessorEditor::mouseUp(const juce::MouseEvent &event)
 void ProjectHaloAudioProcessorEditor::timerCallback()
 {
     for (auto& particle : particles)
+    {
+        particle -> update();
+        repaint();
+    }
+    
+    for (auto& particle : particlesDelay)
     {
         particle -> update();
         repaint();

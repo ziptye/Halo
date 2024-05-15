@@ -48,6 +48,8 @@ public:
     void handleFXPowerToggles2(int y);
     void handleFXAmounts1(int y);
     void handleFXAmounts2(int y);
+    void generateReverbParticles();
+    void generateDelayParticles();
     
     void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
     void drawText(juce::Graphics& g, const juce::String& text, int x, int y);
@@ -113,8 +115,12 @@ private:
     int sickoModeAmt = 0;
     
     void timerCallback() override;
+    
     std::vector<std::unique_ptr<AnimatedParticles>> particles;
     juce::Rectangle<float>particleBounds;
+    
+    std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
+    juce::Rectangle<float>particleBoundsDelay;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
