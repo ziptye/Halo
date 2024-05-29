@@ -103,7 +103,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     if(!reverbState)
     {
         // Draw particles
-        for (auto& particle : particles)
+        for (auto& particle : particlesReverb)
         {
             particle->draw(g);
         }
@@ -127,7 +127,7 @@ void ProjectHaloAudioProcessorEditor::generateReverbParticles()
 
     // Create particles within the defined bounds
     for (int i = 0; i < 50; ++i)
-        particles.push_back(std::make_unique<AnimatedParticles>(
+        particlesReverb.push_back(std::make_unique<AnimatedParticles>(
             juce::Random::getSystemRandom().nextFloat() * particleBoundsReverb.getWidth() + particleBoundsReverb.getX(),
             juce::Random::getSystemRandom().nextFloat() * particleBoundsReverb.getHeight() + particleBoundsReverb.getY(),
             particleBoundsReverb));
@@ -310,11 +310,11 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
         case 10:
             handlePanelLeft(x, y);
             break;
-        case 52: // Tap Tempo Bounds
-            std::cout<< "TAP TEMPO" << std::endl;
+        case 52:
+            updateTempo();
             break;
         case 183:
-            handleTempoChange(x, y);
+            handleManualTempoChange(x, y);
             break;
         case 304:
             handlePanelRight(x, y);
@@ -722,7 +722,7 @@ void ProjectHaloAudioProcessorEditor::mouseUp(const juce::MouseEvent &event)
 
 void ProjectHaloAudioProcessorEditor::timerCallback()
 {
-    for (auto& particle : particles)
+    for (auto& particle : particlesReverb)
     {
         particle -> update();
         repaint();
@@ -750,7 +750,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
     }
 }
 
-void ProjectHaloAudioProcessorEditor::handleTempoChange(int x, int y)
+void ProjectHaloAudioProcessorEditor::handleManualTempoChange(int x, int y)
 {
     if (bpmVal < 300)
     {
@@ -766,5 +766,34 @@ void ProjectHaloAudioProcessorEditor::handleTempoChange(int x, int y)
         {
             bpmVal -= 1;
         }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::updateTempo()
+{
+    static std::vector<double> tapTimes;
+    static const int maxTaps = 4;  // Number of taps to average for tempo calc
+
+    double currentTime = juce::Time::getMillisecondCounterHiRes() / 1000.0;
+
+    if (!tapTimes.empty() && currentTime - tapTimes.back() > 2.0)  // Reset if last tap was more than 2 seconds ago
+        tapTimes.clear();
+
+    tapTimes.push_back(currentTime);
+
+    if (tapTimes.size() == maxTaps)
+    {
+        double sumIntervals = 0.0;
+        for (int i = 1; i < tapTimes.size(); ++i)
+            sumIntervals += (tapTimes[i] - tapTimes[i - 1]);
+        
+        double averageInterval = sumIntervals / (tapTimes.size() - 1);
+        double bpm = 60.0 / averageInterval;
+        
+        // Updates the current tempo
+        bpmVal = bpm;
+        
+        // Clear tap times to start new measurement
+        tapTimes.clear();
     }
 }

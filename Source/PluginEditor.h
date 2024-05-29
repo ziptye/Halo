@@ -51,7 +51,8 @@ public:
     void generateReverbParticles();
     void generateDelayParticles();
     
-    void handleTempoChange(int x, int y);
+    void handleManualTempoChange(int x, int y);
+    void updateTempo();
     
     void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
     void drawText(juce::Graphics& g, juce::Colour color, float fontSize, const juce::String& text, int x, int y);
@@ -120,7 +121,7 @@ private:
     
     void timerCallback() override;
     
-    std::vector<std::unique_ptr<AnimatedParticles>> particles;
+    std::vector<std::unique_ptr<AnimatedParticles>> particlesReverb;
     juce::Rectangle<float>particleBoundsReverb;
     
     std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
