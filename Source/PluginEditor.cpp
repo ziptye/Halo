@@ -120,14 +120,14 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
 void ProjectHaloAudioProcessorEditor::generateReverbParticles()
 {
     // Create Particles:
-    particleBounds = juce::Rectangle<float>(5, 45, 320, 230); // X, Y, W, H
+    particleBoundsReverb = juce::Rectangle<float>(5, 45, 320, 230); // X, Y, W, H
 
     // Create particles within the defined bounds
     for (int i = 0; i < 50; ++i)
         particles.push_back(std::make_unique<AnimatedParticles>(
-            juce::Random::getSystemRandom().nextFloat() * particleBounds.getWidth() + particleBounds.getX(),
-            juce::Random::getSystemRandom().nextFloat() * particleBounds.getHeight() + particleBounds.getY(),
-            particleBounds));
+            juce::Random::getSystemRandom().nextFloat() * particleBoundsReverb.getWidth() + particleBoundsReverb.getX(),
+            juce::Random::getSystemRandom().nextFloat() * particleBoundsReverb.getHeight() + particleBoundsReverb.getY(),
+            particleBoundsReverb));
 
     // Start timer for animation:
     startTimerHz(60);
@@ -239,6 +239,8 @@ void ProjectHaloAudioProcessorEditor::createClickableAreas()
         {512, 75, 20, 20}, // Shifter Amt Down
         {512, 115, 20, 20}, // Sick-o-Mode Amt Up
         {512, 165, 20, 20}, // Sick-o-Mode Amt Down
+        {52, 385, 64, 64}, // Tap Tempo Feature
+        
     };
     
     for (const auto& rect : rectangles)
@@ -302,6 +304,9 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
     {
         case 10:
             handlePanelLeft(x, y);
+            break;
+        case 52: // Tap Tempo Bounds
+            std::cout<< "TAP TEMPO" << std::endl;
             break;
         case 304:
             handlePanelRight(x, y);
@@ -704,7 +709,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK
 }
 void ProjectHaloAudioProcessorEditor::mouseUp(const juce::MouseEvent &event)
 {
-    
+//    stopTimer();
 }
 
 void ProjectHaloAudioProcessorEditor::timerCallback()

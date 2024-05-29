@@ -117,7 +117,7 @@ private:
     void timerCallback() override;
     
     std::vector<std::unique_ptr<AnimatedParticles>> particles;
-    juce::Rectangle<float>particleBounds;
+    juce::Rectangle<float>particleBoundsReverb;
     
     std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
     juce::Rectangle<float>particleBoundsDelay;
