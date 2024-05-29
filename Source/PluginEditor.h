@@ -118,6 +118,7 @@ private:
     int sickoModeAmt = 0;
     
     int bpmVal = 120; // Default BPM
+    std::vector<double> tapTimes;
     
     void timerCallback() override;
     

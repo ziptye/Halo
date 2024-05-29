@@ -100,6 +100,16 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     // Display BPM
     drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
     
+    // Displays LED lights for Tap Tempo
+    if (tapTimes.size() == 4 || tapTimes.size() == 0)
+    {
+        drawLEDLights(g, juce::Colours::limegreen, 150, 430, 8, 8, 4.0f);
+    }
+    else if (tapTimes.size() < 4)
+    {
+        drawLEDLights(g, juce::Colours::orange, 150, 400, 8, 8, 4.0f);
+    }
+    
     if(!reverbState)
     {
         // Draw particles
@@ -771,12 +781,11 @@ void ProjectHaloAudioProcessorEditor::handleManualTempoChange(int x, int y)
 
 void ProjectHaloAudioProcessorEditor::updateTempo()
 {
-    static std::vector<double> tapTimes;
     static const int maxTaps = 4;  // Number of taps to average for tempo calc
 
     double currentTime = juce::Time::getMillisecondCounterHiRes() / 1000.0;
 
-    if (!tapTimes.empty() && currentTime - tapTimes.back() > 2.0)  // Reset if last tap was more than 2 seconds ago
+    if (!tapTimes.empty() && currentTime - tapTimes.back() > 1.5)  // Resets if last tap was more than 1.5 seconds ago
         tapTimes.clear();
 
     tapTimes.push_back(currentTime);
