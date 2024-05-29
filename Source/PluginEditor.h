@@ -51,8 +51,10 @@ public:
     void generateReverbParticles();
     void generateDelayParticles();
     
+    void handleTempoChange(int x, int y);
+    
     void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
-    void drawText(juce::Graphics& g, const juce::String& text, int x, int y);
+    void drawText(juce::Graphics& g, juce::Colour color, float fontSize, const juce::String& text, int x, int y);
     
     void drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize);
     
@@ -113,6 +115,8 @@ private:
     int shifterAmt = 0;
     int cozyModeAmt = 0;
     int sickoModeAmt = 0;
+    
+    int bpmVal = 120; // Default BPM
     
     void timerCallback() override;
     

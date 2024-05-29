@@ -86,16 +86,19 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     drawLabel(g, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
-    drawText(g, std::to_string(distortionAmt), 340, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(distortionAmt), 340, 49);
     
     // Cozy Mode Amount
-    drawText(g, std::to_string(cozyModeAmt), 340, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(cozyModeAmt), 340, 139);
     
     // Shifter Amount
-    drawText(g, std::to_string(shifterAmt), 504, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(shifterAmt), 504, 49);
     
     // Sick-O Mode Amount
-    drawText(g, std::to_string(sickoModeAmt), 504, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(sickoModeAmt), 504, 139);
+    
+    // Display BPM
+    drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
     
     if(!reverbState)
     {
@@ -163,10 +166,10 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
     
 }
 
-void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, const juce::String &text, int x, int y)
+void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, juce::Colour color, float fontSize, const juce::String &text, int x, int y)
 {
-    g.setFont(juce::Font("Copperplate", 14.0f, 0));
-    g.setColour(juce::Colours::white);
+    g.setFont(juce::Font("Copperplate", fontSize, 0)); // 14.0f
+    g.setColour(color);
     g.drawText(text, x, y, 35, 20, juce::Justification::centred);
 }
 
@@ -239,8 +242,10 @@ void ProjectHaloAudioProcessorEditor::createClickableAreas()
         {512, 75, 20, 20}, // Shifter Amt Down
         {512, 115, 20, 20}, // Sick-o-Mode Amt Up
         {512, 165, 20, 20}, // Sick-o-Mode Amt Down
-        {52, 385, 64, 64}, // Tap Tempo Feature
         
+        {52, 385, 64, 64}, // Tap Tempo Feature
+        {183, 385, 20, 20}, // BPM Up
+        {183, 430, 20, 20}, // BPM Down
     };
     
     for (const auto& rect : rectangles)
@@ -307,6 +312,9 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
             break;
         case 52: // Tap Tempo Bounds
             std::cout<< "TAP TEMPO" << std::endl;
+            break;
+        case 183:
+            handleTempoChange(x, y);
             break;
         case 304:
             handlePanelRight(x, y);
@@ -738,6 +746,25 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
         {
             handleCompClick(rect);
             break;
+        }
+    }
+}
+
+void ProjectHaloAudioProcessorEditor::handleTempoChange(int x, int y)
+{
+    if (bpmVal < 300)
+    {
+        if (x == 183 && y == 385) // BPM UP
+        {
+            bpmVal += 1;
+        }
+    }
+    
+    if (bpmVal > 0)
+    {
+        if (x == 183 && y == 430) // BPM Down
+        {
+            bpmVal -= 1;
         }
     }
 }
