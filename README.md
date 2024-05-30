@@ -20,3 +20,11 @@
 
 - Initial release
 - Implemented basic functionality
+
+## License
+
+This software is proprietary and may not be copied, modified, or distributed without permission. Please refer to the [LICENSE.txt](LICENSE.txt) file for the full terms and conditions.
+
+## Copyright Notice
+
+© 2024 Ziptye Audio. All rights reserved.
