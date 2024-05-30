@@ -14,11 +14,12 @@
 #include "AnimatedKnob.h"
 #include "HaloSliders.h"
 #include "HaloDelayButtons.h"
+#include "AnimatedParticles.h"
 
 //==============================================================================
 /**
 */
-class ProjectHaloAudioProcessorEditor  : public juce::AudioProcessorEditor
+class ProjectHaloAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor&);
@@ -28,6 +29,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDown(const juce::MouseEvent& event) override;
+    void mouseUp(const juce::MouseEvent& event) override;
     void createClickableAreas();
     void addImagesToArray();
     juce::Image backgroundGenerator(int pos);
@@ -46,9 +48,14 @@ public:
     void handleFXPowerToggles2(int y);
     void handleFXAmounts1(int y);
     void handleFXAmounts2(int y);
+    void generateReverbParticles();
+    void generateDelayParticles();
+    
+    void handleManualTempoChange(int x, int y);
+    void updateTempo();
     
     void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
-    void drawText(juce::Graphics& g, const juce::String& text, int x, int y);
+    void drawText(juce::Graphics& g, juce::Colour color, float fontSize, const juce::String& text, int x, int y);
     
     void drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize);
     
@@ -72,8 +79,8 @@ private:
     HaloSliders reverbRoomSize {juce::Colours::limegreen, 10, 200, 80, 80, 0.0, 100.0}; // P1
     HaloSliders reverbPreDelay {juce::Colours::skyblue, 127, 200, 80, 80, 0.0, 100.0}; // P1
     HaloSliders reverbDamping {juce::Colours::yellow, 248, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbWidth {juce::Colours::limegreen, 10, 200, 80, 80, 0.0, 100.0}; // P2
-    HaloSliders reverbHPF {juce::Colours::limegreen, 127, 200, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbWidth {juce::Colours::darkblue, 10, 200, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbHPF {juce::Colours::lightblue, 127, 200, 80, 80, 0.0, 100.0}; // P2
     HaloSliders reverbLPF {juce::Colours::limegreen, 248, 200, 80, 80, 0.0, 100.0}; // P2
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
@@ -109,6 +116,17 @@ private:
     int shifterAmt = 0;
     int cozyModeAmt = 0;
     int sickoModeAmt = 0;
+    
+    int bpmVal = 120; // Default BPM
+    std::vector<double> tapTimes;
+    
+    void timerCallback() override;
+    
+    std::vector<std::unique_ptr<AnimatedParticles>> particlesReverb;
+    juce::Rectangle<float>particleBoundsReverb;
+    
+    std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
+    juce::Rectangle<float>particleBoundsDelay;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)

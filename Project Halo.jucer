@@ -11,6 +11,8 @@
     </GROUP>
     <GROUP id="{630D8907-384A-25B9-EF17-7DE55815EE79}" name="Source">
       <GROUP id="{7019EABF-910C-58EE-069D-E2B27EF81A4E}" name="Components">
+        <FILE id="bBmgJc" name="AnimatedParticles.h" compile="0" resource="0"
+              file="Source/AnimatedParticles.h"/>
         <FILE id="XWiJ2l" name="HaloDelayButtons.h" compile="0" resource="0"
               file="Source/HaloDelayButtons.h"/>
         <FILE id="UyIftA" name="HaloSliders.h" compile="0" resource="0" file="Source/HaloSliders.h"/>
