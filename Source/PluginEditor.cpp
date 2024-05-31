@@ -203,17 +203,28 @@ void ProjectHaloAudioProcessorEditor::resized()
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
 {
-    // Defines the images:
-    auto initBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
-    auto bg1 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
-    auto bg2 = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
-    auto bg3 = juce::ImageCache::getFromMemory(BinaryData::PH_RonDon_png, BinaryData::PH_RonDon_pngSize);
+    // Defines light mode images:
+    auto initLightBackground = juce::ImageCache::getFromMemory(BinaryData::PH_InitBG_png, BinaryData::PH_InitBG_pngSize);
+    auto bg1Light = juce::ImageCache::getFromMemory(BinaryData::PH_RonDoff_png, BinaryData::PH_RonDoff_pngSize);
+    auto bg2Light = juce::ImageCache::getFromMemory(BinaryData::PH_RoffDon_png, BinaryData::PH_RoffDon_pngSize);
+    auto bg3Light = juce::ImageCache::getFromMemory(BinaryData::PH_RonDon_png, BinaryData::PH_RonDon_pngSize);
     
-    // Add images to array
-    imagesArray.add(initBackground);
-    imagesArray.add(bg1);
-    imagesArray.add(bg2);
-    imagesArray.add(bg3);
+    // Defines dark mode images:
+    auto initDarkBackground = juce::ImageCache::getFromMemory(BinaryData::PH_DMInit_png, BinaryData::PH_DMInit_pngSize);
+    auto bg1Dark = juce::ImageCache::getFromMemory(BinaryData::PH_DMRonDoff_png, BinaryData::PH_DMRonDoff_pngSize);
+    auto bg2Dark = juce::ImageCache::getFromMemory(BinaryData::PH_DMRoffDon_png, BinaryData::PH_DMRoffDon_pngSize);
+    auto bg3Dark = juce::ImageCache::getFromMemory(BinaryData::PH_DMRonDon_png, BinaryData::PH_DMRonDon_pngSize);
+    
+    // Adds all images to array
+    imagesArray.add(initLightBackground);
+    imagesArray.add(bg1Light);
+    imagesArray.add(bg2Light);
+    imagesArray.add(bg3Light);
+    
+    imagesArray.add(initDarkBackground);
+    imagesArray.add(bg1Dark);
+    imagesArray.add(bg2Dark);
+    imagesArray.add(bg3Dark);
     
 }
 
@@ -256,6 +267,8 @@ void ProjectHaloAudioProcessorEditor::createClickableAreas()
         {52, 385, 64, 64}, // Tap Tempo Feature
         {183, 385, 20, 20}, // BPM Up
         {183, 430, 20, 20}, // BPM Down
+        
+        {335, 195, 328, 90}, // Light/Dark Mode Selector
     };
     
     for (const auto& rect : rectangles)
@@ -343,6 +356,18 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
             break;
         case 347:
             handleFXAmounts1(y);
+            break;
+        case 335:
+            background = backgroundGenerator(4); // Light/Dark Mode Selector
+            /* 
+             
+            Need to update the backgroundGenerator() to check for light or dark modes and change to the desired array image.
+             
+             --> Also need to update each of the accompanying function calls for backgroundGenerator()
+                --> handleReverbPowerToggle()
+                --> handleDelayToggle()
+             
+             */
             break;
         case 512:
             handleFXAmounts2(y);

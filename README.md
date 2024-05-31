@@ -6,9 +6,10 @@
 
 ### v0.1.2
 
-- Added new "tap tempo" feature
+- Adds new "tap tempo" feature
 - Adds new dynamic partical effect to reverb & delay sections
 - Adds new live waveform view
+- Updated UI to include a dark/light mode
 
 # Halo v0.1.1
 
