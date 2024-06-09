@@ -42,8 +42,8 @@ public:
     void renderDelayComps(int page, int direction);
     void hideReverbComps(int page);
     void hideDelayComps(int page);
-    void handleReverbPowerToggle(int y);
-    void handleDelayToggle(int y);
+    void handleReverbPowerToggle();
+    void handleDelayToggle();
     void handleFXPowerToggles1(int y);
     void handleFXPowerToggles2(int y);
     void handleFXAmounts1(int y);
@@ -105,6 +105,8 @@ private:
     bool shifterState = false;
     bool cozyModeState = false;
     bool sickoModeState = false;
+    
+    bool darkModeState = false;
     
     int currentIndexPresetBank1 = 0;
     int currentIndexPresetBank2 = 0;

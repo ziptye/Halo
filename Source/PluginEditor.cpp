@@ -349,25 +349,41 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
             handlePanelRight(x, y);
             break;
         case 110:
-            handleReverbPowerToggle(y);
+            handleReverbPowerToggle();
             break;
         case 776:
-            handleDelayToggle(y);
+            handleDelayToggle();
             break;
         case 347:
             handleFXAmounts1(y);
             break;
         case 335:
-            background = backgroundGenerator(4); // Light/Dark Mode Selector
-            /* 
-             
-            Need to update the backgroundGenerator() to check for light or dark modes and change to the desired array image.
-             
-             --> Also need to update each of the accompanying function calls for backgroundGenerator()
-                --> handleReverbPowerToggle()
-                --> handleDelayToggle()
-             
-             */
+            if (!darkModeState)
+            {
+                darkModeState = true;
+            }
+            else
+            {
+                darkModeState = false;
+            }
+            
+            // Updates background when toggling dark mode
+            if (!reverbState && !delayState)
+            {
+                background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
+            }
+            else if (!reverbState && delayState)
+            {
+                background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
+            }
+            else if (reverbState && !delayState)
+            {
+                background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
+            }
+            else if (reverbState && delayState)
+            {
+                background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
+            }
             break;
         case 512:
             handleFXAmounts2(y);
@@ -449,74 +465,59 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
     }
 }
 
-void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle(int y)
+void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle()
 {
-    if (y == 103)
+    if (!reverbState && !delayState)
     {
-        if (!reverbState && !delayState)
-        {
-            background = backgroundGenerator(1);
-            repaint();
-            reverbState = true;
-            renderReverbComps(currentVerbIndex, 0);
-        }
-        else if (!reverbState && delayState)
-        {
-            background = backgroundGenerator(3);
-            repaint();
-            reverbState = true;
-            renderReverbComps(currentVerbIndex, 0);
-        }
-        else if (reverbState && !delayState)
-        {
-            background = backgroundGenerator(0);
-            repaint();
-            reverbState = false;
-            hideReverbComps(currentVerbIndex);
-        }
-        else if (reverbState && delayState)
-        {
-            background = backgroundGenerator(2);
-            repaint();
-            reverbState = false;
-            hideReverbComps(currentVerbIndex);
-        }
+        background = darkModeState ? backgroundGenerator(5) :  backgroundGenerator(1);
+        reverbState = true;
+        renderReverbComps(currentVerbIndex, 0);
+    }
+    else if (!reverbState && delayState)
+    {
+        background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
+        reverbState = true;
+        renderReverbComps(currentVerbIndex, 0);
+    }
+    else if (reverbState && !delayState)
+    {
+        background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
+        reverbState = false;
+        hideReverbComps(currentVerbIndex);
+    }
+    else if (reverbState && delayState)
+    {
+        background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
+        reverbState = false;
+        hideReverbComps(currentVerbIndex);
     }
 }
 
-void ProjectHaloAudioProcessorEditor::handleDelayToggle(int y)
+void ProjectHaloAudioProcessorEditor::handleDelayToggle()
 {
-    if (y == 103)
+    if (!delayState && !reverbState)
     {
-        if (!delayState && !reverbState)
-        {
-            background = backgroundGenerator(2);
-            repaint();
-            delayState = true;
-            renderDelayComps(currentDelayIndex, 0);
-        }
-        else if (!delayState && reverbState)
-        {
-            background = backgroundGenerator(3);
-            repaint();
-            delayState = true;
-            renderDelayComps(currentDelayIndex, 0);
-        }
-        else if (delayState && !reverbState)
-        {
-            background = backgroundGenerator(0);
-            repaint();
-            delayState = false;
-            hideDelayComps(currentDelayIndex);
-
-        }
-        else if (delayState && reverbState)
-        {
-            background = backgroundGenerator(1);
-            repaint();
-            delayState = false;
-            hideDelayComps(currentDelayIndex);
-        }
+        background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
+        delayState = true;
+        renderDelayComps(currentDelayIndex, 0);
+    }
+    else if (!delayState && reverbState)
+    {
+        background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
+        delayState = true;
+        renderDelayComps(currentDelayIndex, 0);
+    }
+    else if (delayState && !reverbState)
+    {
+        background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
+        delayState = false;
+        hideDelayComps(currentDelayIndex);
+    }
+    else if (delayState && reverbState)
+    {
+        background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
+        delayState = false;
+        hideDelayComps(currentDelayIndex);
     }
 }
 
