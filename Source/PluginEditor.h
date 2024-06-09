@@ -54,7 +54,7 @@ public:
     void handleManualTempoChange(int x, int y);
     void updateTempo();
     
-    void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
+    void drawLabel(juce::Graphics& g, float fontSize, const juce::String& text, int x, int y);
     void drawText(juce::Graphics& g, juce::Colour color, float fontSize, const juce::String& text, int x, int y);
     
     void drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize);

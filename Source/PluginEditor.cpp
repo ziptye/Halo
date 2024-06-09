@@ -80,10 +80,10 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         drawLEDLights(g, juce::Colours::lime, 628, 122, 8, 8, 4.0f);
     
     // Preset Bank 1 Label
-    drawLabel(g, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
+    drawLabel(g, 14.0f, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
     
     // Preset Bank 2 Label
-    drawLabel(g, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
+    drawLabel(g, 14.0f, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
     drawText(g, juce::Colours::white, 14.0f, std::to_string(distortionAmt), 340, 49);
@@ -99,6 +99,12 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     // Display BPM
     drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
+    
+    // Light/Dark Mode Text Toggle
+    if (!darkModeState)
+        drawLabel(g, 12.0f, "Light Mode", 330, 190);
+    else
+        drawLabel(g, 12.0f, "Dark Mode", 585, 190);
     
     // Displays LED lights for Tap Tempo
     if (tapTimes.size() == 4 || tapTimes.size() == 0)
@@ -183,9 +189,9 @@ void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, juce::Colour c
     g.drawText(text, x, y, 35, 20, juce::Justification::centred);
 }
 
-void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, const juce::String &text, int x, int y)
+void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, float fontSize, const juce::String &text, int x, int y)
 {
-    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setFont(juce::Font("Copperplate", fontSize, juce::Font::bold));
     g.setColour(juce::Colours::white);
     g.drawText(text, x, y, 85, 35, juce::Justification::centred);
 }
