@@ -1,6 +1,7 @@
 # Halo v0.1.2
 
 ![PH_BGV0 1 2](https://github.com/ziptye/Halo/assets/105367626/3c4c12c1-2e0c-41b8-b306-36aadbec201c)
+![PH_BGV0 1 2 Dark](https://github.com/ziptye/Halo/assets/105367626/6a49d047-da9b-4548-8d4a-7955c7cdbd7a)
 
 ## Release Notes
 

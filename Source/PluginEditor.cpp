@@ -469,7 +469,7 @@ void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle()
 {
     if (!reverbState && !delayState)
     {
-        background = darkModeState ? backgroundGenerator(5) :  backgroundGenerator(1);
+        background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
         reverbState = true;
         renderReverbComps(currentVerbIndex, 0);
     }
