@@ -4,6 +4,12 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="cRJusX" name="Project Halo">
     <GROUP id="{B4E655E9-2A52-2561-4CBE-BB02E5787628}" name="Assets">
+      <FILE id="Rtba6h" name="PH_DMInit.png" compile="0" resource="1" file="../../HALO ASSETS/PH_DMInit.png"/>
+      <FILE id="a5WG4l" name="PH_DMRoffDon.png" compile="0" resource="1"
+            file="../../HALO ASSETS/PH_DMRoffDon.png"/>
+      <FILE id="EdYRkA" name="PH_DMRonDoff.png" compile="0" resource="1"
+            file="../../HALO ASSETS/PH_DMRonDoff.png"/>
+      <FILE id="VWO64n" name="PH_DMRonDon.png" compile="0" resource="1" file="../../HALO ASSETS/PH_DMRonDon.png"/>
       <FILE id="U6PlGL" name="PH_InitBG.png" compile="0" resource="1" file="../../HALO ASSETS/PH_InitBG.png"/>
       <FILE id="tEwQGu" name="PH_RoffDon.png" compile="0" resource="1" file="../../HALO ASSETS/PH_RoffDon.png"/>
       <FILE id="cYXqmf" name="PH_RonDoff.png" compile="0" resource="1" file="../../HALO ASSETS/PH_RonDoff.png"/>
