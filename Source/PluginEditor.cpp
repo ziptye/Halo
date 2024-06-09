@@ -102,9 +102,15 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     
     // Light/Dark Mode Text Toggle
     if (!darkModeState)
+    {
         drawLabel(g, 12.0f, "Light Mode", 330, 190);
+        drawLEDLights(g, juce::Colours::limegreen, 370, 220, 8, 8, 4.0f);
+    }
     else
+    {
         drawLabel(g, 12.0f, "Dark Mode", 585, 190);
+        drawLEDLights(g, juce::Colours::blueviolet, 625, 220, 8, 8, 4.0f);
+    }
     
     // Displays LED lights for Tap Tempo
     if (tapTimes.size() == 4 || tapTimes.size() == 0)
@@ -365,31 +371,19 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
             break;
         case 335:
             if (!darkModeState)
-            {
                 darkModeState = true;
-            }
             else
-            {
                 darkModeState = false;
-            }
             
             // Updates background when toggling dark mode
             if (!reverbState && !delayState)
-            {
                 background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-            }
             else if (!reverbState && delayState)
-            {
                 background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-            }
             else if (reverbState && !delayState)
-            {
                 background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-            }
             else if (reverbState && delayState)
-            {
                 background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-            }
             break;
         case 512:
             handleFXAmounts2(y);
