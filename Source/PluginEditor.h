@@ -72,16 +72,16 @@ private:
     
     HaloSliders mainDryWetSlider {juce::Colours::white, juce::Colours::transparentWhite, 393, 299, 213, 227, 0.0, 100.0};
     
-    HaloSliders delayFeedback {juce::Colours::royalblue, 670, 200, 80, 80, 0.0, 100.0};
-    HaloSliders delayLPF {juce::Colours::goldenrod, 792, 200, 80, 80, 0.0, 100.0};
-    HaloSliders delayHPF {juce::Colours::limegreen, 910, 200, 80, 80, 0.0, 100.0};
+    HaloSliders delayFeedback {juce::Colours::royalblue, 670, 195, 80, 80, 0.0, 100.0};
+    HaloSliders delayLPF {juce::Colours::goldenrod, 792, 195, 80, 80, 0.0, 100.0};
+    HaloSliders delayHPF {juce::Colours::limegreen, 910, 195, 80, 80, 0.0, 100.0};
     
-    HaloSliders reverbRoomSize {juce::Colours::limegreen, 10, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbPreDelay {juce::Colours::skyblue, 127, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbDamping {juce::Colours::yellow, 248, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbWidth {juce::Colours::darkblue, 10, 200, 80, 80, 0.0, 100.0}; // P2
-    HaloSliders reverbHPF {juce::Colours::lightblue, 127, 200, 80, 80, 0.0, 100.0}; // P2
-    HaloSliders reverbLPF {juce::Colours::limegreen, 248, 200, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbRoomSize {juce::Colours::limegreen, 10, 195, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbPreDelay {juce::Colours::skyblue, 127, 195, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbDamping {juce::Colours::yellow, 248, 195, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbWidth {juce::Colours::darkblue, 10, 195, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbHPF {juce::Colours::lightblue, 127, 195, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbLPF {juce::Colours::limegreen, 248, 195, 80, 80, 0.0, 100.0}; // P2
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     

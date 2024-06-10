@@ -100,11 +100,31 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     // Display BPM
     drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
     
+    if(reverbState && currentVerbIndex == 0)
+    {
+        drawLabel(g, 10.0f, "Room Size", 8, 255);
+        drawLabel(g, 10.0f, "Pre-Delay", 125, 255);
+        drawLabel(g, 10.0f, "Damping", 246, 255);
+    }
+    else if (reverbState && currentVerbIndex == 1)
+    {
+        drawLabel(g, 10.0f, "Width", 8, 255);
+        drawLabel(g, 10.0f, "HPF", 125, 255);
+        drawLabel(g, 10.0f, "LPF", 246, 255);
+    }
+    
+    if (delayState && currentDelayIndex == 1)
+    {
+        drawLabel(g, 10.0f, "Feedback", 668, 255);
+        drawLabel(g, 10.0f, "HPF", 790, 255);
+        drawLabel(g, 10.0f, "LPF", 908, 255);
+    }
+    
     // Light/Dark Mode Text Toggle
     if (!darkModeState)
     {
         drawLabel(g, 12.0f, "Light Mode", 330, 190);
-        drawLEDLights(g, juce::Colours::limegreen, 370, 220, 8, 8, 4.0f);
+        drawLEDLights(g, juce::Colours::cyan, 370, 220, 8, 8, 4.0f);
     }
     else
     {
