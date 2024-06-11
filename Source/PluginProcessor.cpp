@@ -93,8 +93,10 @@ void ProjectHaloAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = getTotalNumOutputChannels();
 }
 
 void ProjectHaloAudioProcessor::releaseResources()
@@ -186,6 +188,32 @@ void ProjectHaloAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::createParams()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    auto roomSizeRange = juce::NormalisableRange<float>(0.20f, 70.0f, 0.01f);
+    auto preDelayRange = juce::NormalisableRange<float>(0.00f, 500.0f, 1.0f);
+    auto dampingRange = juce::NormalisableRange<float>(0.00f, 1.0f, 0.01f);
+    auto widthRange = juce::NormalisableRange<float>(0.00f, 1.0f, 0.01f);
+    auto HPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f);
+    auto LPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f);
+    auto feedbackRange = juce::NormalisableRange<float>(0.0f, 200.0f, 1.0f);
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Room Size", 1), "Room Size", roomSizeRange, 0.20f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Pre Delay", 1), "Pre Delay", preDelayRange, 0.00f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Damping", 1), "Damping", dampingRange, 0.00f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Width", 1), "Width", widthRange, 0.00f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Reverb HPF", 1), "Reverb HPF", HPFRange, 20.0f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Reverb LPF", 1), "Reverb LPF", LPFRange, 20000.0f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Feedback", 1), "Feedback", feedbackRange, 0.0f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Delay HPF", 1), "Delay HPF", HPFRange, 20.0f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Delay LPF", 1), "Delay LPF", LPFRange, 20000.0f));
     
     return {params.begin(), params.end()};
 }
