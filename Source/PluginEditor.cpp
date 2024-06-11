@@ -39,8 +39,26 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     // BACKGROUND ======================================================
     
     background = backgroundGenerator(0);
-    
     setSize(1000, 525);
+    
+    // SLIDER ATTACHMENTS ==============================================
+    reverbRoomSizeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Room Size", reverbRoomSize);
+    
+    reverbPreDelayAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Pre Delay", reverbPreDelay);
+    
+    reverbDampingAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Damping", reverbDamping);
+    
+    reverbWidthAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Width", reverbWidth);
+    
+    reverbHPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Reverb HPF", reverbHPF);
+    
+    reverbLPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Reverb LPF", reverbHPF);
+    
+    delayFeedbackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Feedback", delayFeedback);
+    
+    delayHPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay HPF", delayHPF);
+    
+    delayLPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay LPF", delayLPF);
 }
 
 ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
@@ -100,6 +118,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     // Display BPM
     drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
     
+    // Adds text below the various reverb knobs
     if(reverbState && currentVerbIndex == 0)
     {
         drawLabel(g, 10.0f, "Room Size", 8, 255);
@@ -113,6 +132,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         drawLabel(g, 10.0f, "LPF", 246, 255);
     }
     
+    // Adds text below the various delay knobs
     if (delayState && currentDelayIndex == 1)
     {
         drawLabel(g, 10.0f, "Feedback", 668, 255);

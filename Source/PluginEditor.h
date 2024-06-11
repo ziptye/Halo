@@ -73,8 +73,8 @@ private:
     HaloSliders mainDryWetSlider {juce::Colours::white, juce::Colours::transparentWhite, 393, 299, 213, 227, 0.0, 100.0};
     
     HaloSliders delayFeedback {juce::Colours::royalblue, 670, 195, 80, 80, 0.0, 100.0};
-    HaloSliders delayLPF {juce::Colours::goldenrod, 792, 195, 80, 80, 0.0, 100.0};
-    HaloSliders delayHPF {juce::Colours::limegreen, 910, 195, 80, 80, 0.0, 100.0};
+    HaloSliders delayHPF {juce::Colours::goldenrod, 792, 195, 80, 80, 0.0, 100.0};
+    HaloSliders delayLPF {juce::Colours::limegreen, 910, 195, 80, 80, 0.0, 100.0};
     
     HaloSliders reverbRoomSize {juce::Colours::limegreen, 10, 195, 80, 80, 0.0, 100.0}; // P1
     HaloSliders reverbPreDelay {juce::Colours::skyblue, 127, 195, 80, 80, 0.0, 100.0}; // P1
@@ -130,6 +130,17 @@ private:
     std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
     juce::Rectangle<float>particleBoundsDelay;
     
+    // SLIDER ATTACHMENTS ==============================================================================
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbRoomSizeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbPreDelayAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbDampingAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbWidthAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbHPFAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbLPFAttachment;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayFeedbackAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayHPFAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayLPFAttachment;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
 };
