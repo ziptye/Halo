@@ -54,9 +54,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     juce::AudioProcessorValueTreeState apvts;
+    juce::dsp::StateVariableTPTFilter<float> verbHPF, verbLPF, delayHPF, delayLPF;
 
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();
+    void reset() override;
+//    juce::AudioProcessor &processor;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessor)
 };

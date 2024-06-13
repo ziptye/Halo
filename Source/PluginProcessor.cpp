@@ -97,6 +97,18 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     spec.maximumBlockSize = samplesPerBlock;
     spec.sampleRate = sampleRate;
     spec.numChannels = getTotalNumOutputChannels();
+    
+    reset(); // resets all parameters of the plugin
+    
+    verbHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+    verbLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    delayHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+    delayLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    
+    verbHPF.prepare(spec);
+    verbLPF.prepare(spec);
+    delayHPF.prepare(spec);
+    delayLPF.prepare(spec);
 }
 
 void ProjectHaloAudioProcessor::releaseResources()
@@ -137,27 +149,26 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
+    auto vHPF = apvts.getRawParameterValue("Reverb HPF");
+    auto vLPF = apvts.getRawParameterValue("Reverb LPF");
+    auto dHPF = apvts.getRawParameterValue("Delay HPF");
+    auto dLPF = apvts.getRawParameterValue("Delay LPF");
+    
+    verbHPF.setCutoffFrequency(vHPF -> load());
+    verbLPF.setCutoffFrequency(vLPF -> load());
+    delayHPF.setCutoffFrequency(dHPF -> load());
+    delayLPF.setCutoffFrequency(dLPF -> load());
+    
+    auto audioBlock = juce::dsp::AudioBlock<float> (buffer);
+    auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
+    
+    verbHPF.process(context);
+    verbLPF.process(context);
+    delayHPF.process(context);
+    delayLPF.process(context);
 }
 
 //==============================================================================
@@ -216,6 +227,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Delay LPF", 1), "Delay LPF", LPFRange, 20000.0f));
     
     return {params.begin(), params.end()};
+}
+
+void ProjectHaloAudioProcessor::reset()
+{
+    verbHPF.reset();
+    verbLPF.reset();
+    delayHPF.reset();
+    delayLPF.reset();
 }
 
 //==============================================================================
