@@ -15,7 +15,6 @@
 ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
-//    addAndMakeVisible(animatedKnob1);
     addAndMakeVisible(mainDryWetSlider);
     
     createClickableAreas();
@@ -59,6 +58,8 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     delayHPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay HPF", delayHPF);
     
     delayLPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay LPF", delayLPF);
+    
+    mainDryWetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Dry Wet", mainDryWetSlider);
 }
 
 ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()

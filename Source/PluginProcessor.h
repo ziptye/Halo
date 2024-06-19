@@ -55,11 +55,17 @@ public:
     
     juce::AudioProcessorValueTreeState apvts;
     juce::dsp::StateVariableTPTFilter<float> verbHPF, verbLPF, delayHPF, delayLPF;
+    juce::dsp::Reverb reverb;
+    
+    
 
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();
     void reset() override;
-//    juce::AudioProcessor &processor;
+    juce::dsp::Reverb::Parameters reverbParams;
+    juce::dsp::DelayLine<float> verbPreDelay;
+    
+    static constexpr int maxDelayTime = 500;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessor)
 };

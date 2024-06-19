@@ -100,15 +100,19 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     
     reset(); // resets all parameters of the plugin
     
-    verbHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-    verbLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-    delayHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-    delayLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
-    
     verbHPF.prepare(spec);
     verbLPF.prepare(spec);
     delayHPF.prepare(spec);
     delayLPF.prepare(spec);
+    
+    verbPreDelay.setMaximumDelayInSamples(static_cast<int>(sampleRate * maxDelayTime / 1000.0f));
+    verbPreDelay.prepare(spec);
+    reverb.prepare(spec);
+    
+    verbHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+    verbLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    delayHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+    delayLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
 }
 
 void ProjectHaloAudioProcessor::releaseResources()
@@ -162,13 +166,39 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     delayHPF.setCutoffFrequency(dHPF -> load());
     delayLPF.setCutoffFrequency(dLPF -> load());
     
+    auto vRoomSize = apvts.getRawParameterValue("Room Size");
+    auto vDamping = apvts.getRawParameterValue("Damping");
+    auto vWidth = apvts.getRawParameterValue("Width");
+    
+    reverbParams.roomSize = vRoomSize -> load();
+    reverbParams.damping = vDamping -> load();
+    reverbParams.width = vWidth -> load();
+    
+    auto vDryWet = apvts.getRawParameterValue("Dry Wet");
+    float wetLevel = vDryWet->load();
+    float dryLevel = 1.0f - wetLevel;
+    
+    reverbParams.wetLevel = wetLevel;
+    reverbParams.dryLevel = dryLevel;
+    
+    reverbParams.freezeMode = 0.0f;
+    
+    reverb.setParameters(reverbParams);
+    
+    auto vPreDelay = apvts.getRawParameterValue("Pre Delay");
+    float preDelayTimeMs = vPreDelay->load();
+    float preDelayTimeSamples = getSampleRate() * preDelayTimeMs / 1000.0f;
+    verbPreDelay.setDelay(preDelayTimeSamples);
+    
     auto audioBlock = juce::dsp::AudioBlock<float> (buffer);
     auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
     
+    verbPreDelay.process(context);
     verbHPF.process(context);
     verbLPF.process(context);
     delayHPF.process(context);
     delayLPF.process(context);
+    reverb.process(context);
 }
 
 //==============================================================================
@@ -200,15 +230,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    auto roomSizeRange = juce::NormalisableRange<float>(0.20f, 70.0f, 0.01f);
-    auto preDelayRange = juce::NormalisableRange<float>(0.00f, 500.0f, 1.0f);
+    float predelaySkew = 0.25f;
+    float skewFactorLPF = 0.5f;
+    float skewFactorHPF = 0.25f;
+    auto roomSizeRange = juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f);
+    auto preDelayRange = juce::NormalisableRange<float>(0.00f, 500.0f, 0.01f, predelaySkew);
     auto dampingRange = juce::NormalisableRange<float>(0.00f, 1.0f, 0.01f);
     auto widthRange = juce::NormalisableRange<float>(0.00f, 1.0f, 0.01f);
-    auto HPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f);
-    auto LPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f);
+    auto HPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, skewFactorHPF);
+    auto LPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, skewFactorLPF);
     auto feedbackRange = juce::NormalisableRange<float>(0.0f, 200.0f, 1.0f);
+    auto dryWetRange = juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f);
     
-    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Room Size", 1), "Room Size", roomSizeRange, 0.20f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Room Size", 1), "Room Size", roomSizeRange, 0.00f));
     
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Pre Delay", 1), "Pre Delay", preDelayRange, 0.00f));
     
@@ -226,6 +260,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Delay LPF", 1), "Delay LPF", LPFRange, 20000.0f));
     
+    params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Dry Wet", 1), "Dry Wet", dryWetRange, 0.0f));
+    
     return {params.begin(), params.end()};
 }
 
@@ -235,6 +271,7 @@ void ProjectHaloAudioProcessor::reset()
     verbLPF.reset();
     delayHPF.reset();
     delayLPF.reset();
+    reverb.reset();
 }
 
 //==============================================================================

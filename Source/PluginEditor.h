@@ -61,14 +61,14 @@ public:
     
     std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
+    
+    bool getReverbState() const { return reverbState; }
 
 private:
     
     ProjectHaloAudioProcessor& audioProcessor;
     
     juce::Image background;
-    
-    AnimatedKnob animatedKnob1;
     
     HaloSliders mainDryWetSlider {juce::Colours::white, juce::Colours::transparentWhite, 393, 299, 213, 227, 0.0, 100.0};
     
@@ -141,6 +141,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayFeedbackAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayHPFAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayLPFAttachment;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainDryWetAttachment;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
 };
