@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Visualizer.h"
 
 //==============================================================================
 /**
@@ -56,16 +57,22 @@ public:
     juce::AudioProcessorValueTreeState apvts;
     juce::dsp::StateVariableTPTFilter<float> verbHPF, verbLPF, delayHPF, delayLPF;
     juce::dsp::Reverb reverb;
+    juce::dsp::Reverb::Parameters reverbParams;
+    Visualizer& getVisualizer() {return visualizer;}
     
+    bool getReverbState() {return reverbState;}
+    bool getDelayState() {return delayState;}
+    void setReverbState(bool rState);
+    void setDelayState(bool dState);
     
-
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();
     void reset() override;
-    juce::dsp::Reverb::Parameters reverbParams;
     juce::dsp::DelayLine<float> verbPreDelay;
-    
+    Visualizer visualizer;
+    bool reverbState = false;
+    bool delayState = false;
     static constexpr int maxDelayTime = 500;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessor)
 };

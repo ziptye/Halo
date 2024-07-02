@@ -90,6 +90,24 @@ void ProjectHaloAudioProcessor::changeProgramName (int index, const juce::String
 {
 }
 
+void ProjectHaloAudioProcessor::setReverbState(bool rState)
+{
+    if (rState)
+    {
+        reverbState = true;
+    }
+    else
+        reverbState = false;
+}
+
+void ProjectHaloAudioProcessor::setDelayState(bool dState)
+{
+    if (dState)
+        delayState = true;
+    else
+        delayState = false;
+}
+
 //==============================================================================
 void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
@@ -113,6 +131,8 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     verbLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
     delayHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
     delayLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+    
+    visualizer.clear();
 }
 
 void ProjectHaloAudioProcessor::releaseResources()
@@ -193,6 +213,8 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     auto audioBlock = juce::dsp::AudioBlock<float> (buffer);
     auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
     
+    visualizer.pushBuffer(buffer);
+    
     verbPreDelay.process(context);
     verbHPF.process(context);
     verbLPF.process(context);
@@ -241,6 +263,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     auto LPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, skewFactorLPF);
     auto feedbackRange = juce::NormalisableRange<float>(0.0f, 200.0f, 1.0f);
     auto dryWetRange = juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f);
+    
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Reverb State", 1), "Reverb State", false));
     
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Room Size", 1), "Room Size", roomSizeRange, 0.00f));
     

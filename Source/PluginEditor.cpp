@@ -60,6 +60,11 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     delayLPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay LPF", delayLPF);
     
     mainDryWetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Dry Wet", mainDryWetSlider);
+    
+    for(auto* comp : getOtherComps())
+    {
+        addAndMakeVisible(comp); // RENDERS VISUALIZER COMP.
+    }
 }
 
 ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
@@ -120,13 +125,13 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
     
     // Adds text below the various reverb knobs
-    if(reverbState && currentVerbIndex == 0)
+    if(audioProcessor.getReverbState() && currentVerbIndex == 0)
     {
         drawLabel(g, 10.0f, "Room Size", 8, 255);
         drawLabel(g, 10.0f, "Pre-Delay", 125, 255);
         drawLabel(g, 10.0f, "Damping", 246, 255);
     }
-    else if (reverbState && currentVerbIndex == 1)
+    else if (audioProcessor.getReverbState() && currentVerbIndex == 1)
     {
         drawLabel(g, 10.0f, "Width", 8, 255);
         drawLabel(g, 10.0f, "HPF", 125, 255);
@@ -134,7 +139,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     }
     
     // Adds text below the various delay knobs
-    if (delayState && currentDelayIndex == 1)
+    if (audioProcessor.getDelayState() && currentDelayIndex == 1)
     {
         drawLabel(g, 10.0f, "Feedback", 668, 255);
         drawLabel(g, 10.0f, "HPF", 790, 255);
@@ -163,7 +168,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         drawLEDLights(g, juce::Colours::orange, 150, 400, 8, 8, 4.0f);
     }
     
-    if(!reverbState)
+    if(!audioProcessor.getReverbState())
     {
         // Draw particles
         for (auto& particle : particlesReverb)
@@ -172,7 +177,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         }
     }
     
-    if(!delayState)
+    if(!audioProcessor.getDelayState())
     {
         // Draw particles
         for (auto& particle : particlesDelay)
@@ -252,6 +257,7 @@ void ProjectHaloAudioProcessorEditor::drawLEDLights(juce::Graphics& g, juce::Col
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
+    audioProcessor.getVisualizer().setBounds(668, 370, 325, 75); // x, y , w, h
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -375,6 +381,13 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps(int
     }
 }
 
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getOtherComps()
+{
+    return 
+    {
+        &audioProcessor.getVisualizer()
+    };
+}
 // ====================================================================================================================
 void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int> &rect)
 {
@@ -417,13 +430,13 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
                 darkModeState = false;
             
             // Updates background when toggling dark mode
-            if (!reverbState && !delayState)
+            if (!audioProcessor.getReverbState() && !audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-            else if (!reverbState && delayState)
+            else if (!audioProcessor.getReverbState() && audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-            else if (reverbState && !delayState)
+            else if (audioProcessor.getReverbState() && !audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-            else if (reverbState && delayState)
+            else if (audioProcessor.getReverbState() && audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
             break;
         case 512:
@@ -444,7 +457,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelLeft(int x, int y)
 {
     if (x == 10 && y == 150) // LP1
     {
-        if (reverbState)
+        if (audioProcessor.getReverbState())
         {
             renderReverbComps(0, -1);
             if (currentVerbIndex > 0)
@@ -453,7 +466,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelLeft(int x, int y)
     }
     else if (x == 670 && y == 150) // LP3
     {
-        if (delayState)
+        if (audioProcessor.getDelayState())
         {
             renderDelayComps(0, -1);
             if (currentDelayIndex > 0)
@@ -476,7 +489,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
 {
     if (x == 304 && y == 150) // RP1
     {
-        if (reverbState)
+        if (audioProcessor.getReverbState())
         {
             int numPages = 1;
             renderReverbComps(1, 1);
@@ -486,7 +499,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
     }
     else if (x == 965 && y == 150) // RP3
     {
-        if (delayState)
+        if (audioProcessor.getDelayState())
         {
             int numPages = 1;
             renderDelayComps(1, 1);
@@ -508,56 +521,64 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
 
 void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle()
 {
-    if (!reverbState && !delayState)
+    if (!audioProcessor.getReverbState() && !audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-        reverbState = true;
+//        reverbState = true;
+        audioProcessor.setReverbState(true);
         renderReverbComps(currentVerbIndex, 0);
     }
-    else if (!reverbState && delayState)
+    else if (!audioProcessor.getReverbState() && audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-        reverbState = true;
+//        reverbState = true;
+        audioProcessor.setReverbState(true);
         renderReverbComps(currentVerbIndex, 0);
     }
-    else if (reverbState && !delayState)
+    else if (audioProcessor.getReverbState() && !audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-        reverbState = false;
+//        reverbState = false;
+        audioProcessor.setReverbState(false);
         hideReverbComps(currentVerbIndex);
     }
-    else if (reverbState && delayState)
+    else if (audioProcessor.getReverbState() && audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-        reverbState = false;
+//        reverbState = false;
+        audioProcessor.setReverbState(false);
         hideReverbComps(currentVerbIndex);
     }
 }
 
 void ProjectHaloAudioProcessorEditor::handleDelayToggle()
 {
-    if (!delayState && !reverbState)
+    if (!audioProcessor.getDelayState() && !audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-        delayState = true;
+//        delayState = true;
+        audioProcessor.setDelayState(true);
         renderDelayComps(currentDelayIndex, 0);
     }
-    else if (!delayState && reverbState)
+    else if (!audioProcessor.getDelayState() && audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-        delayState = true;
+//        delayState = true;
+        audioProcessor.setDelayState(true);
         renderDelayComps(currentDelayIndex, 0);
     }
-    else if (delayState && !reverbState)
+    else if (audioProcessor.getDelayState() && !audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-        delayState = false;
+//        delayState = false;
+        audioProcessor.setDelayState(false);
         hideDelayComps(currentDelayIndex);
     }
-    else if (delayState && reverbState)
+    else if (audioProcessor.getDelayState() && audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-        delayState = false;
+//        delayState = false;
+        audioProcessor.setDelayState(false);
         hideDelayComps(currentDelayIndex);
     }
 }

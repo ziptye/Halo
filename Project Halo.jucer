@@ -22,6 +22,7 @@
         <FILE id="XWiJ2l" name="HaloDelayButtons.h" compile="0" resource="0"
               file="Source/HaloDelayButtons.h"/>
         <FILE id="UyIftA" name="HaloSliders.h" compile="0" resource="0" file="Source/HaloSliders.h"/>
+        <FILE id="FvVmme" name="Visualizer.h" compile="0" resource="0" file="Source/Visualizer.h"/>
       </GROUP>
       <FILE id="hu21Dw" name="AnimatedKnob.h" compile="0" resource="0" file="Source/AnimatedKnob.h"/>
       <FILE id="pqx26n" name="PluginProcessor.cpp" compile="1" resource="0"

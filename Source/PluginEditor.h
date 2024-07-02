@@ -61,8 +61,7 @@ public:
     
     std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
-    
-    bool getReverbState() const { return reverbState; }
+    std::vector<Component*>getOtherComps();
 
 private:
     
@@ -97,9 +96,6 @@ private:
     HaloDelayButtons quarterNote {"1/4", 712, 245, 75, 30};
     HaloDelayButtons halfNote {"1/2", 793, 245, 75, 30};
     HaloDelayButtons wholeNote {"1/1", 873, 245, 75, 30};
-    
-    bool reverbState = false;
-    bool delayState = false;
     
     bool distortionState = false;
     bool shifterState = false;
