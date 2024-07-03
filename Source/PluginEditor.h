@@ -97,10 +97,10 @@ private:
     HaloDelayButtons halfNote {"1/2", 793, 245, 75, 30};
     HaloDelayButtons wholeNote {"1/1", 873, 245, 75, 30};
     
-    bool distortionState = false;
-    bool shifterState = false;
-    bool cozyModeState = false;
-    bool sickoModeState = false;
+//    bool distortionState = false;
+//    bool shifterState = false;
+//    bool cozyModeState = false;
+//    bool sickoModeState = false;
     
     bool darkModeState = false;
     

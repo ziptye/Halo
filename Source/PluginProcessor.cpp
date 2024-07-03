@@ -93,9 +93,7 @@ void ProjectHaloAudioProcessor::changeProgramName (int index, const juce::String
 void ProjectHaloAudioProcessor::setReverbState(bool rState)
 {
     if (rState)
-    {
         reverbState = true;
-    }
     else
         reverbState = false;
 }
@@ -106,6 +104,38 @@ void ProjectHaloAudioProcessor::setDelayState(bool dState)
         delayState = true;
     else
         delayState = false;
+}
+
+void ProjectHaloAudioProcessor::setDistortionState(bool distState)
+{
+    if (distState)
+        distortionState = true;
+    else
+        distortionState = false;
+}
+
+void ProjectHaloAudioProcessor::setShifterState(bool shiftState)
+{
+    if (shiftState)
+        shifterState = true;
+    else
+        shifterState = false;
+}
+
+void ProjectHaloAudioProcessor::setCozyModeState(bool cozyState)
+{
+    if (cozyState)
+        cozyModeState = true;
+    else
+        cozyModeState = false;
+}
+
+void ProjectHaloAudioProcessor::setSickOModeState(bool sickState)
+{
+    if (sickState)
+        sickoModeState = true;
+    else
+        sickoModeState = false;
 }
 
 //==============================================================================
@@ -190,20 +220,16 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     auto vDamping = apvts.getRawParameterValue("Damping");
     auto vWidth = apvts.getRawParameterValue("Width");
     
-    reverbParams.roomSize = vRoomSize -> load();
-    reverbParams.damping = vDamping -> load();
-    reverbParams.width = vWidth -> load();
-    
     auto vDryWet = apvts.getRawParameterValue("Dry Wet");
     float wetLevel = vDryWet->load();
     float dryLevel = 1.0f - wetLevel;
     
+    reverbParams.roomSize = vRoomSize -> load();
+    reverbParams.damping = vDamping -> load();
+    reverbParams.width = vWidth -> load();
     reverbParams.wetLevel = wetLevel;
     reverbParams.dryLevel = dryLevel;
-    
     reverbParams.freezeMode = 0.0f;
-    
-    reverb.setParameters(reverbParams);
     
     auto vPreDelay = apvts.getRawParameterValue("Pre Delay");
     float preDelayTimeMs = vPreDelay->load();
@@ -215,12 +241,17 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     visualizer.pushBuffer(buffer);
     
-    verbPreDelay.process(context);
-    verbHPF.process(context);
-    verbLPF.process(context);
     delayHPF.process(context);
     delayLPF.process(context);
-    reverb.process(context);
+    
+    if (reverbState)
+    {
+        reverb.setParameters(reverbParams);
+        verbPreDelay.process(context);
+        verbHPF.process(context);
+        verbLPF.process(context);
+        reverb.process(context);
+    }
 }
 
 //==============================================================================

@@ -80,25 +80,25 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawImageAt(background, 0, 0);
     
     // DIST. STATUS ----
-    if (!distortionState)
+    if (!audioProcessor.getDistortionState())
         drawLEDLights(g, juce::Colours::red, 467, 75, 8, 8, 4.0f);
     else
         drawLEDLights(g, juce::Colours::lime, 467, 30, 8, 8, 4.0f);
     
     // SHIFTER STATUS ----
-    if (!shifterState)
+    if (!audioProcessor.getShifterState())
         drawLEDLights(g, juce::Colours::red, 628, 75, 8, 8, 4.0f);
     else
         drawLEDLights(g, juce::Colours::lime, 628, 30, 8, 8, 4.0f);
     
     // COZY MODE STATUS  ----
-    if (!cozyModeState)
+    if (!audioProcessor.getCozyModeState())
         drawLEDLights(g, juce::Colours::red, 467, 170, 8, 8, 4.0f);
     else
         drawLEDLights(g, juce::Colours::lime, 467, 122, 8, 8, 4.0f);
     
     // SICKOMODE STATUS ----
-    if (!sickoModeState)
+    if (!audioProcessor.getSickOModeState())
         drawLEDLights(g, juce::Colours::red, 628, 170, 8, 8, 4.0f);
     else 
         drawLEDLights(g, juce::Colours::lime, 628, 122, 8, 8, 4.0f);
@@ -659,15 +659,15 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles1(int y) // DIST. && C
     {
         int i = 0;
 
-        if (!distortionState && i == 0)
+        if (!audioProcessor.getDistortionState() && i == 0)
         {
             i++;
-            distortionState = true;
+            audioProcessor.setDistortionState(true);
             repaint();
         }
         else
         {
-            distortionState = false;
+            audioProcessor.setDistortionState(false);
             i = 0;
             repaint();
         }
@@ -676,16 +676,16 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles1(int y) // DIST. && C
     {
         int i = 0;
 
-        if (!cozyModeState && i == 0)
+        if (!audioProcessor.getCozyModeState() && i == 0)
         {
             i++;
-            cozyModeState = true;
+            audioProcessor.setCozyModeState(true);
             repaint();
         }
         else
         {
             i = 0;
-            cozyModeState = false;
+            audioProcessor.setCozyModeState(false);
             repaint();
         }
     }
@@ -697,16 +697,16 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER &&
     {
         int i = 0;
 
-        if (!shifterState && i == 0)
+        if (!audioProcessor.getShifterState() && i == 0)
         {
             i++;
-            shifterState = true;
+            audioProcessor.setShifterState(true);
             repaint();
         }
         else
         {
             i = 0;
-            shifterState = false;
+            audioProcessor.setShifterState(false);
             repaint();
         }
     }
@@ -715,16 +715,16 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER &&
 
         int i = 0;
 
-        if (!sickoModeState && i == 0)
+        if (!audioProcessor.getSickOModeState() && i == 0)
         {
             i++;
-            sickoModeState = true;
+            audioProcessor.setSickOModeState(true);
             repaint();
         }
         else
         {
             i = 0;
-            sickoModeState = false;
+            audioProcessor.setSickOModeState(false);
             repaint();
         }
     }
@@ -734,7 +734,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY M
 {
     if (y == 25)
     {
-        if (distortionAmt < 100 && distortionState)
+        if (distortionAmt < 100 && audioProcessor.getDistortionState())
         {
             distortionAmt += 2;
             repaint();
@@ -744,14 +744,14 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY M
     else if (y == 75)
     {
         // Checks that distortionAmt is non-negative
-        if (distortionAmt > 0 && distortionState)
+        if (distortionAmt > 0 && audioProcessor.getDistortionState())
         {
             distortionAmt -= 2;
             repaint();
         }
         distortionAmt -= 0;
     }
-    else if (y == 115 && cozyModeState)
+    else if (y == 115 && audioProcessor.getCozyModeState())
     {
         if (cozyModeAmt < 100)
         {
@@ -760,7 +760,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY M
         }
         cozyModeAmt += 0;
     }
-    else if (y == 165 && cozyModeState)
+    else if (y == 165 && audioProcessor.getCozyModeState())
     {
         // Checks that cozyModeAmt is non-negative
         if (cozyModeAmt > 0)
@@ -774,7 +774,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY M
 
 void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK-O-MODES AMT.
 {
-    if (y == 25 && shifterState)
+    if (y == 25 && audioProcessor.getShifterState())
     {
         if (shifterAmt < 100)
         {
@@ -783,7 +783,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK
         }
         shifterAmt += 0;
     }
-    else if (y == 75 && shifterState)
+    else if (y == 75 && audioProcessor.getShifterState())
     {
         // Checks that shifterAmt is non-negative
         if (shifterAmt > 0)
@@ -793,7 +793,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK
         }
         shifterAmt -= 0;
     }
-    else if (y == 115 && sickoModeState)
+    else if (y == 115 && audioProcessor.getSickOModeState())
     {
         if (sickoModeAmt < 100)
         {
@@ -802,7 +802,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK
         }
         sickoModeAmt += 0;
     }
-    else if (y == 165 && sickoModeState)
+    else if (y == 165 && audioProcessor.getSickOModeState())
     {
         // Checks that sickoModeAmt is non-negative
         if (sickoModeAmt > 0)

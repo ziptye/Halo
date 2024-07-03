@@ -65,14 +65,30 @@ public:
     void setReverbState(bool rState);
     void setDelayState(bool dState);
     
+    bool getDistortionState() {return distortionState;}
+    bool getShifterState() {return shifterState;}
+    bool getCozyModeState() {return cozyModeState;}
+    bool getSickOModeState() {return sickoModeState;}
+    void setDistortionState(bool distState);
+    void setShifterState(bool shiftState);
+    void setCozyModeState(bool cozyState);
+    void setSickOModeState(bool sickState);
+    
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();
     void reset() override;
     juce::dsp::DelayLine<float> verbPreDelay;
     Visualizer visualizer;
+    
     bool reverbState = false;
     bool delayState = false;
+    bool distortionState = false;
+    bool shifterState = false;
+    bool cozyModeState = false;
+    bool sickoModeState = false;
+    
     static constexpr int maxDelayTime = 500;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessor)
 };
