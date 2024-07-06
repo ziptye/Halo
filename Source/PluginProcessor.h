@@ -62,6 +62,7 @@ public:
     
     bool getReverbState() {return reverbState;}
     bool getDelayState() {return delayState;}
+    
     void setReverbState(bool rState);
     void setDelayState(bool dState);
     
@@ -69,6 +70,7 @@ public:
     bool getShifterState() {return shifterState;}
     bool getCozyModeState() {return cozyModeState;}
     bool getSickOModeState() {return sickoModeState;}
+    
     void setDistortionState(bool distState);
     void setShifterState(bool shiftState);
     void setCozyModeState(bool cozyState);

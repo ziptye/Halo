@@ -524,28 +524,24 @@ void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle()
     if (!audioProcessor.getReverbState() && !audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-//        reverbState = true;
         audioProcessor.setReverbState(true);
         renderReverbComps(currentVerbIndex, 0);
     }
     else if (!audioProcessor.getReverbState() && audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-//        reverbState = true;
         audioProcessor.setReverbState(true);
         renderReverbComps(currentVerbIndex, 0);
     }
     else if (audioProcessor.getReverbState() && !audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-//        reverbState = false;
         audioProcessor.setReverbState(false);
         hideReverbComps(currentVerbIndex);
     }
     else if (audioProcessor.getReverbState() && audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-//        reverbState = false;
         audioProcessor.setReverbState(false);
         hideReverbComps(currentVerbIndex);
     }
@@ -556,28 +552,24 @@ void ProjectHaloAudioProcessorEditor::handleDelayToggle()
     if (!audioProcessor.getDelayState() && !audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-//        delayState = true;
         audioProcessor.setDelayState(true);
         renderDelayComps(currentDelayIndex, 0);
     }
     else if (!audioProcessor.getDelayState() && audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-//        delayState = true;
         audioProcessor.setDelayState(true);
         renderDelayComps(currentDelayIndex, 0);
     }
     else if (audioProcessor.getDelayState() && !audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-//        delayState = false;
         audioProcessor.setDelayState(false);
         hideDelayComps(currentDelayIndex);
     }
     else if (audioProcessor.getDelayState() && audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-//        delayState = false;
         audioProcessor.setDelayState(false);
         hideDelayComps(currentDelayIndex);
     }
