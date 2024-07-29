@@ -83,6 +83,8 @@ private:
     juce::dsp::DelayLine<float> verbPreDelay;
     Visualizer visualizer;
     
+    juce::dsp::ProcessorChain<juce::dsp::Reverb, juce::dsp::DelayLine<float>> effectChain;
+    
     bool reverbState = false;
     bool delayState = false;
     bool distortionState = false;

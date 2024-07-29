@@ -155,7 +155,8 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     
     verbPreDelay.setMaximumDelayInSamples(static_cast<int>(sampleRate * maxDelayTime / 1000.0f));
     verbPreDelay.prepare(spec);
-    reverb.prepare(spec);
+
+    effectChain.prepare(spec);
     
     verbHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
     verbLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
@@ -216,6 +217,9 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     delayHPF.setCutoffFrequency(dHPF -> load());
     delayLPF.setCutoffFrequency(dLPF -> load());
     
+    // ADD DELAY FEEDBACK
+    // FETCH RAW PRAAM. VALUE FROM APVTS
+    
     auto vRoomSize = apvts.getRawParameterValue("Room Size");
     auto vDamping = apvts.getRawParameterValue("Damping");
     auto vWidth = apvts.getRawParameterValue("Width");
@@ -246,12 +250,14 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     if (reverbState)
     {
-        reverb.setParameters(reverbParams);
+        effectChain.get<0>().setParameters(reverbParams);
         verbPreDelay.process(context);
         verbHPF.process(context);
         verbLPF.process(context);
-        reverb.process(context);
+        effectChain.process(context);
     }
+    
+    // TODO: ADD CHECK FOR DELAYSTATE BEFORE PROCESSING THE DELAY PARAMETERS
 }
 
 //==============================================================================
@@ -326,7 +332,7 @@ void ProjectHaloAudioProcessor::reset()
     verbLPF.reset();
     delayHPF.reset();
     delayLPF.reset();
-    reverb.reset();
+    effectChain.reset();
 }
 
 //==============================================================================
