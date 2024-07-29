@@ -76,6 +76,8 @@ public:
     void setCozyModeState(bool cozyState);
     void setSickOModeState(bool sickState);
     
+    int bpmVal = 120; // Default BPM
+    
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();

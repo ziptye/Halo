@@ -122,7 +122,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     drawText(g, juce::Colours::white, 14.0f, std::to_string(sickoModeAmt), 504, 139);
     
     // Display BPM
-    drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
+    drawText(g, juce::Colours::black, 16.0f, std::to_string(audioProcessor.bpmVal), 233, 406);
     
     // Adds text below the various reverb knobs
     if(audioProcessor.getReverbState() && currentVerbIndex == 0)
@@ -257,7 +257,7 @@ void ProjectHaloAudioProcessorEditor::drawLEDLights(juce::Graphics& g, juce::Col
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
-    audioProcessor.getVisualizer().setBounds(668, 370, 325, 75); // x, y , w, h
+    audioProcessor.getVisualizer().setBounds(681, 374, 300, 65); // x, y , w, h
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -842,19 +842,19 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 
 void ProjectHaloAudioProcessorEditor::handleManualTempoChange(int x, int y)
 {
-    if (bpmVal < 300)
+    if (audioProcessor.bpmVal < 300)
     {
         if (x == 183 && y == 385) // BPM UP
         {
-            bpmVal += 1;
+            audioProcessor.bpmVal += 1;
         }
     }
     
-    if (bpmVal > 0)
+    if (audioProcessor.bpmVal > 0)
     {
         if (x == 183 && y == 430) // BPM Down
         {
-            bpmVal -= 1;
+            audioProcessor.bpmVal -= 1;
         }
     }
 }
@@ -880,7 +880,7 @@ void ProjectHaloAudioProcessorEditor::updateTempo()
         double bpm = 60.0 / averageInterval;
         
         // Updates the current tempo
-        bpmVal = bpm;
+        audioProcessor.bpmVal = bpm;
         
         // Clear tap times to start new measurement
         tapTimes.clear();

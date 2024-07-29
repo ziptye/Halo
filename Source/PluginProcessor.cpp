@@ -207,18 +207,18 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    auto vHPF = apvts.getRawParameterValue("Reverb HPF");
-    auto vLPF = apvts.getRawParameterValue("Reverb LPF");
-    auto dHPF = apvts.getRawParameterValue("Delay HPF");
-    auto dLPF = apvts.getRawParameterValue("Delay LPF");
+
+    auto vHPF = apvts.getRawParameterValue("Reverb HPF")->load();
+    auto vLPF = apvts.getRawParameterValue("Reverb LPF")->load();
+    auto dHPF = apvts.getRawParameterValue("Delay HPF")->load();
+    auto dLPF = apvts.getRawParameterValue("Delay LPF")->load();
     
-    verbHPF.setCutoffFrequency(vHPF -> load());
-    verbLPF.setCutoffFrequency(vLPF -> load());
-    delayHPF.setCutoffFrequency(dHPF -> load());
-    delayLPF.setCutoffFrequency(dLPF -> load());
+    verbHPF.setCutoffFrequency(vHPF);
+    verbLPF.setCutoffFrequency(vLPF);
+    delayHPF.setCutoffFrequency(dHPF);
+    delayLPF.setCutoffFrequency(dLPF);
     
-    // ADD DELAY FEEDBACK
-    // FETCH RAW PRAAM. VALUE FROM APVTS
+    auto delayFB = apvts.getRawParameterValue("Feedback")->load();
     
     auto vRoomSize = apvts.getRawParameterValue("Room Size");
     auto vDamping = apvts.getRawParameterValue("Damping");
@@ -245,9 +245,6 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     visualizer.pushBuffer(buffer);
     
-    delayHPF.process(context);
-    delayLPF.process(context);
-    
     if (reverbState)
     {
         effectChain.get<0>().setParameters(reverbParams);
@@ -257,6 +254,12 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
         effectChain.process(context);
     }
     
+    if (delayState)
+    {
+//        effectChain.get<1>().setDelay(<#float newDelayInSamples#>);
+        delayHPF.process(context);
+        delayLPF.process(context);
+    }
     // TODO: ADD CHECK FOR DELAYSTATE BEFORE PROCESSING THE DELAY PARAMETERS
 }
 
