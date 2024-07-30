@@ -85,6 +85,8 @@ private:
     juce::dsp::DelayLine<float> verbPreDelay;
     Visualizer visualizer;
     
+    float calcDelayTime(int timeDivide);
+    
     juce::dsp::ProcessorChain<juce::dsp::Reverb, juce::dsp::DelayLine<float>> effectChain;
     
     bool reverbState = false;

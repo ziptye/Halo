@@ -137,6 +137,30 @@ void ProjectHaloAudioProcessor::setSickOModeState(bool sickState)
     else
         sickoModeState = false;
 }
+float ProjectHaloAudioProcessor::calcDelayTime(int timeDivide)
+{
+    float temp = 60000/bpmVal;
+    float result = 0;
+    
+    if (timeDivide > 0)
+    {
+        for (int i = 0; i < timeDivide; i++)
+        {
+            result = temp / 2;
+            temp = result;
+        }
+    }
+    else if (timeDivide == 0)
+    {
+        result = temp;
+    }
+    else if (timeDivide < 0)
+    {
+        result = (temp * timeDivide) * -1;
+    }
+    
+    return result;
+}
 
 //==============================================================================
 void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
@@ -265,11 +289,40 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     if (delayState)
     {
+        if (delay64)
+        {
+            std::cout << calcDelayTime(4) << std::endl;
+        }
+        else if (delay32)
+        {
+            std::cout << calcDelayTime(3) << std::endl;
+        }
+        else if (delay16)
+        {
+            std::cout << calcDelayTime(2) << std::endl;
+        }
+        else if (delay8)
+        {
+            std::cout << calcDelayTime(1) << std::endl;
+        }
+        else if (delay4)
+        {
+            std::cout << calcDelayTime(0) << std::endl;
+        }
+        else if (delay2)
+        {
+            std::cout << calcDelayTime(-2) << std::endl;
+        }
+        else if (delay1)
+        {
+            std::cout << calcDelayTime(-4) << std::endl;
+        }
 //        effectChain.get<1>().setDelay(<#float newDelayInSamples#>);
         delayHPF.process(context);
         delayLPF.process(context);
     }
-    // TODO: ADD CHECK FOR DELAYSTATE BEFORE PROCESSING THE DELAY PARAMETERS
+    // TODO: Take various delay buttons and make a switch/case statement that checks which is active/true.
+    // TODO: Create a bpm based delay function that takes button selection and use 60,000/bpm
 }
 
 //==============================================================================
