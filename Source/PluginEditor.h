@@ -132,6 +132,14 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayHPFAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayLPFAttachment;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay64;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay32;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay16;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay8;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay4;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay2;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay1;
+    
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainDryWetAttachment;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)

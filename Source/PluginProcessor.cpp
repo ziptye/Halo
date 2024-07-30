@@ -220,6 +220,15 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     auto delayFB = apvts.getRawParameterValue("Feedback")->load();
     
+    auto delay64 = apvts.getRawParameterValue("Delay64")->load();
+    auto delay32 = apvts.getRawParameterValue("Delay32")->load();
+    auto delay16 = apvts.getRawParameterValue("Delay16")->load();
+    auto delay8 = apvts.getRawParameterValue("Delay8")->load();
+    auto delay4 = apvts.getRawParameterValue("Delay4")->load();
+    auto delay2 = apvts.getRawParameterValue("Delay2")->load();
+    auto delay1 = apvts.getRawParameterValue("Delay1")->load();
+    
+    
     auto vRoomSize = apvts.getRawParameterValue("Room Size");
     auto vDamping = apvts.getRawParameterValue("Damping");
     auto vWidth = apvts.getRawParameterValue("Width");
@@ -325,6 +334,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Delay LPF", 1), "Delay LPF", LPFRange, 20000.0f));
     
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Dry Wet", 1), "Dry Wet", dryWetRange, 0.0f));
+    
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay64", 1), "Delay64", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay32", 1), "Delay32", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay16", 1), "Delay16", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay8", 1), "Delay8", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay4", 1), "Delay4", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay2", 1), "Delay2", false));
+    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay1", 1), "Delay1", false));
     
     return {params.begin(), params.end()};
 }

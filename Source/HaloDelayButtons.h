@@ -47,7 +47,6 @@ private:
                     button->setClickingTogglesState(true);
                 }
             }
-            setClickingTogglesState(false);  // Allows button be to deselected
         }
         else
         {

@@ -61,6 +61,21 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     
     mainDryWetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Dry Wet", mainDryWetSlider);
     
+     // ======= DELAY =======
+    delay64 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay64", sixtyFourthNote);
+    
+    delay32 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay32", thirtySecondNote);
+    
+    delay16 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay16", sixteenthNote);
+    
+    delay8 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay8", eighthNote);
+    
+    delay4 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay4", quarterNote);
+    
+    delay2 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay2", halfNote);
+    
+    delay1 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay1", wholeNote);
+    
     for(auto* comp : getOtherComps())
     {
         addAndMakeVisible(comp); // RENDERS VISUALIZER COMP.
