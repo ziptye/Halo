@@ -179,6 +179,8 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     
     verbPreDelay.setMaximumDelayInSamples(static_cast<int>(sampleRate * maxDelayTime / 1000.0f));
     verbPreDelay.prepare(spec);
+    
+    effectChain.get<0>().setMaximumDelayInSamples(529200); // TODO: EVALUATE THIS NUMBER LATER...
 
     effectChain.prepare(spec);
     
@@ -280,49 +282,62 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     if (reverbState)
     {
-        effectChain.get<0>().setParameters(reverbParams);
+        effectChain.get<1>().setParameters(reverbParams);
         verbPreDelay.process(context);
         verbHPF.process(context);
         verbLPF.process(context);
         effectChain.process(context);
     }
+    else
+    {
+        effectChain.setBypassed<1>(true);
+    }
     
     if (delayState)
     {
+        float delayTime = 0.0f;
+        
         if (delay64)
         {
-            std::cout << calcDelayTime(4) << std::endl;
+            delayTime = calcDelayTime(4);
         }
         else if (delay32)
         {
-            std::cout << calcDelayTime(3) << std::endl;
+            delayTime = calcDelayTime(3);
         }
         else if (delay16)
         {
-            std::cout << calcDelayTime(2) << std::endl;
+            delayTime = calcDelayTime(2);
         }
         else if (delay8)
         {
-            std::cout << calcDelayTime(1) << std::endl;
+            delayTime = calcDelayTime(1);
         }
         else if (delay4)
         {
-            std::cout << calcDelayTime(0) << std::endl;
+            delayTime = calcDelayTime(0);
         }
         else if (delay2)
         {
-            std::cout << calcDelayTime(-2) << std::endl;
+            delayTime = calcDelayTime(-2);
         }
         else if (delay1)
         {
-            std::cout << calcDelayTime(-4) << std::endl;
+            delayTime = calcDelayTime(-4);
         }
-//        effectChain.get<1>().setDelay(<#float newDelayInSamples#>);
+        
+        auto delayToSamples = delayTime * (getSampleRate() / 1000.0f);
+        effectChain.get<0>().setDelay(delayToSamples);
+        
         delayHPF.process(context);
         delayLPF.process(context);
+        effectChain.process(context);
     }
-    // TODO: Take various delay buttons and make a switch/case statement that checks which is active/true.
-    // TODO: Create a bpm based delay function that takes button selection and use 60,000/bpm
+    else
+    {
+        effectChain.setBypassed<0>(true);
+    }
+    
 }
 
 //==============================================================================
