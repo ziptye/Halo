@@ -87,7 +87,7 @@ private:
     
     float calcDelayTime(int timeDivide);
     
-    juce::dsp::ProcessorChain<juce::dsp::DelayLine<float>, juce::dsp::Reverb> effectChain;
+    juce::dsp::ProcessorChain<juce::dsp::Reverb, juce::dsp::DelayLine<float>> effectChain;
     
     bool reverbState = false;
     bool delayState = false;

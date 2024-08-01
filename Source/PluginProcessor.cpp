@@ -180,7 +180,7 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     verbPreDelay.setMaximumDelayInSamples(static_cast<int>(sampleRate * maxDelayTime / 1000.0f));
     verbPreDelay.prepare(spec);
     
-    effectChain.get<0>().setMaximumDelayInSamples(529200); // TODO: EVALUATE THIS NUMBER LATER...
+    effectChain.get<1>().setMaximumDelayInSamples(529200); // TODO: EVALUATE THIS NUMBER LATER...
 
     effectChain.prepare(spec);
     
@@ -245,7 +245,6 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     delayLPF.setCutoffFrequency(dLPF);
     
     auto delayFB = apvts.getRawParameterValue("Feedback")->load();
-    
     auto delay64 = apvts.getRawParameterValue("Delay64")->load();
     auto delay32 = apvts.getRawParameterValue("Delay32")->load();
     auto delay16 = apvts.getRawParameterValue("Delay16")->load();
@@ -253,7 +252,6 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     auto delay4 = apvts.getRawParameterValue("Delay4")->load();
     auto delay2 = apvts.getRawParameterValue("Delay2")->load();
     auto delay1 = apvts.getRawParameterValue("Delay1")->load();
-    
     
     auto vRoomSize = apvts.getRawParameterValue("Room Size");
     auto vDamping = apvts.getRawParameterValue("Damping");
@@ -282,19 +280,20 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     
     if (reverbState)
     {
-        effectChain.get<1>().setParameters(reverbParams);
+        effectChain.get<0>().setParameters(reverbParams);
+        effectChain.setBypassed<0>(false);
         verbPreDelay.process(context);
         verbHPF.process(context);
         verbLPF.process(context);
-        effectChain.process(context);
     }
     else
     {
-        effectChain.setBypassed<1>(true);
+        effectChain.setBypassed<0>(true);
     }
     
     if (delayState)
     {
+        effectChain.setBypassed<1>(false);
         float delayTime = 0.0f;
         
         if (delay64)
@@ -327,16 +326,17 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
         }
         
         auto delayToSamples = delayTime * (getSampleRate() / 1000.0f);
-        effectChain.get<0>().setDelay(delayToSamples);
+        effectChain.get<1>().setDelay(delayToSamples);
         
         delayHPF.process(context);
         delayLPF.process(context);
-        effectChain.process(context);
     }
     else
     {
-        effectChain.setBypassed<0>(true);
+        effectChain.setBypassed<1>(true);
     }
+    
+    effectChain.process(context);
     
 }
 
@@ -380,8 +380,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     auto LPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, skewFactorLPF);
     auto feedbackRange = juce::NormalisableRange<float>(0.0f, 200.0f, 1.0f);
     auto dryWetRange = juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f);
-    
-    params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Reverb State", 1), "Reverb State", false));
     
     params.push_back(std::make_unique<juce::AudioParameterFloat>(juce::ParameterID("Room Size", 1), "Room Size", roomSizeRange, 0.00f));
     
