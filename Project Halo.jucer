@@ -20,6 +20,7 @@
         <FILE id="bBmgJc" name="AnimatedParticles.h" compile="0" resource="0"
               file="Source/AnimatedParticles.h"/>
         <FILE id="TnntGe" name="BpmHandler.h" compile="0" resource="0" file="Source/BpmHandler.h"/>
+        <FILE id="cEToMb" name="FXHandler.h" compile="0" resource="0" file="Source/FXHandler.h"/>
         <FILE id="JOF9Rb" name="HaloDelayButtons.cpp" compile="1" resource="0"
               file="Source/HaloDelayButtons.cpp"/>
         <FILE id="XWiJ2l" name="HaloDelayButtons.h" compile="0" resource="0"

@@ -13,7 +13,7 @@
 
 //==============================================================================
 ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), bpmHandler(p)
+    : AudioProcessorEditor (&p), audioProcessor (p), bpmHandler(p), fxHandler(p)
 {
     addAndMakeVisible(mainDryWetSlider);
     
@@ -125,16 +125,16 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     drawLabel(g, 14.0f, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(distortionAmt), 340, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getDistortion()), 340, 49);
     
     // Cozy Mode Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(cozyModeAmt), 340, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getCozyMode()), 340, 139);
     
     // Shifter Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(shifterAmt), 504, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getShifter()), 504, 49);
     
     // Sick-O Mode Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(sickoModeAmt), 504, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getSickoMode()), 504, 139);
     
     // Display BPM
     drawText(g, juce::Colours::black, 16.0f, std::to_string(audioProcessor.bpmVal), 233, 406);
@@ -739,90 +739,47 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER &&
 
 void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY MODES AMT.
 {
-    if (y == 25)
+    if (y == 25) // Dist. Mode
     {
-        if (distortionAmt < 100 && audioProcessor.getDistortionState())
-        {
-            distortionAmt += 2;
-            repaint();
-        }
-        distortionAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::Distortion);
     }
     else if (y == 75)
     {
-        // Checks that distortionAmt is non-negative
-        if (distortionAmt > 0 && audioProcessor.getDistortionState())
-        {
-            distortionAmt -= 2;
-            repaint();
-        }
-        distortionAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::Distortion);
     }
-    else if (y == 115 && audioProcessor.getCozyModeState())
+    else if (y == 115) // Cozy Mode
     {
-        if (cozyModeAmt < 100)
-        {
-            cozyModeAmt += 2;
-            repaint();
-        }
-        cozyModeAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::CozyMode);
     }
-    else if (y == 165 && audioProcessor.getCozyModeState())
+    else if (y == 165)
     {
-        // Checks that cozyModeAmt is non-negative
-        if (cozyModeAmt > 0)
-        {
-            cozyModeAmt -= 2;
-            repaint();
-        }
-        cozyModeAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::CozyMode);
     }
 }
 
 void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK-O-MODES AMT.
 {
-    if (y == 25 && audioProcessor.getShifterState())
+    if (y == 25) // Shifter Mode
     {
-        if (shifterAmt < 100)
-        {
-            shifterAmt += 2;
-            repaint();
-        }
-        shifterAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::Shifter);
     }
-    else if (y == 75 && audioProcessor.getShifterState())
+    else if (y == 75)
     {
-        // Checks that shifterAmt is non-negative
-        if (shifterAmt > 0)
-        {
-            shifterAmt -= 2;
-            repaint();
-        }
-        shifterAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::Shifter);
     }
-    else if (y == 115 && audioProcessor.getSickOModeState())
+    else if (y == 115) // Sicko Mode
     {
-        if (sickoModeAmt < 100)
-        {
-            sickoModeAmt += 2;
-            repaint();
-        }
-        sickoModeAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::SickOMode);
     }
-    else if (y == 165 && audioProcessor.getSickOModeState())
+    else if (y == 165)
     {
-        // Checks that sickoModeAmt is non-negative
-        if (sickoModeAmt > 0)
-        {
-            sickoModeAmt -= 2;
-            repaint();
-        }
-        sickoModeAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::SickOMode);
     }
 }
 void ProjectHaloAudioProcessorEditor::mouseUp(const juce::MouseEvent &event)
 {
     bpmHandler.stopBpmChange();
+    fxHandler.stopFXChange();
 }
 
 void ProjectHaloAudioProcessorEditor::timerCallback()
@@ -857,7 +814,7 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 
 void ProjectHaloAudioProcessorEditor::handleManualTempoChange(int x, int y)
 {
-    if (x == 183 && y == 385) // BPM UP
+    if (x == 183 && y == 385) // BPM Up
     {
         bpmHandler.startBpmChange(true);
     }

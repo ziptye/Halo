@@ -16,6 +16,7 @@
 #include "HaloDelayButtons.h"
 #include "AnimatedParticles.h"
 #include "BpmHandler.h"
+#include "FXHandler.h"
 
 //==============================================================================
 /**
@@ -106,10 +107,10 @@ private:
     unsigned short currentVerbIndex = 0;
     unsigned short currentDelayIndex = 0;
     
-    int distortionAmt = 0;
-    int shifterAmt = 0;
-    int cozyModeAmt = 0;
-    int sickoModeAmt = 0;
+//    int distortionAmt = 0;
+//    int shifterAmt = 0;
+//    int cozyModeAmt = 0;
+//    int sickoModeAmt = 0;
     
     std::vector<double> tapTimes;
     
@@ -122,6 +123,7 @@ private:
     juce::Rectangle<float>particleBoundsDelay;
     
     BpmHandler bpmHandler;
+    FXHandler fxHandler;
     
     // SLIDER ATTACHMENTS ==============================================================================
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbRoomSizeAttachment;

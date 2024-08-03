@@ -19,7 +19,7 @@ public:
     void startBpmChange(bool increase)
     {
         isIncreasing = increase;
-        startTimer(100); // Adjust the interval as needed
+        startTimer(85);
     }
 
     void stopBpmChange()
