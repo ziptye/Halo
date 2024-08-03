@@ -13,7 +13,7 @@
 
 //==============================================================================
 ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p), bpmHandler(p)
 {
     addAndMakeVisible(mainDryWetSlider);
     
@@ -822,7 +822,7 @@ void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK
 }
 void ProjectHaloAudioProcessorEditor::mouseUp(const juce::MouseEvent &event)
 {
-//    stopTimer();
+    bpmHandler.stopBpmChange();
 }
 
 void ProjectHaloAudioProcessorEditor::timerCallback()
@@ -857,20 +857,13 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 
 void ProjectHaloAudioProcessorEditor::handleManualTempoChange(int x, int y)
 {
-    if (audioProcessor.bpmVal < 300)
+    if (x == 183 && y == 385) // BPM UP
     {
-        if (x == 183 && y == 385) // BPM UP
-        {
-            audioProcessor.bpmVal += 1;
-        }
+        bpmHandler.startBpmChange(true);
     }
-    
-    if (audioProcessor.bpmVal > 0)
+    else if (x == 183 && y == 430) // BPM Down
     {
-        if (x == 183 && y == 430) // BPM Down
-        {
-            audioProcessor.bpmVal -= 1;
-        }
+        bpmHandler.startBpmChange(false);
     }
 }
 

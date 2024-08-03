@@ -15,6 +15,7 @@
 #include "HaloSliders.h"
 #include "HaloDelayButtons.h"
 #include "AnimatedParticles.h"
+#include "BpmHandler.h"
 
 //==============================================================================
 /**
@@ -119,6 +120,8 @@ private:
     
     std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
     juce::Rectangle<float>particleBoundsDelay;
+    
+    BpmHandler bpmHandler;
     
     // SLIDER ATTACHMENTS ==============================================================================
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbRoomSizeAttachment;

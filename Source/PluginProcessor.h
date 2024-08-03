@@ -76,6 +76,7 @@ public:
     void setCozyModeState(bool cozyState);
     void setSickOModeState(bool sickState);
     
+    // TODO: Create getter and setter functions to fetch/update the bpm...
     int bpmVal = 120; // Default BPM
     
 private:
