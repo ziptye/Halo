@@ -107,11 +107,6 @@ private:
     unsigned short currentVerbIndex = 0;
     unsigned short currentDelayIndex = 0;
     
-//    int distortionAmt = 0;
-//    int shifterAmt = 0;
-//    int cozyModeAmt = 0;
-//    int sickoModeAmt = 0;
-    
     std::vector<double> tapTimes;
     
     void timerCallback() override;

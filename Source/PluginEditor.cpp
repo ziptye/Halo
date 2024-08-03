@@ -125,16 +125,16 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     drawLabel(g, 14.0f, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getDistortion()), 340, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.distortionAmt)), 340, 49);
     
     // Cozy Mode Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getCozyMode()), 340, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.cozyModeAmt)), 340, 139);
     
     // Shifter Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getShifter()), 504, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.shifterAmt)), 504, 49);
     
     // Sick-O Mode Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(fxHandler.getSickoMode()), 504, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.sickoModeAmt)), 504, 139);
     
     // Display BPM
     drawText(g, juce::Colours::black, 16.0f, std::to_string(audioProcessor.bpmVal), 233, 406);

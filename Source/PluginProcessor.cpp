@@ -22,6 +22,11 @@ ProjectHaloAudioProcessor::ProjectHaloAudioProcessor()
                        ), apvts(*this, nullptr, "Parameters", createParams())
 #endif
 {
+    distortionAmt = apvts.getRawParameterValue("distortionAmt");
+    cozyModeAmt = apvts.getRawParameterValue("cozyModeAmt");
+    shifterAmt = apvts.getRawParameterValue("shifterAmt");
+    sickoModeAmt = apvts.getRawParameterValue("sickoModeAmt");
+    
 }
 
 ProjectHaloAudioProcessor::~ProjectHaloAudioProcessor()
@@ -408,6 +413,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay4", 1), "Delay4", false));
     params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay2", 1), "Delay2", false));
     params.push_back(std::make_unique<juce::AudioParameterBool>(juce::ParameterID("Delay1", 1), "Delay1", false));
+    
+//    params.push_back(std::make_unique<juce::AudioParameterInt>("distortionAmt", "Distortion Amount", 0, 100, 0));
+//    params.push_back(std::make_unique<juce::AudioParameterInt>("cozyModeAmt", "Cozy Mode Amount", 0, 100, 0));
+//    params.push_back(std::make_unique<juce::AudioParameterInt>("shifterAmt", "Shifter Amount", 0, 100, 0));
+//    params.push_back(std::make_unique<juce::AudioParameterInt>("sickoModeAmt", "Sicko Mode Amount", 0, 100, 0));
+    
+    params.push_back(std::make_unique<juce::AudioParameterInt>(juce::ParameterID("distortionAmt" , 1), "Distortion Amount", 0, 100, 0));
+    params.push_back(std::make_unique<juce::AudioParameterInt>(juce::ParameterID("cozyModeAmt" , 1), "Cozy Mode Amount", 0, 100, 0));
+    params.push_back(std::make_unique<juce::AudioParameterInt>(juce::ParameterID("shifterAmt" , 1), "Shifter Amount", 0, 100, 0));
+    params.push_back(std::make_unique<juce::AudioParameterInt>(juce::ParameterID("sickoModeAmt" , 1), "Sicko Amount", 0, 100, 0));
     
     return {params.begin(), params.end()};
 }

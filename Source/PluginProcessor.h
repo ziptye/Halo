@@ -79,6 +79,11 @@ public:
     // TODO: Create getter and setter functions to fetch/update the bpm...
     int bpmVal = 120; // Default BPM
     
+    std::atomic<float>* distortionAmt;
+    std::atomic<float>* cozyModeAmt;
+    std::atomic<float>* shifterAmt;
+    std::atomic<float>* sickoModeAmt;
+    
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();

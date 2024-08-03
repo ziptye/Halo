@@ -37,89 +37,52 @@ public:
 
     void timerCallback() override
     {
-        switch (currentMode)
+        auto* distortionAmt = audioProcessor.apvts.getRawParameterValue("distortionAmt");
+        auto* cozyModeAmt = audioProcessor.apvts.getRawParameterValue("cozyModeAmt");
+        auto* shifterAmt = audioProcessor.apvts.getRawParameterValue("shifterAmt");
+        auto* sickoModeAmt = audioProcessor.apvts.getRawParameterValue("sickoModeAmt");
+        
+        auto updateParameter = [](std::atomic<float>* param, bool isIncreasing) 
         {
-        case Mode::Distortion:
+            float value = param->load();
             if (isIncreasing)
             {
-                if (distortionAmt < 100 && audioProcessor.getDistortionState())
-                {
-                    distortionAmt += 2;
-                }
+                if (value < 100.0f)
+                    value = std::min(100.0f, value + 2.0f);
             }
             else
             {
-                if (distortionAmt > 0 && audioProcessor.getDistortionState())
-                {
-                    distortionAmt -= 2;
-                }
+                if (value > 0.0f)
+                    value = std::max(0.0f, value - 2.0f);
             }
-            break;
+            param->store(value);
+        };
 
-        case Mode::CozyMode:
-            if (isIncreasing)
+        switch (currentMode)
             {
-                if (cozyModeAmt < 100 && audioProcessor.getCozyModeState())
-                {
-                    cozyModeAmt += 2;
-                }
-            }
-            else
-            {
-                if (cozyModeAmt > 0 && audioProcessor.getCozyModeState())
-                {
-                    cozyModeAmt -= 2;
-                }
-            }
-            break;
+            case Mode::Distortion:
+                if (audioProcessor.getDistortionState())
+                    updateParameter(distortionAmt, isIncreasing);
+                break;
 
-        case Mode::Shifter:
-            if (isIncreasing)
-            {
-                if (shifterAmt < 100 && audioProcessor.getShifterState())
-                {
-                    shifterAmt += 2;
-                }
-            }
-            else
-            {
-                if (shifterAmt > 0 && audioProcessor.getShifterState())
-                {
-                    shifterAmt -= 2;
-                }
-            }
-            break;
+            case Mode::CozyMode:
+                if (audioProcessor.getCozyModeState())
+                    updateParameter(cozyModeAmt, isIncreasing);
+                break;
 
-        case Mode::SickOMode:
-            if (isIncreasing)
-            {
-                if (sickoModeAmt < 100 && audioProcessor.getSickOModeState())
-                {
-                    sickoModeAmt += 2;
-                }
+            case Mode::Shifter:
+                if (audioProcessor.getShifterState())
+                    updateParameter(shifterAmt, isIncreasing);
+                break;
+
+            case Mode::SickOMode:
+                if (audioProcessor.getSickOModeState())
+                    updateParameter(sickoModeAmt, isIncreasing);
+                break;
             }
-            else
-            {
-                if (sickoModeAmt > 0 && audioProcessor.getSickOModeState())
-                {
-                    sickoModeAmt -= 2;
-                }
-            }
-            break;
-        }
     }
-
-    int getDistortion() { return distortionAmt; }
-    int getShifter() { return shifterAmt; }
-    int getCozyMode() { return cozyModeAmt; }
-    int getSickoMode() { return sickoModeAmt; }
-
 private:
     ProjectHaloAudioProcessor& audioProcessor;
     bool isIncreasing;
     Mode currentMode;
-    int distortionAmt = 0;
-    int shifterAmt = 0;
-    int cozyModeAmt = 0;
-    int sickoModeAmt = 0;
 };
