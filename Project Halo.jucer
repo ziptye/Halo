@@ -26,6 +26,9 @@
         <FILE id="XWiJ2l" name="HaloDelayButtons.h" compile="0" resource="0"
               file="Source/HaloDelayButtons.h"/>
         <FILE id="UyIftA" name="HaloSliders.h" compile="0" resource="0" file="Source/HaloSliders.h"/>
+        <FILE id="X4qvVz" name="myLookAndFeel.cpp" compile="1" resource="0"
+              file="Source/myLookAndFeel.cpp"/>
+        <FILE id="NVpC6p" name="myLookAndFeel.h" compile="0" resource="0" file="Source/myLookAndFeel.h"/>
         <FILE id="FvVmme" name="Visualizer.h" compile="0" resource="0" file="Source/Visualizer.h"/>
       </GROUP>
       <FILE id="hu21Dw" name="AnimatedKnob.h" compile="0" resource="0" file="Source/AnimatedKnob.h"/>
