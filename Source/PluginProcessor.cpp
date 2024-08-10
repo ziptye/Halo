@@ -144,6 +144,8 @@ void ProjectHaloAudioProcessor::setSickOModeState(bool sickState)
 }
 float ProjectHaloAudioProcessor::calcDelayTime(int timeDivide)
 {
+    // TODO: This whole function probably needs to be rewritten for computational effciency. Math is a little weird.
+    
     float temp = 60000/bpmVal;
     float result = 0;
     

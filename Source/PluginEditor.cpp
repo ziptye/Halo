@@ -251,14 +251,14 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
 
 void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, juce::Colour color, float fontSize, const juce::String &text, int x, int y)
 {
-    g.setFont(juce::Font("Copperplate", fontSize, 0)); // 14.0f
+    g.setFont(juce::Font(juce::FontOptions("Copperplate", fontSize, 0)));
     g.setColour(color);
     g.drawText(text, x, y, 35, 20, juce::Justification::centred);
 }
 
 void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, float fontSize, const juce::String &text, int x, int y)
 {
-    g.setFont(juce::Font("Copperplate", fontSize, juce::Font::bold));
+    g.setFont(juce::Font(juce::FontOptions("Copperplate", fontSize, juce::Font::bold)));
     g.setColour(juce::Colours::white);
     g.drawText(text, x, y, 85, 35, juce::Justification::centred);
 }

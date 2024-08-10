@@ -11,9 +11,7 @@
 #include "myLookAndFeel.h"
 myLookAndFeelV2::myLookAndFeelV2()
 {
-    juce::File knobImageFile1 = juce::File::getSpecialLocation
-    (juce::File::SpecialLocationType::userDesktopDirectory).getChildFile("knob4.png");
-    img2 = juce::ImageCache::getFromFile(knobImageFile1);
+    img2 = juce::ImageCache::getFromMemory(BinaryData::knob4_png, BinaryData::knob4_pngSize);
 }
 
 //==============================================================================
