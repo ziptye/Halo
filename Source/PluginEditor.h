@@ -17,6 +17,7 @@
 #include "AnimatedParticles.h"
 #include "BpmHandler.h"
 #include "FXHandler.h"
+#include "LicenseActivationWindow.h"
 
 //==============================================================================
 /**
@@ -119,6 +120,8 @@ private:
     
     BpmHandler bpmHandler;
     FXHandler fxHandler;
+    
+    void showActivationWindow();
     
     // SLIDER ATTACHMENTS ==============================================================================
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbRoomSizeAttachment;

@@ -34,7 +34,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     presentBank2Settings.add("Ping-Pong");
     presentBank2Settings.add("BPM Sync");
     presentBank2Settings.add("MS");
-        
+    
     // BACKGROUND ======================================================
     
     background = backgroundGenerator(0);
@@ -61,7 +61,7 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     
     mainDryWetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Dry Wet", mainDryWetSlider);
     
-     // ======= DELAY =======
+    // ======= DELAY =======
     delay64 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay64", sixtyFourthNote);
     
     delay32 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay32", thirtySecondNote);
@@ -80,8 +80,38 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     {
         addAndMakeVisible(comp); // RENDERS VISUALIZER COMP.
     }
+    showActivationWindow();
+    
+//
+//    if (!audioProcessor.getIsActivated())
+//    {
+//        //        std::cout << "ACTIVATION STATUS: " << audioProcessor.getIsActivated() << std::endl;
+//        juce::DialogWindow::LaunchOptions options;
+//        options.content.setOwned(new LicenseActivationWindow());
+//        options.dialogTitle = "Activate Project Halo";
+//        options.dialogBackgroundColour = juce::Colours::black;
+//        options.escapeKeyTriggersCloseButton = true;
+//        options.useNativeTitleBar = true;
+//        options.resizable = false;
+//        
+//        auto* dialog = options.launchAsync();
+//        dialog->centreWithSize(400, 250);
+//        dialog->setAlwaysOnTop(true);
+//        
+//        audioProcessor.setIsActivated(true);
+//        
+//        // Check if activation was successful
+//        if (!audioProcessor.getIsActivated())
+//        {
+//            std::cout << "ACTIVATION STATUS: " << audioProcessor.getIsActivated() << std::endl;
+//        }
+//        else
+//        {
+//            std::cout << "Activation failed, please try again." << std::endl;
+//        }
+//        
+//    }
 }
-
 ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 {
     stopTimer();
@@ -269,10 +299,31 @@ void ProjectHaloAudioProcessorEditor::drawLEDLights(juce::Graphics& g, juce::Col
     g.fillRoundedRectangle(x, y, w, h, cornerSize);
 }
 
+void ProjectHaloAudioProcessorEditor::showActivationWindow()
+{
+    
+    if (!audioProcessor.getIsActivated())
+    {
+        //        std::cout << "ACTIVATION STATUS: " << audioProcessor.getIsActivated() << std::endl;
+        juce::DialogWindow::LaunchOptions options;
+        options.content.setOwned(new LicenseActivationWindow());
+        options.dialogTitle = "Activate Project Halo";
+        options.dialogBackgroundColour = juce::Colours::black;
+        options.escapeKeyTriggersCloseButton = true;
+        options.useNativeTitleBar = true;
+        options.resizable = false;
+        
+        auto* dialog = options.launchAsync();
+        dialog->centreWithSize(400, 250);
+        dialog->setAlwaysOnTop(true);
+        
+    }
+}
+
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
-    audioProcessor.getVisualizer().setBounds(681, 374, 300, 65); // x, y , w, h
+//    audioProcessor.getVisualizer().setBounds(681, 374, 300, 65); // x, y , w, h
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
