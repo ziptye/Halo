@@ -15,6 +15,9 @@
 #include "HaloSliders.h"
 #include "HaloDelayButtons.h"
 #include "AnimatedParticles.h"
+#include "BpmHandler.h"
+#include "FXHandler.h"
+#include "LicenseActivationWindow.h"
 
 //==============================================================================
 /**
@@ -54,13 +57,14 @@ public:
     void handleManualTempoChange(int x, int y);
     void updateTempo();
     
-    void drawLabel(juce::Graphics& g, const juce::String& text, int x, int y);
+    void drawLabel(juce::Graphics& g, float fontSize, const juce::String& text, int x, int y);
     void drawText(juce::Graphics& g, juce::Colour color, float fontSize, const juce::String& text, int x, int y);
     
     void drawLEDLights(juce::Graphics& g, juce::Colour color, float x, float y, float w, float h, float cornerSize);
     
     std::vector<Component*>getDelayComps(int curPage);
     std::vector<Component*>getReverbComps(int pageNum);
+    std::vector<Component*>getOtherComps();
 
 private:
     
@@ -68,20 +72,18 @@ private:
     
     juce::Image background;
     
-    AnimatedKnob animatedKnob1;
-    
     HaloSliders mainDryWetSlider {juce::Colours::white, juce::Colours::transparentWhite, 393, 299, 213, 227, 0.0, 100.0};
     
-    HaloSliders delayFeedback {juce::Colours::royalblue, 670, 200, 80, 80, 0.0, 100.0};
-    HaloSliders delayLPF {juce::Colours::goldenrod, 792, 200, 80, 80, 0.0, 100.0};
-    HaloSliders delayHPF {juce::Colours::limegreen, 910, 200, 80, 80, 0.0, 100.0};
+    HaloSliders delayFeedback {juce::Colours::royalblue, 670, 195, 80, 80, 0.0, 100.0};
+    HaloSliders delayHPF {juce::Colours::goldenrod, 792, 195, 80, 80, 0.0, 100.0};
+    HaloSliders delayLPF {juce::Colours::limegreen, 910, 195, 80, 80, 0.0, 100.0};
     
-    HaloSliders reverbRoomSize {juce::Colours::limegreen, 10, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbPreDelay {juce::Colours::skyblue, 127, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbDamping {juce::Colours::yellow, 248, 200, 80, 80, 0.0, 100.0}; // P1
-    HaloSliders reverbWidth {juce::Colours::darkblue, 10, 200, 80, 80, 0.0, 100.0}; // P2
-    HaloSliders reverbHPF {juce::Colours::lightblue, 127, 200, 80, 80, 0.0, 100.0}; // P2
-    HaloSliders reverbLPF {juce::Colours::limegreen, 248, 200, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbRoomSize {juce::Colours::limegreen, 10, 195, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbPreDelay {juce::Colours::skyblue, 127, 195, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbDamping {juce::Colours::yellow, 248, 195, 80, 80, 0.0, 100.0}; // P1
+    HaloSliders reverbWidth {juce::Colours::darkblue, 10, 195, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbHPF {juce::Colours::lightblue, 127, 195, 80, 80, 0.0, 100.0}; // P2
+    HaloSliders reverbLPF {juce::Colours::limegreen, 248, 195, 80, 80, 0.0, 100.0}; // P2
     
     juce::Array<juce::Rectangle<int>> rectangleArr;
     
@@ -98,14 +100,6 @@ private:
     HaloDelayButtons halfNote {"1/2", 793, 245, 75, 30};
     HaloDelayButtons wholeNote {"1/1", 873, 245, 75, 30};
     
-    bool reverbState = false;
-    bool delayState = false;
-    
-    bool distortionState = false;
-    bool shifterState = false;
-    bool cozyModeState = false;
-    bool sickoModeState = false;
-    
     bool darkModeState = false;
     
     int currentIndexPresetBank1 = 0;
@@ -114,12 +108,6 @@ private:
     unsigned short currentVerbIndex = 0;
     unsigned short currentDelayIndex = 0;
     
-    int distortionAmt = 0;
-    int shifterAmt = 0;
-    int cozyModeAmt = 0;
-    int sickoModeAmt = 0;
-    
-    int bpmVal = 120; // Default BPM
     std::vector<double> tapTimes;
     
     void timerCallback() override;
@@ -130,6 +118,32 @@ private:
     std::vector<std::unique_ptr<AnimatedParticles>> particlesDelay;
     juce::Rectangle<float>particleBoundsDelay;
     
+    BpmHandler bpmHandler;
+    FXHandler fxHandler;
+    
+    void showActivationWindow();
+    
+    // SLIDER ATTACHMENTS ==============================================================================
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbRoomSizeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbPreDelayAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbDampingAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbWidthAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbHPFAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> reverbLPFAttachment;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayFeedbackAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayHPFAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> delayLPFAttachment;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay64;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay32;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay16;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay8;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay4;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay2;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> delay1;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainDryWetAttachment;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectHaloAudioProcessorEditor)
 };

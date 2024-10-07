@@ -4,6 +4,7 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="cRJusX" name="Project Halo">
     <GROUP id="{B4E655E9-2A52-2561-4CBE-BB02E5787628}" name="Assets">
+      <FILE id="N2nOtX" name="knob4.png" compile="0" resource="1" file="../../knob4.png"/>
       <FILE id="Rtba6h" name="PH_DMInit.png" compile="0" resource="1" file="../../HALO ASSETS/PH_DMInit.png"/>
       <FILE id="a5WG4l" name="PH_DMRoffDon.png" compile="0" resource="1"
             file="../../HALO ASSETS/PH_DMRoffDon.png"/>
@@ -19,9 +20,19 @@
       <GROUP id="{7019EABF-910C-58EE-069D-E2B27EF81A4E}" name="Components">
         <FILE id="bBmgJc" name="AnimatedParticles.h" compile="0" resource="0"
               file="Source/AnimatedParticles.h"/>
+        <FILE id="TnntGe" name="BpmHandler.h" compile="0" resource="0" file="Source/BpmHandler.h"/>
+        <FILE id="cEToMb" name="FXHandler.h" compile="0" resource="0" file="Source/FXHandler.h"/>
+        <FILE id="JOF9Rb" name="HaloDelayButtons.cpp" compile="1" resource="0"
+              file="Source/HaloDelayButtons.cpp"/>
         <FILE id="XWiJ2l" name="HaloDelayButtons.h" compile="0" resource="0"
               file="Source/HaloDelayButtons.h"/>
         <FILE id="UyIftA" name="HaloSliders.h" compile="0" resource="0" file="Source/HaloSliders.h"/>
+        <FILE id="lTaaX7" name="LicenseActivationWindow.h" compile="0" resource="0"
+              file="Source/LicenseActivationWindow.h"/>
+        <FILE id="X4qvVz" name="myLookAndFeel.cpp" compile="1" resource="0"
+              file="Source/myLookAndFeel.cpp"/>
+        <FILE id="NVpC6p" name="myLookAndFeel.h" compile="0" resource="0" file="Source/myLookAndFeel.h"/>
+        <FILE id="FvVmme" name="Visualizer.h" compile="0" resource="0" file="Source/Visualizer.h"/>
       </GROUP>
       <FILE id="hu21Dw" name="AnimatedKnob.h" compile="0" resource="0" file="Source/AnimatedKnob.h"/>
       <FILE id="pqx26n" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -42,6 +53,7 @@
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -70,6 +82,7 @@
         <MODULEPATH id="juce_graphics" path="../../Documents/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../Documents/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../Documents/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../Documents/JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>

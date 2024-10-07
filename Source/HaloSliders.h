@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include "myLookAndFeel.h"
 
 class HaloSliders : public juce::Slider
 {
@@ -21,6 +22,7 @@ public:
         setBounds(x, y, w, h);
         setRange(minVal, maxVal);
         setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+        setLookAndFeel(&myLookAndFeel);
     }
     HaloSliders(juce::Colour fillColor,juce::Colour outlineColor, int x, int y, int w, int h, double minVal, double maxVal)
     {
@@ -34,5 +36,5 @@ public:
     }
     ~HaloSliders() override {}
 private:
-    
+    myLookAndFeelV2 myLookAndFeel;
 };

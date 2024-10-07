@@ -13,9 +13,8 @@
 
 //==============================================================================
 ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p), bpmHandler(p), fxHandler(p)
 {
-//    addAndMakeVisible(animatedKnob1);
     addAndMakeVisible(mainDryWetSlider);
     
     createClickableAreas();
@@ -35,14 +34,84 @@ ProjectHaloAudioProcessorEditor::ProjectHaloAudioProcessorEditor (ProjectHaloAud
     presentBank2Settings.add("Ping-Pong");
     presentBank2Settings.add("BPM Sync");
     presentBank2Settings.add("MS");
-        
+    
     // BACKGROUND ======================================================
     
     background = backgroundGenerator(0);
-    
     setSize(1000, 525);
+    
+    // SLIDER ATTACHMENTS ==============================================
+    reverbRoomSizeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Room Size", reverbRoomSize);
+    
+    reverbPreDelayAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Pre Delay", reverbPreDelay);
+    
+    reverbDampingAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Damping", reverbDamping);
+    
+    reverbWidthAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Width", reverbWidth);
+    
+    reverbHPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Reverb HPF", reverbHPF);
+    
+    reverbLPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Reverb LPF", reverbLPF);
+    
+    delayFeedbackAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Feedback", delayFeedback);
+    
+    delayHPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay HPF", delayHPF);
+    
+    delayLPFAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Delay LPF", delayLPF);
+    
+    mainDryWetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "Dry Wet", mainDryWetSlider);
+    
+    // ======= DELAY =======
+    delay64 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay64", sixtyFourthNote);
+    
+    delay32 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay32", thirtySecondNote);
+    
+    delay16 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay16", sixteenthNote);
+    
+    delay8 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay8", eighthNote);
+    
+    delay4 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay4", quarterNote);
+    
+    delay2 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay2", halfNote);
+    
+    delay1 = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "Delay1", wholeNote);
+    
+    for(auto* comp : getOtherComps())
+    {
+        addAndMakeVisible(comp); // RENDERS VISUALIZER COMP.
+    }
+    showActivationWindow();
+    
+//
+//    if (!audioProcessor.getIsActivated())
+//    {
+//        //        std::cout << "ACTIVATION STATUS: " << audioProcessor.getIsActivated() << std::endl;
+//        juce::DialogWindow::LaunchOptions options;
+//        options.content.setOwned(new LicenseActivationWindow());
+//        options.dialogTitle = "Activate Project Halo";
+//        options.dialogBackgroundColour = juce::Colours::black;
+//        options.escapeKeyTriggersCloseButton = true;
+//        options.useNativeTitleBar = true;
+//        options.resizable = false;
+//        
+//        auto* dialog = options.launchAsync();
+//        dialog->centreWithSize(400, 250);
+//        dialog->setAlwaysOnTop(true);
+//        
+//        audioProcessor.setIsActivated(true);
+//        
+//        // Check if activation was successful
+//        if (!audioProcessor.getIsActivated())
+//        {
+//            std::cout << "ACTIVATION STATUS: " << audioProcessor.getIsActivated() << std::endl;
+//        }
+//        else
+//        {
+//            std::cout << "Activation failed, please try again." << std::endl;
+//        }
+//        
+//    }
 }
-
 ProjectHaloAudioProcessorEditor::~ProjectHaloAudioProcessorEditor()
 {
     stopTimer();
@@ -56,49 +125,83 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
     g.drawImageAt(background, 0, 0);
     
     // DIST. STATUS ----
-    if (!distortionState)
+    if (!audioProcessor.getDistortionState())
         drawLEDLights(g, juce::Colours::red, 467, 75, 8, 8, 4.0f);
     else
         drawLEDLights(g, juce::Colours::lime, 467, 30, 8, 8, 4.0f);
     
     // SHIFTER STATUS ----
-    if (!shifterState)
+    if (!audioProcessor.getShifterState())
         drawLEDLights(g, juce::Colours::red, 628, 75, 8, 8, 4.0f);
     else
         drawLEDLights(g, juce::Colours::lime, 628, 30, 8, 8, 4.0f);
     
     // COZY MODE STATUS  ----
-    if (!cozyModeState)
+    if (!audioProcessor.getCozyModeState())
         drawLEDLights(g, juce::Colours::red, 467, 170, 8, 8, 4.0f);
     else
         drawLEDLights(g, juce::Colours::lime, 467, 122, 8, 8, 4.0f);
     
     // SICKOMODE STATUS ----
-    if (!sickoModeState)
+    if (!audioProcessor.getSickOModeState())
         drawLEDLights(g, juce::Colours::red, 628, 170, 8, 8, 4.0f);
     else 
         drawLEDLights(g, juce::Colours::lime, 628, 122, 8, 8, 4.0f);
     
     // Preset Bank 1 Label
-    drawLabel(g, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
+    drawLabel(g, 14.0f, presentBankSettingsGenerator(0, currentIndexPresetBank1), 125, 294);
     
     // Preset Bank 2 Label
-    drawLabel(g, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
+    drawLabel(g, 14.0f, presentBankSettingsGenerator(1, currentIndexPresetBank2), 792, 294);
     
     // Dist. Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(distortionAmt), 340, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.distortionAmt)), 340, 49);
     
     // Cozy Mode Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(cozyModeAmt), 340, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.cozyModeAmt)), 340, 139);
     
     // Shifter Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(shifterAmt), 504, 49);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.shifterAmt)), 504, 49);
     
     // Sick-O Mode Amount
-    drawText(g, juce::Colours::white, 14.0f, std::to_string(sickoModeAmt), 504, 139);
+    drawText(g, juce::Colours::white, 14.0f, std::to_string(static_cast<int>(*audioProcessor.sickoModeAmt)), 504, 139);
     
     // Display BPM
-    drawText(g, juce::Colours::black, 16.0f, std::to_string(bpmVal), 233, 406);
+    drawText(g, juce::Colours::black, 16.0f, std::to_string(audioProcessor.bpmVal), 233, 406);
+    
+    // Adds text below the various reverb knobs
+    if(audioProcessor.getReverbState() && currentVerbIndex == 0)
+    {
+        drawLabel(g, 10.0f, "Room Size", 8, 255);
+        drawLabel(g, 10.0f, "Pre-Delay", 125, 255);
+        drawLabel(g, 10.0f, "Damping", 246, 255);
+    }
+    else if (audioProcessor.getReverbState() && currentVerbIndex == 1)
+    {
+        drawLabel(g, 10.0f, "Width", 8, 255);
+        drawLabel(g, 10.0f, "HPF", 125, 255);
+        drawLabel(g, 10.0f, "LPF", 246, 255);
+    }
+    
+    // Adds text below the various delay knobs
+    if (audioProcessor.getDelayState() && currentDelayIndex == 1)
+    {
+        drawLabel(g, 10.0f, "Feedback", 668, 255);
+        drawLabel(g, 10.0f, "HPF", 790, 255);
+        drawLabel(g, 10.0f, "LPF", 908, 255);
+    }
+    
+    // Light/Dark Mode Text Toggle
+    if (!darkModeState)
+    {
+        drawLabel(g, 12.0f, "Light Mode", 330, 190);
+        drawLEDLights(g, juce::Colours::cyan, 370, 220, 8, 8, 4.0f);
+    }
+    else
+    {
+        drawLabel(g, 12.0f, "Dark Mode", 585, 190);
+        drawLEDLights(g, juce::Colours::blueviolet, 625, 220, 8, 8, 4.0f);
+    }
     
     // Displays LED lights for Tap Tempo
     if (tapTimes.size() == 4 || tapTimes.size() == 0)
@@ -110,7 +213,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         drawLEDLights(g, juce::Colours::orange, 150, 400, 8, 8, 4.0f);
     }
     
-    if(!reverbState)
+    if(!audioProcessor.getReverbState())
     {
         // Draw particles
         for (auto& particle : particlesReverb)
@@ -119,7 +222,7 @@ void ProjectHaloAudioProcessorEditor::paint (juce::Graphics& g)
         }
     }
     
-    if(!delayState)
+    if(!audioProcessor.getDelayState())
     {
         // Draw particles
         for (auto& particle : particlesDelay)
@@ -178,14 +281,14 @@ juce::String ProjectHaloAudioProcessorEditor::presentBankSettingsGenerator(int n
 
 void ProjectHaloAudioProcessorEditor::drawText(juce::Graphics &g, juce::Colour color, float fontSize, const juce::String &text, int x, int y)
 {
-    g.setFont(juce::Font("Copperplate", fontSize, 0)); // 14.0f
+    g.setFont(juce::Font(juce::FontOptions("Copperplate", fontSize, 0)));
     g.setColour(color);
     g.drawText(text, x, y, 35, 20, juce::Justification::centred);
 }
 
-void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, const juce::String &text, int x, int y)
+void ProjectHaloAudioProcessorEditor::drawLabel(juce::Graphics &g, float fontSize, const juce::String &text, int x, int y)
 {
-    g.setFont(juce::Font("Copperplate", 14.0f, juce::Font::bold));
+    g.setFont(juce::Font(juce::FontOptions("Copperplate", fontSize, juce::Font::bold)));
     g.setColour(juce::Colours::white);
     g.drawText(text, x, y, 85, 35, juce::Justification::centred);
 }
@@ -196,9 +299,31 @@ void ProjectHaloAudioProcessorEditor::drawLEDLights(juce::Graphics& g, juce::Col
     g.fillRoundedRectangle(x, y, w, h, cornerSize);
 }
 
+void ProjectHaloAudioProcessorEditor::showActivationWindow()
+{
+    
+    if (!audioProcessor.getIsActivated())
+    {
+        //        std::cout << "ACTIVATION STATUS: " << audioProcessor.getIsActivated() << std::endl;
+        juce::DialogWindow::LaunchOptions options;
+        options.content.setOwned(new LicenseActivationWindow());
+        options.dialogTitle = "Activate Project Halo";
+        options.dialogBackgroundColour = juce::Colours::black;
+        options.escapeKeyTriggersCloseButton = true;
+        options.useNativeTitleBar = true;
+        options.resizable = false;
+        
+        auto* dialog = options.launchAsync();
+        dialog->centreWithSize(400, 250);
+        dialog->setAlwaysOnTop(true);
+        
+    }
+}
+
 void ProjectHaloAudioProcessorEditor::resized()
 {
 //    animatedKnob1.setBounds(783, 400, 100, 100);
+//    audioProcessor.getVisualizer().setBounds(681, 374, 300, 65); // x, y , w, h
 }
 
 void ProjectHaloAudioProcessorEditor::addImagesToArray()
@@ -322,6 +447,13 @@ std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getReverbComps(int
     }
 }
 
+std::vector<juce::Component*>ProjectHaloAudioProcessorEditor::getOtherComps()
+{
+    return 
+    {
+        &audioProcessor.getVisualizer()
+    };
+}
 // ====================================================================================================================
 void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int> &rect)
 {
@@ -359,31 +491,19 @@ void ProjectHaloAudioProcessorEditor::handleCompClick(const juce::Rectangle<int>
             break;
         case 335:
             if (!darkModeState)
-            {
                 darkModeState = true;
-            }
             else
-            {
                 darkModeState = false;
-            }
             
             // Updates background when toggling dark mode
-            if (!reverbState && !delayState)
-            {
+            if (!audioProcessor.getReverbState() && !audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-            }
-            else if (!reverbState && delayState)
-            {
+            else if (!audioProcessor.getReverbState() && audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-            }
-            else if (reverbState && !delayState)
-            {
+            else if (audioProcessor.getReverbState() && !audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-            }
-            else if (reverbState && delayState)
-            {
+            else if (audioProcessor.getReverbState() && audioProcessor.getDelayState())
                 background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-            }
             break;
         case 512:
             handleFXAmounts2(y);
@@ -403,7 +523,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelLeft(int x, int y)
 {
     if (x == 10 && y == 150) // LP1
     {
-        if (reverbState)
+        if (audioProcessor.getReverbState())
         {
             renderReverbComps(0, -1);
             if (currentVerbIndex > 0)
@@ -412,7 +532,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelLeft(int x, int y)
     }
     else if (x == 670 && y == 150) // LP3
     {
-        if (delayState)
+        if (audioProcessor.getDelayState())
         {
             renderDelayComps(0, -1);
             if (currentDelayIndex > 0)
@@ -435,7 +555,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
 {
     if (x == 304 && y == 150) // RP1
     {
-        if (reverbState)
+        if (audioProcessor.getReverbState())
         {
             int numPages = 1;
             renderReverbComps(1, 1);
@@ -445,7 +565,7 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
     }
     else if (x == 965 && y == 150) // RP3
     {
-        if (delayState)
+        if (audioProcessor.getDelayState())
         {
             int numPages = 1;
             renderDelayComps(1, 1);
@@ -467,56 +587,56 @@ void ProjectHaloAudioProcessorEditor::handlePanelRight(int x, int y)
 
 void ProjectHaloAudioProcessorEditor::handleReverbPowerToggle()
 {
-    if (!reverbState && !delayState)
+    if (!audioProcessor.getReverbState() && !audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-        reverbState = true;
+        audioProcessor.setReverbState(true);
         renderReverbComps(currentVerbIndex, 0);
     }
-    else if (!reverbState && delayState)
+    else if (!audioProcessor.getReverbState() && audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-        reverbState = true;
+        audioProcessor.setReverbState(true);
         renderReverbComps(currentVerbIndex, 0);
     }
-    else if (reverbState && !delayState)
+    else if (audioProcessor.getReverbState() && !audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-        reverbState = false;
+        audioProcessor.setReverbState(false);
         hideReverbComps(currentVerbIndex);
     }
-    else if (reverbState && delayState)
+    else if (audioProcessor.getReverbState() && audioProcessor.getDelayState())
     {
         background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-        reverbState = false;
+        audioProcessor.setReverbState(false);
         hideReverbComps(currentVerbIndex);
     }
 }
 
 void ProjectHaloAudioProcessorEditor::handleDelayToggle()
 {
-    if (!delayState && !reverbState)
+    if (!audioProcessor.getDelayState() && !audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(6) : backgroundGenerator(2);
-        delayState = true;
+        audioProcessor.setDelayState(true);
         renderDelayComps(currentDelayIndex, 0);
     }
-    else if (!delayState && reverbState)
+    else if (!audioProcessor.getDelayState() && audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(7) : backgroundGenerator(3);
-        delayState = true;
+        audioProcessor.setDelayState(true);
         renderDelayComps(currentDelayIndex, 0);
     }
-    else if (delayState && !reverbState)
+    else if (audioProcessor.getDelayState() && !audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(4) : backgroundGenerator(0);
-        delayState = false;
+        audioProcessor.setDelayState(false);
         hideDelayComps(currentDelayIndex);
     }
-    else if (delayState && reverbState)
+    else if (audioProcessor.getDelayState() && audioProcessor.getReverbState())
     {
         background = darkModeState ? backgroundGenerator(5) : backgroundGenerator(1);
-        delayState = false;
+        audioProcessor.setDelayState(false);
         hideDelayComps(currentDelayIndex);
     }
 }
@@ -597,15 +717,15 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles1(int y) // DIST. && C
     {
         int i = 0;
 
-        if (!distortionState && i == 0)
+        if (!audioProcessor.getDistortionState() && i == 0)
         {
             i++;
-            distortionState = true;
+            audioProcessor.setDistortionState(true);
             repaint();
         }
         else
         {
-            distortionState = false;
+            audioProcessor.setDistortionState(false);
             i = 0;
             repaint();
         }
@@ -614,16 +734,16 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles1(int y) // DIST. && C
     {
         int i = 0;
 
-        if (!cozyModeState && i == 0)
+        if (!audioProcessor.getCozyModeState() && i == 0)
         {
             i++;
-            cozyModeState = true;
+            audioProcessor.setCozyModeState(true);
             repaint();
         }
         else
         {
             i = 0;
-            cozyModeState = false;
+            audioProcessor.setCozyModeState(false);
             repaint();
         }
     }
@@ -635,16 +755,16 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER &&
     {
         int i = 0;
 
-        if (!shifterState && i == 0)
+        if (!audioProcessor.getShifterState() && i == 0)
         {
             i++;
-            shifterState = true;
+            audioProcessor.setShifterState(true);
             repaint();
         }
         else
         {
             i = 0;
-            shifterState = false;
+            audioProcessor.setShifterState(false);
             repaint();
         }
     }
@@ -653,16 +773,16 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER &&
 
         int i = 0;
 
-        if (!sickoModeState && i == 0)
+        if (!audioProcessor.getSickOModeState() && i == 0)
         {
             i++;
-            sickoModeState = true;
+            audioProcessor.setSickOModeState(true);
             repaint();
         }
         else
         {
             i = 0;
-            sickoModeState = false;
+            audioProcessor.setSickOModeState(false);
             repaint();
         }
     }
@@ -670,90 +790,47 @@ void ProjectHaloAudioProcessorEditor::handleFXPowerToggles2(int y) // SHIFTER &&
 
 void ProjectHaloAudioProcessorEditor::handleFXAmounts1(int y) // DIST. && COZY MODES AMT.
 {
-    if (y == 25)
+    if (y == 25) // Dist. Mode
     {
-        if (distortionAmt < 100 && distortionState)
-        {
-            distortionAmt += 2;
-            repaint();
-        }
-        distortionAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::Distortion);
     }
     else if (y == 75)
     {
-        // Checks that distortionAmt is non-negative
-        if (distortionAmt > 0 && distortionState)
-        {
-            distortionAmt -= 2;
-            repaint();
-        }
-        distortionAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::Distortion);
     }
-    else if (y == 115 && cozyModeState)
+    else if (y == 115) // Cozy Mode
     {
-        if (cozyModeAmt < 100)
-        {
-            cozyModeAmt += 2;
-            repaint();
-        }
-        cozyModeAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::CozyMode);
     }
-    else if (y == 165 && cozyModeState)
+    else if (y == 165)
     {
-        // Checks that cozyModeAmt is non-negative
-        if (cozyModeAmt > 0)
-        {
-            cozyModeAmt -= 2;
-            repaint();
-        }
-        cozyModeAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::CozyMode);
     }
 }
 
 void ProjectHaloAudioProcessorEditor::handleFXAmounts2(int y) // SHIFTER && SICK-O-MODES AMT.
 {
-    if (y == 25 && shifterState)
+    if (y == 25) // Shifter Mode
     {
-        if (shifterAmt < 100)
-        {
-            shifterAmt += 2;
-            repaint();
-        }
-        shifterAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::Shifter);
     }
-    else if (y == 75 && shifterState)
+    else if (y == 75)
     {
-        // Checks that shifterAmt is non-negative
-        if (shifterAmt > 0)
-        {
-            shifterAmt -= 2;
-            repaint();
-        }
-        shifterAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::Shifter);
     }
-    else if (y == 115 && sickoModeState)
+    else if (y == 115) // Sicko Mode
     {
-        if (sickoModeAmt < 100)
-        {
-            sickoModeAmt += 2;
-            repaint();
-        }
-        sickoModeAmt += 0;
+        fxHandler.startFXChange(true, FXHandler::Mode::SickOMode);
     }
-    else if (y == 165 && sickoModeState)
+    else if (y == 165)
     {
-        // Checks that sickoModeAmt is non-negative
-        if (sickoModeAmt > 0)
-        {
-            sickoModeAmt -= 2;
-            repaint();
-        }
-        sickoModeAmt -= 0;
+        fxHandler.startFXChange(false, FXHandler::Mode::SickOMode);
     }
 }
 void ProjectHaloAudioProcessorEditor::mouseUp(const juce::MouseEvent &event)
 {
-//    stopTimer();
+    bpmHandler.stopBpmChange();
+    fxHandler.stopFXChange();
 }
 
 void ProjectHaloAudioProcessorEditor::timerCallback()
@@ -788,20 +865,13 @@ void ProjectHaloAudioProcessorEditor::mouseDown(const juce::MouseEvent &event)
 
 void ProjectHaloAudioProcessorEditor::handleManualTempoChange(int x, int y)
 {
-    if (bpmVal < 300)
+    if (x == 183 && y == 385) // BPM Up
     {
-        if (x == 183 && y == 385) // BPM UP
-        {
-            bpmVal += 1;
-        }
+        bpmHandler.startBpmChange(true);
     }
-    
-    if (bpmVal > 0)
+    else if (x == 183 && y == 430) // BPM Down
     {
-        if (x == 183 && y == 430) // BPM Down
-        {
-            bpmVal -= 1;
-        }
+        bpmHandler.startBpmChange(false);
     }
 }
 
@@ -826,7 +896,7 @@ void ProjectHaloAudioProcessorEditor::updateTempo()
         double bpm = 60.0 / averageInterval;
         
         // Updates the current tempo
-        bpmVal = bpm;
+        audioProcessor.bpmVal = bpm;
         
         // Clear tap times to start new measurement
         tapTimes.clear();
