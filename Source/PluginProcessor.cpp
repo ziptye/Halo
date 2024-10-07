@@ -142,6 +142,16 @@ void ProjectHaloAudioProcessor::setSickOModeState(bool sickState)
     else
         sickoModeState = false;
 }
+void ProjectHaloAudioProcessor::setIsActivated(bool state)
+{
+    if (state)
+    {
+        isActivated = true;
+        std::cout << "MASSIVE YES ACTIVATION BROTHER" << std::endl;
+    }
+    isActivated = false;
+}
+
 float ProjectHaloAudioProcessor::calcDelayTime(int timeDivide)
 {
     // TODO: This whole function probably needs to be rewritten for computational effciency. Math is a little weird.
@@ -178,6 +188,8 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     spec.numChannels = getTotalNumOutputChannels();
     
     reset(); // resets all parameters of the plugin
+
+    smoothedReverbPreDelayTime.reset(sampleRate, 0.02);
     
     verbHPF.prepare(spec);
     verbLPF.prepare(spec);
@@ -196,7 +208,7 @@ void ProjectHaloAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     delayHPF.setType(juce::dsp::StateVariableTPTFilterType::highpass);
     delayLPF.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
     
-    visualizer.clear();
+//    visualizer.clear();
 }
 
 void ProjectHaloAudioProcessor::releaseResources()
@@ -239,8 +251,7 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-
+    
     auto vHPF = apvts.getRawParameterValue("Reverb HPF")->load();
     auto vLPF = apvts.getRawParameterValue("Reverb LPF")->load();
     auto dHPF = apvts.getRawParameterValue("Delay HPF")->load();
@@ -250,6 +261,8 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     verbLPF.setCutoffFrequency(vLPF);
     delayHPF.setCutoffFrequency(dHPF);
     delayLPF.setCutoffFrequency(dLPF);
+    
+//    DBG(vHPF);
     
     auto delayFB = apvts.getRawParameterValue("Feedback")->load();
     auto delay64 = apvts.getRawParameterValue("Delay64")->load();
@@ -280,10 +293,14 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     float preDelayTimeSamples = getSampleRate() * preDelayTimeMs / 1000.0f;
     verbPreDelay.setDelay(preDelayTimeSamples);
     
+//    auto vPreDelay = apvts.getRawParameterValue("Pre Delay")->load();
+//    smoothedReverbPreDelayTime.setTargetValue(vPreDelay);
+//    float preDelayTimeSamples = getSampleRate() * smoothedReverbPreDelayTime.getNextValue() / 1000.0f;
+//    verbPreDelay.setDelay(preDelayTimeSamples);
+    
     auto audioBlock = juce::dsp::AudioBlock<float> (buffer);
     auto context = juce::dsp::ProcessContextReplacing<float>(audioBlock);
     
-    visualizer.pushBuffer(buffer);
     
     if (reverbState)
     {
@@ -332,7 +349,10 @@ void ProjectHaloAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
             delayTime = calcDelayTime(-4);
         }
         
+//        smoothedDelayTime.setTargetValue(delayTime);
         auto delayToSamples = delayTime * (getSampleRate() / 1000.0f);
+
+//        auto delayToSamples = smoothedDelayTime.getNextValue() * (getSampleRate() / 1000.0f);
         effectChain.get<1>().setDelay(delayToSamples);
         
         delayHPF.process(context);
@@ -378,12 +398,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout ProjectHaloAudioProcessor::c
     
     float predelaySkew = 0.25f;
     float skewFactorLPF = 0.5f;
-    float skewFactorHPF = 0.25f;
+    float skewFactorHPF = 0.5f;
     auto roomSizeRange = juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f);
     auto preDelayRange = juce::NormalisableRange<float>(0.00f, 500.0f, 0.01f, predelaySkew);
     auto dampingRange = juce::NormalisableRange<float>(0.00f, 1.0f, 0.01f);
     auto widthRange = juce::NormalisableRange<float>(0.00f, 1.0f, 0.01f);
-    auto HPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, skewFactorHPF);
+    auto HPFRange = juce::NormalisableRange<float>(20.0f, 2000.0f, 1.0f, skewFactorHPF);
     auto LPFRange = juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, skewFactorLPF);
     auto feedbackRange = juce::NormalisableRange<float>(0.0f, 200.0f, 1.0f);
     auto dryWetRange = juce::NormalisableRange<float>(0.0f, 1.0f, 0.01f);
@@ -430,6 +450,7 @@ void ProjectHaloAudioProcessor::reset()
     verbLPF.reset();
     delayHPF.reset();
     delayLPF.reset();
+    verbPreDelay.reset();
     effectChain.reset();
 }
 
